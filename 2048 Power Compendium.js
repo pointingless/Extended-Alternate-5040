@@ -45,17 +45,19 @@ let startTileAmount = 2; //How many tiles spawn at the beginning of the game
 let randomTileAmount = 1; //How many tiles spawn after each move
 let hiddenTileText = false;
 let hiddenTileBackground = false;
-let modifiers = [Infinity, 1, 2, false, "All", "Square", 0, 0, 0, 0, "Orthogonal", false, false, "None", 0, "Regular", 1, 0, 0, 1, false, false, 1, 1, 1, 0, 1, 1, 0, 100, 0, 0, 0, 0, 1];
+let modifiers = [Infinity, 1, 2, false, "All", "Square", 0, 0, 0, 0, "Orthogonal", false, -1, "None", 0, "Regular", 1, 0, 0, 1, false, false, 1, 1, 1, 0, 1, 1, 0, 100, 0, 0, 0, 0, 1];
     /*
     modifiers[0] corresponds to SlideAmount, modifiers[1] corresponds to randomTileAmount, modifiers[2] corresponds to startTileAmount, modifiers[3] corresponds
     to multiMerge, and modifiers[4] corresponds to spawnLocation. modifiers[5] changes the shape of the grid, and modifiers[6] through modifiers[9] are used as size
     variables for alternate grid shapes. modifiers[10] controls the available directions, modifiers[11] is whether you can stay still as a move, modifiers[12] is the
-    toggle for Garbage 0s, modifiers[13] is the toggle for Negative Tiles, modifiers[14] corresponds to nextTiles, modifiers[15] is the toggle for SimpleSpawns,
+    toggle for Garbage Tiles, modifiers[13] is the toggle for Negative Tiles, modifiers[14] corresponds to nextTiles, modifiers[15] is the toggle for SimpleSpawns,
     modifiers[16] is the animation speed, modifiers[17] adds holes to the grid, modifiers[18] adds box tiles to the grid, modifiers[19] changes how many turns
     there are between each tile spawning (which is done by changing spawnConditions), modifiers[20] is whether it takes two moves in the same direction to merge,
     modifiers[21] corresponds to hiddenTileText, modifiers[22] and modifiers[23] are the ratio of positive to negative tile spawn chances when Negative Tiles is on,
     modifiers[24] is the amount for Multicolor Tiles, modifiers[25], modifiers[26], and modifiers[27] are the amount per spawn, interval between spawns, and lifespan (respectively) of Temporary Holes,
-    modifiers[28] adds slippery tiles to the grid, modifiers[29] is time between moves in a replay, modifiers[32] corresponds to hiddenTileBackground, modifiers[33] corresponds to memoryMode, and modifiers[34] corresponds to the move number for memoryMode.
+    modifiers[28] adds slippery tiles to the grid, modifiers[29] is time between moves in a replay, modifiers[30] is the amount of random unmoving tiles in a turn,
+    modifiers[31] is the amount of random unmerging tiles in a turn, modifiers[32] corresponds to hiddenTileBackground, modifiers[33] corresponds to memoryMode, 
+    and modifiers[34] corresponds to the number of moves for memoryMode.
     */
 let gamemode = 0; //Which mode are we in? 2048 is gamemode 1, 2187 is gamemode 2, 1024 is gamemode 3, and so on. Save codes use gamemode 0 to alert StartGame to not go through some of the starting steps.
 let mode_vars = []; //Used by a couple gamemodes
@@ -112,9 +114,12 @@ let forcedSpawns = [];
 Each entry of this array consists of a CalcArray expression, a string, a boolean, and one or more tile arrays.
 If the CalcArray expression is true this turn, then all of the tiles in this entry will be spawned this turn, either before or after the random spawns
 depending on the string. If there aren't enough spaces on the grid to spawn them all and the boolean is true, then you immediately lose.
+The boolean entry may instead be an array of multiple booleans. If so, its first entry is the game over one, and if its second entry is true, then that forced spawn is removed once it successfully spawns. 
 */
+let start_forcedSpawns = [] //forcedSpawns is set to this at the beginning of each game 
 let tileValueFunction = [0]; // A CalcArray function that, when called at particular coordinates, returns the numeric value of the tile there. Must be adjusted on a mode-by-mode basis. Assumed to return a number.
 let TileOrder = []; // This array is filled by MoveHandler while doing a move. Used to only exist within MoveHandler but now CalcArrays can access it
+let discoveredTilesFilter = [] // A CalcArray (missing its first entry) to be run on each potential new discovered tile before adding it to the discovered tiles list (if it's still undiscovered after doing so) 
 
 // These next two combined are a list of already-discovered tile displays that can be copied onto new tiles, so displayTile doesn't have to be run as many times
 let knownTileDisplayArrays = []; // Each entry is a pair: the array that is the tile being displayed, and the "type" of its display (Grid, NextTile, Score, etc.)
@@ -257,7 +262,10 @@ document.getElementById("gm_height_plus").addEventListener("click", function(){
     gmDisplayVars();
 });
 document.getElementById("gm_return").addEventListener("click", function(){
-    switchScreen("Menu", Math.max(Math.floor(modes_order.indexOf(Math.floor(gamemode)) / 25), 0) + 1)
+    let page = Math.max(Math.floor(modes_order.indexOf(Math.floor(gamemode)) / 25), 0) + 1; 
+    if (gamemode == 50.7101113) page = 3 
+    if (gamemode == 101 || gamemode == 102) page = 4 
+    switchScreen("Menu", page) 
 });
 document.getElementById("return_button").addEventListener("click", function(){
     if (gamemode == 0) {
@@ -528,7 +536,7 @@ document.getElementById("DIVE_1s_button").addEventListener("click", function(){
     gmDisplayVars();
 });
 document.getElementById("DIVE_unlockRules_button").addEventListener("click", function(){
-    mode_vars[2] = (mode_vars[2] + 1) % 4;
+    mode_vars[2] = (mode_vars[2] + 1) % 5;
     gmDisplayVars();
 });
 document.getElementById("DIVE_randomGoals_button").addEventListener("click", function(){
@@ -547,6 +555,11 @@ document.getElementById("DIVE_firstGoalMinimum_change").addEventListener("change
     mode_vars[4] = v;
     gmDisplayVars();
 });
+document.getElementById("DIVE3_variant_button").addEventListener("click", function(){ 
+    mode_vars[5] = (mode_vars[5] % 3) + 1; 
+    loadGridSize(50, mode_vars); 
+    gmDisplayVars(); 
+}); 
 document.getElementById("3888_randomGoals_button").addEventListener("click", function(){
     mode_vars[0] = (mode_vars[0] + 1) % 3;
     gmDisplayVars();
@@ -978,6 +991,10 @@ document.getElementById("2496_mlengthMax_minus").addEventListener("click", funct
     else mode_vars[3]--;
     gmDisplayVars();
 });
+document.getElementById("RF3375_othersSmaller_button").addEventListener("click", function(){ 
+    mode_vars[0] = !(mode_vars[0]); 
+    gmDisplayVars(); 
+});
 document.getElementById("1845_randomGoals_button").addEventListener("click", function(){
     mode_vars[0] = (mode_vars[0] + 1) % 3;
     gmDisplayVars();
@@ -1034,6 +1051,10 @@ document.getElementById("TRIGAT_spawn2s_button").addEventListener("click", funct
     mode_vars[2] = !(mode_vars[2]);
     gmDisplayVars();
 });
+document.getElementById("RF9261_othersSmaller_button").addEventListener("click", function(){ 
+    mode_vars[0] = !(mode_vars[0]); 
+    gmDisplayVars(); 
+}); 
 document.getElementById("3385_exponent_plus").addEventListener("click", function(){
     mode_vars[0]++;
     loadGridSize(95, mode_vars);
@@ -1110,7 +1131,7 @@ document.getElementById("PA377_PA233_button").addEventListener("click", function
 });
 document.getElementById("Alternate5040_baseFactorials_button").addEventListener("click", function(){
     mode_vars[1] = 2n;
-    if(mode_vars[0] == 8 || mode_vars[0] == 9 || mode_vars[0] == 10 || mode_vars[0] == 21) loadGridSize(100, mode_vars);
+    loadGridSize(100, mode_vars);
     gmDisplayVars();
 });
 document.getElementById("Alternate5040_base_change").addEventListener("change", function() {
@@ -1126,36 +1147,36 @@ document.getElementById("Alternate5040_base_change").addEventListener("change", 
                 mode_vars[1] = v;
                 secretsFound[2] = true;
             }
-            if(mode_vars[0] == 8 || mode_vars[0] == 9) loadGridSize(100, mode_vars);
+            loadGridSize(100, mode_vars);
             gmDisplayVars();
             return;
         }
         else v = 0n;
     }
     if (v > 1n) mode_vars[1] = v;
-    if(mode_vars[0] == 8 || mode_vars[0] == 9 || mode_vars[0] == 21) loadGridSize(100, mode_vars);
+    loadGridSize(100, mode_vars);
     gmDisplayVars();
 });
 document.getElementById("Alternate5040_base_button").addEventListener("click", function(){
     mode_vars[1] = false;
-    if(mode_vars[0] == 8 || mode_vars[0] == 9 || mode_vars[0] == 10 || mode_vars[0] == 21) loadGridSize(100, mode_vars);
+    loadGridSize(100, mode_vars);
     gmDisplayVars();
 });
 document.getElementById("Alternate5040_basePrimorials_button").addEventListener("click", function(){
     mode_vars[1] = 0n;
-    if(mode_vars[0] == 8 || mode_vars[0] == 9 || mode_vars[0] == 10 || mode_vars[0] == 21) loadGridSize(100, mode_vars);
+    loadGridSize(100, mode_vars);
     gmDisplayVars();
 });
 document.getElementById("Alternate5040_baseSubfactorials_button").addEventListener("click", function(){
     mode_vars[1] = [2n, 3n, 7n];
     if(mode_vars[0] == 8) mode_vars[1][2] = 5n;
     else if(mode_vars[0] == 9 || mode_vars[0] == 10) mode_vars[1][2] = 6n;
-    if(mode_vars[0] == 8 || mode_vars[0] == 9 || mode_vars[0] == 10 || mode_vars[0] == 21) loadGridSize(100, mode_vars);
+    loadGridSize(100, mode_vars);
     gmDisplayVars();
 });
 document.getElementById("Alternate5040_baseListIntro_button").addEventListener("click", function(){
     mode_vars[1] = true;
-    if(mode_vars[0] == 8 || mode_vars[0] == 9 || mode_vars[0] == 10 || mode_vars[0] == 21) loadGridSize(100, mode_vars);
+    loadGridSize(100, mode_vars);
     gmDisplayVars();
 });
 document.getElementById("Alternate5040_baseListRandomize_button").addEventListener("click", function(){
@@ -1182,7 +1203,7 @@ document.getElementById("Alternate5040_baseRational_numerator_change").addEventL
         if (v.gt(1) && v.isFinite()) mode_vars[1] = v;
     }
     catch {}
-    if(mode_vars[0] == 8) loadGridSize(100, mode_vars);
+    loadGridSize(100, mode_vars);
     gmDisplayVars();
 });
 document.getElementById("Alternate5040_baseRational_denominator_change").addEventListener("change", function() {
@@ -1193,12 +1214,12 @@ document.getElementById("Alternate5040_baseRational_denominator_change").addEven
         if (v.gt(1) && v.isFinite()) mode_vars[1] = v;
     }
     catch {}
-    if(mode_vars[0] == 8) loadGridSize(100, mode_vars);
+    loadGridSize(100, mode_vars);
     gmDisplayVars();
 });
 document.getElementById("Alternate5040_baseRational_button").addEventListener("click", function(){
     mode_vars[1] = true;
-    if(mode_vars[0] == 8) loadGridSize(100, mode_vars);
+    loadGridSize(100, mode_vars);
     gmDisplayVars();
 });
 document.getElementById("Alternate5040_diff_button").addEventListener("click", function() {
@@ -1270,6 +1291,116 @@ document.getElementById("Alternate5040_fraction_denominator_change").addEventLis
     catch {}
     gmDisplayVars();
 });
+document.getElementById("DOFFET_offset_plus").addEventListener("click", function(){ 
+    mode_vars[0]++; 
+    mode_vars[1]++; 
+    if (mode_vars[0] == 0n) { 
+        mode_vars[0]++; 
+        mode_vars[1]++; 
+    } 
+    gmDisplayVars();
+});
+document.getElementById("DOFFET_offset_minus").addEventListener("click", function(){ 
+    mode_vars[0]--; 
+    mode_vars[1]--; 
+    if (mode_vars[0] == 0n) { 
+        mode_vars[0]--; 
+        mode_vars[1]--; 
+    } 
+    gmDisplayVars();
+});
+document.getElementById("DOFFET_largerOffset_plus").addEventListener("click", function(){ 
+    mode_vars[1]++; 
+    gmDisplayVars(); 
+}); 
+document.getElementById("DOFFET_largerOffset_minus").addEventListener("click", function(){ 
+    mode_vars[1]--; 
+    gmDisplayVars(); 
+}); 
+document.getElementById("DOFFET_randomGoals_button").addEventListener("click", function(){ 
+    mode_vars[2] = (mode_vars[2] + 1) % 4; 
+    gmDisplayVars(); 
+}); 
+document.getElementById("DOFFET_firstGoalMinimum_change").addEventListener("change", function() { 
+    let v; 
+    try { 
+        v = BigInt(this.value); 
+    } 
+    catch { 
+        v = 0n;
+    } 
+    if (v < 3n) v = 3n; 
+    mode_vars[3] = v; 
+    gmDisplayVars();
+});
+document.getElementById("FRUSEE_randomGoals_button").addEventListener("click", function(){ 
+    mode_vars[0] = (mode_vars[0] + 1) % 4; 
+    gmDisplayVars();
+});
+document.getElementById("FRUSEE_firstGoalMinimum_change").addEventListener("change", function() {
+    let v;
+    try {
+        v = BigInt(this.value);
+    }
+    catch {
+        v = 0n;
+    }
+    if (v < 15n) v = 15n;
+    mode_vars[1] = v;
+    gmDisplayVars();
+});
+document.getElementById("WavesModes_seeds_button").addEventListener("click", function(){
+    if (mode_vars[0] == 0) mode_vars[0] = -1;
+    else if (mode_vars[0] == -1 && gamemode == 50.7101113) mode_vars[0] = 1;
+    else mode_vars[0] = 0;
+    gmDisplayVars();
+});
+document.getElementById("WavesModes_1s_button").addEventListener("click", function(){
+    mode_vars[1] = !mode_vars[1];
+    gmDisplayVars();
+});
+document.getElementById("WavesModes_unlockRules_button").addEventListener("click", function(){
+    mode_vars[2] = (mode_vars[2] + 1) % 5;
+    gmDisplayVars();
+});
+document.getElementById("WavesModes_randomGoals_button").addEventListener("click", function(){
+    let RGMStart = -1;
+    if (gamemode == 96.50118 || gamemode == 73.50118 || gamemode == 91.50118) RGMStart = 3;
+    if (gamemode == 34.50118 || gamemode == 50.248) RGMStart = 4;
+    if (RGMStart != -1) {
+        mode_vars[RGMStart] = (mode_vars[RGMStart] + 1) % 3;
+        if (gamemode == 34.50118 && mode_vars[RGMStart] == 1) mode_vars[RGMStart]++;
+    }
+    gmDisplayVars();
+});
+document.getElementById("WavesModes_firstGoalMinimum_change").addEventListener("change", function() {
+    let RGMStart = -1;
+    let RGMinimum = 0n;
+    if (gamemode == 96.50118) {
+        RGMStart = 3;
+        RGMinimum = 5n;
+    }
+    if (gamemode == 34.50118 || gamemode == 50.248) {
+        RGMStart = 4;
+        RGMinimum = 4n;
+    }
+    if (gamemode == 73.50118 || gamemode == 91.50118) {
+        RGMStart = 3;
+        RGMinimum = 4n;
+    }
+    if (RGMStart != -1) {
+        let v;
+        try {
+            v = BigInt(this.value);
+        }
+        catch {
+            v = 0n;
+        }
+        if (v < RGMinimum) v = RGMinimum;
+        mode_vars[RGMStart + 1] = v;
+        gmDisplayVars();
+    }
+});
 document.getElementById("GaussianDIVE_startSeeds_button").addEventListener("click", function(){
     mode_vars[0] = (mode_vars[0] + 1) % 6;
     gmDisplayVars();
@@ -1283,7 +1414,7 @@ document.getElementById("GaussianDIVE_seedsFirstQuadrant_button").addEventListen
     gmDisplayVars();
 });
 document.getElementById("GaussianDIVE_unlockRules_button").addEventListener("click", function(){
-    mode_vars[4] = (mode_vars[4] + 1) % 4;
+    mode_vars[4] = (mode_vars[4] + 1) % 5;
     gmDisplayVars();
 });
 document.getElementById("GaussianDIVE_quadrant0SpawnRatio_change").addEventListener("change", function() {
@@ -1318,6 +1449,46 @@ document.getElementById("GaussianDIVE_quadrant3SpawnRatio_change").addEventListe
     }
     gmDisplayVars();
 });
+document.getElementById("Aquatic2496_productLimit_button").addEventListener("click", function(){ 
+    mode_vars[3] = !mode_vars[3]; 
+    gmDisplayVars(); 
+}); 
+document.getElementById("PartialFlowDIVE_coprimeMerge_button").addEventListener("click", function(){ 
+    mode_vars[3] = !mode_vars[3]; 
+    loadGridSize(34.50118, mode_vars); 
+    gmDisplayVars(); 
+}); 
+document.getElementById("PartialFlowDIVE_fullMoveReplenish_button").addEventListener("click", function(){ 
+    mode_vars[6] = (mode_vars[6] + 1) % 3; 
+    mode_vars[7] = [0, 1, 4][mode_vars[6]]; 
+    gmDisplayVars(); 
+}); 
+document.getElementById("PartialFlowDIVE_fullGridMoves_plus").addEventListener("click", function(){ 
+    mode_vars[7]++; 
+    gmDisplayVars(); 
+}); 
+document.getElementById("PartialFlowDIVE_fullGridMoves_minus").addEventListener("click", function(){ 
+    mode_vars[7]--; 
+    gmDisplayVars(); 
+}); 
+document.getElementById("DualTileDIVE_unordered_button").addEventListener("click", function(){ 
+    mode_vars[3] = !mode_vars[3]; 
+    gmDisplayVars(); 
+}); 
+document.getElementById("DivAddTor_232_240_merges_button").addEventListener("click", function(){ 
+    mode_vars[3] = (mode_vars[3] + 1) % 3; 
+    gmDisplayVars(); 
+}); 
+document.getElementById("DivAddTor_DualTileSeeds_button").addEventListener("click", function(){ 
+    mode_vars[4] = (mode_vars[4] + 1) % 3; 
+    loadGridSize(97.50118, mode_vars); 
+    gmDisplayVars(); 
+}); 
+document.getElementById("WildcardDIVE_possibilityChance_change").addEventListener("change", function() { 
+    let v = Number(this.value); 
+    if (v > 0 && v < 1) mode_vars[3] = v; 
+    gmDisplayVars(); 
+}); 
 document.getElementById("839808_randomGoals_button").addEventListener("click", function(){
     mode_vars[0] = (mode_vars[0] + 1) % 3;
     gmDisplayVars();
@@ -1545,6 +1716,22 @@ document.getElementById("modifiers_spawnInterval_minus").addEventListener("click
     modifiers[19]--;
     displayModifiers(1);
 });
+document.getElementById("modifiers_randomUnmovingTiles_plus").addEventListener("click", function(){ 
+    modifiers[30]++; 
+    displayModifiers(1); 
+}); 
+document.getElementById("modifiers_randomUnmovingTiles_minus").addEventListener("click", function(){ 
+    modifiers[30]--; 
+    displayModifiers(1); 
+}); 
+document.getElementById("modifiers_randomUnmergingTiles_plus").addEventListener("click", function(){ 
+    modifiers[31]++; 
+    displayModifiers(1); 
+}); 
+document.getElementById("modifiers_randomUnmergingTiles_minus").addEventListener("click", function(){ 
+    modifiers[31]--; 
+    displayModifiers(1); 
+}); 
 document.getElementById("modifiers_multiMerge_button").addEventListener("click", function(){
     modifiers[3] = !(modifiers[3])
     displayModifiers(2);
@@ -1625,7 +1812,9 @@ document.getElementById("modifiers_simpleSpawns_button").addEventListener("click
     displayModifiers(2);
 });
 document.getElementById("modifiers_garbage0_button").addEventListener("click", function(){
-    modifiers[12] = !(modifiers[12])
+    if (modifiers[12] == -1) modifiers[12] = 0;
+    else if (modifiers[12] == 0) modifiers[12] = 1;
+    else modifiers[12] = -1;
     displayModifiers(4);
 });
 document.getElementById("modifiers_multicolorTiles_plus").addEventListener("click", function(){
@@ -1656,6 +1845,14 @@ document.getElementById("modifiers_negativetiles_negativeSpawnRatio_change").add
     if (modifiers[22] == 0 && modifiers[23] == 0) {
         modifiers[22] = 1; modifiers[23] = 1;
     }
+    displayModifiers(4);
+});
+document.getElementById("modifiers_garbageTemporaryHoles_lifespan_plus").addEventListener("click", function(){
+    modifiers[12]++;
+    displayModifiers(4);
+});
+document.getElementById("modifiers_garbageTemporaryHoles_lifespan_minus").addEventListener("click", function(){
+    modifiers[12]--;
     displayModifiers(4);
 });
 document.getElementById("modifiers_temporaryHoles_amount_plus").addEventListener("click", function(){
@@ -2807,14 +3004,14 @@ for (let c of document.getElementsByClassName("customGuide_exampleReveal")) {
         }
     })
 };
-let secretsFound = [false, false, false, false, false, false, null, false, false];
-let otherSecretStats = [false, false, 0, 0, 0, 0]; // 0th entry is whether the office saves on reload. 1st, 2nd, and 3rd entries relate to secret 3. 4th entry relates to secret 4. 5th entry relates to secret 8.
+let secretsFound = [false, null, false, false, false, false, null, false, false, false];
+let otherSecretStats = [false, false, 0, 0, 0, 0, false]; // 0th entry is whether the office saves on reload. 1st, 2nd, and 3rd entries relate to secret 3. 4th entry relates to secret 4. 5th entry relates to secret 8. 6th entry relates to secret 9.
 if (SCparse(localStorage.getItem("2048PowerCompendium_secretsStored")) === true) {
     otherSecretStats[0] = true;
     if (localStorage.getItem("2048PowerCompendium_secretsFound")) secretsFound = SCparse(localStorage.getItem("2048PowerCompendium_secretsFound"));
 }
-while (secretsFound.length < 9) secretsFound.push(false);
-secretsFound[6] = null; //PA19,683 isn't secret anymore
+while (secretsFound.length < 10) secretsFound.push(false);
+secretsFound[6] = null; secretsFound[1] = null; //PA19,683 and Gaussian DIVE aren't secret anymore
 document.getElementById("titleZero").addEventListener("click", function(){
     secretsFound[0] = true;
     switchScreen("Guide", "SecretOffice");
@@ -2923,6 +3120,7 @@ for (f of document.getElementsByTagName("form")) {
 let currentScreen = "Menu";
 let subScreen = 1;
 let screenVars = [];
+let wavesUnleashed = false; 
 switchScreen("Menu", 1);
 let modes_order = [
     100, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
@@ -2930,6 +3128,10 @@ let modes_order = [
     54, 55, 56, 57, 68, 67, 77, 78, 80, 86, 89, 72, 61, 79, 91, 73, 88, 93, 95, 75, 85, 96, 92, 58, 41,
     31, 49, 81, 82, 40, 43, 59, 70, 69, 97, 34, 98, 35, 36, 62, 37, 71, 39, 60, 99, 45, 74, 50, 44, 1
 ]
+let waves_order = [ 
+    [96, 96.50118], [35, 101], [34, 34.50118], [70, 50.1], [69, 50.22], [91, 91.50118], [73, 73.50118], [89, 89.50118], [97, 97.50118], [37, 102], [40, 50.248], [95, 50.7101113], [50, 50] 
+] 
+let wavesModeModified = [96.50118, 34.50118, 50.22, 91.50118, 73.50118, 89.50118, 97.50118, 50.248]
 for (let t = 1; t <= modes_order.length; t++) { //Adding event listeners to the main mode tiles on the menu
     let mtile = document.getElementById("menu_grid_storage").firstElementChild;
     let position = modes_order.indexOf(t);
@@ -2952,6 +3154,35 @@ for (let t = 1; t <= modes_order.length; t++) { //Adding event listeners to the 
         });
     }
 }
+document.getElementById("UnleashTheWaves_button").addEventListener("click", function(){ 
+    wavesUnleashed = true; 
+    wavesMenuSwitch(true); 
+    switchScreen("Menu", 3); 
+}); 
+document.getElementById("RetractTheWaves_button").addEventListener("click", function(){ 
+    wavesUnleashed = false; 
+    wavesMenuSwitch(false); 
+    switchScreen("Menu", 3); 
+}); 
+for (let t = 0; t < waves_order.length; t++) { //Adding event listeners to the main mode tiles on the menu 
+    let mtile = document.getElementById("waves_grid_storage").children[t]; 
+    let position = modes_order.indexOf(waves_order[t][0]); 
+    mtile.style.setProperty("left", "calc(var(--menu_grid_size) * " + ((position % 5) * 14.75 + 1.25) + " / 75)"); 
+    mtile.style.setProperty("top", "calc(var(--menu_grid_size) * " + ((Math.floor((position % 25) / 5)) * 14.75 + 1.25) + " / 75)"); 
+    mtile.id = "waves_tile_" + waves_order[t][1]; 
+    mtile.addEventListener("click", function(){ 
+        loadMode(waves_order[t][1]); 
+        document.getElementById("gm_big_tile").style.setProperty("display", "flex"); 
+        document.getElementById("gm_big_tile").style.setProperty("background-color", getComputedStyle(this).getPropertyValue("background-color")); 
+        document.getElementById("gm_big_tile").innerHTML = this.innerHTML; 
+        document.getElementById("gm_big_tile").style.setProperty("background-image", getComputedStyle(this).getPropertyValue("background-image")); 
+        document.getElementById("gm_big_tile").style.setProperty("--gm_tfs", getComputedStyle(this).getPropertyValue("--tile_font_size") * 1.25); 
+        OSTDEUpdate(0); 
+    }); 
+    mtile.addEventListener("mouseenter", function(){ 
+        OSTDEUpdate(0); 
+    }); 
+} 
 document.getElementById("menu_tile_37").addEventListener("click", function(){
     if (otherSecretStats[1]) loadMode(37.71);
     else loadMode(37);
@@ -2975,14 +3206,6 @@ document.getElementById("menu_tile_37").addEventListener("mouseenter", function(
 });
 document.getElementById("menu_tile_71").addEventListener("mouseenter", function(){
     OSTDEUpdate(1);
-});
-document.getElementById("GaussianDIVE_enter_button").addEventListener("click", function(){
-    loadMode(50.1);
-    document.getElementById("gm_big_tile").style.setProperty("display", "flex");
-    document.getElementById("gm_big_tile").innerHTML = "Gaussian DIVE";
-    document.getElementById("gm_big_tile").style.setProperty("background-image", "conic-gradient(at 50% -10%, #0000 0% 35%, #0004 40% 45%, #fff4 47.5% 52.5%, #0004 55% 60%, #0000 65%), conic-gradient(from 180deg at 50% 110%, #0000 0% 35%, #0004 40% 45%, #fff4 47.5% 52.5%, #0004 55% 60%, #0000 65%), conic-gradient(from 90deg at 110% 50%, #0000 0% 35%, #0004 40% 45%, #fff4 47.5% 52.5%, #0004 55% 60%, #0000 65%), conic-gradient(from 270deg at -10% 50%, #0000 0% 35%, #0004 40% 45%, #fff4 47.5% 52.5%, #0004 55% 60%, #0000 65%), linear-gradient(#333c55, #333c55, #5e6644, #5e6644)");
-    document.getElementById("gm_big_tile").style.setProperty("--gm_tfs", 2.8 * 1.25);
-    secretsFound[1] = true;
 });
 document.getElementById("MergeOverflow256_enter_button").addEventListener("click", function(){
     loadMode(3.24);
@@ -3107,7 +3330,7 @@ function indexOfPrimArray(inner, outer) {//Checks for the index of inner within 
     if (!("length" in outer) || outer.length == 0) return -1;
     let from = 0;
     if (arguments.length > 2) from = arguments[2];
-    for (let i = 0; i < outer.length; i++) {
+    for (let i = from; i < outer.length; i++) {
         if (eqPrimArrays(outer[i], inner)) return i;
     }
     return -1;
@@ -3117,7 +3340,7 @@ function lastIndexOfPrimArray(inner, outer) {//Checks for the index of inner wit
     if (!("length" in outer) || outer.length == 0) return -1;
     let from = outer.length - 1;
     if (arguments.length > 2) from = arguments[2];
-    for (let i = outer.length - 1; i >= 0; i--) {
+    for (let i = from; i >= 0; i--) {
         if (eqPrimArrays(outer[i], inner)) return i;
     }
     return -1;
@@ -3398,7 +3621,7 @@ function prime(n) {//Returns the nth prime; uses numbers or BigInts depending on
 }
 
 function gaussian_prime(n) {//Returns the nth gaussian prime.
-    while (primes.length < n) gaussianPrimesUpdate(gaussian_primes[gaussian_primes.length - 1].norm() * 2n);
+    while (gaussian_primes.length < n) gaussianPrimesUpdate(gaussian_primes[gaussian_primes.length - 1].norm() * 2n); 
     if ((typeof n == "number") && (n % 1 != 0)) return undefined;
     let an = Math.abs(Number(n));
     let answer = 0n;
@@ -3408,7 +3631,7 @@ function gaussian_prime(n) {//Returns the nth gaussian prime.
     return answer;
 }
 
-function zeckendorf(n) { // Returns the zeckendorf representation of n
+function zeckendorf(n) { //Returns the zeckendorf representation of n
     if(Number(n) < 1) return ["@Literal"];
     let zeck = ["@Literal"];
     let i, j, temp;
@@ -3483,7 +3706,7 @@ function expomodRational(n, m) { // Same as expomod, but for BigRationals. Retur
     return result;
 }
 
-function factorial(n) { //Accepts both numbers and bigints, but whole numbers only.
+function factorial(n) {//Accepts both numbers and bigints, but whole numbers only.
     if (typeof n == "bigint") {
         if (n < 0n) return NaN;
         if (n == 0n) return 1n;
@@ -3915,6 +4138,12 @@ function switchScreen(screen, subscreen) {
             document.getElementById("menu_grid_3").style.setProperty("display", "none");
             document.getElementById("menu_grid_4").style.setProperty("display", "none");
         }
+        if (wavesUnleashed && subScreen >= 3) { 
+            document.getElementById("waves_background").style.setProperty("display", "block"); 
+        } 
+        else { 
+            document.getElementById("waves_background").style.setProperty("display", "none"); 
+        } 
         if ((window.screen.width / window.screen.height) <= 3/4) document.getElementById("menu_extra").innerHTML = "Switch Pages (" + subScreen + " / 4)" 
         else document.getElementById("menu_extra").innerHTML = "Switch Pages<br>(" + subScreen + " / 4)"; 
     }
@@ -4018,6 +4247,12 @@ function switchScreen(screen, subscreen) {
             document.documentElement.style.setProperty("background-image", "radial-gradient(#00552f, #00e980)");
             document.getElementById("regularGuide").style.setProperty("display", "block");
             document.getElementById("guide").style.setProperty("color", "#9affd1");
+            if (wavesUnleashed) { 
+                document.getElementById("guide_wavesModes").style.setProperty("display", "block"); 
+            } 
+            else { 
+                document.getElementById("guide_wavesModes").style.setProperty("display", "none"); 
+            } 
         }
         else if (subscreen == "CustomMode") {
             document.documentElement.style.setProperty("background-image", "radial-gradient(#370064, #8000e9)");
@@ -4054,9 +4289,21 @@ function switchScreen(screen, subscreen) {
             }
             if (otherSecretStats[5] == 0) document.getElementById("secretOffice_secret8").children[0].children[0].innerHTML = "There may be an undiscovered type of supermerging...";
             else document.getElementById("secretOffice_secret8").children[0].children[0].innerHTML = "There may be an undiscovered type of supermerging... where can you recreate what you've found?";
-            if (secretsFound.indexOf(false) == -1) document.getElementById("secretOffice_completeBox").style.setProperty("display", "block");
+            if (secretsFound.slice(1).indexOf(false) == -1) document.getElementById("secretOffice_completeBox").style.setProperty("display", "block");
             else document.getElementById("secretOffice_completeBox").style.setProperty("display", "none");
         }
+        if (wavesUnleashed) { 
+            for (let elem of document.getElementsByClassName("guide_wavesModesHidden")) elem.style.setProperty("display", "none"); 
+            for (let elem of document.getElementsByClassName("guide_wavesModesShown")) elem.style.setProperty("display", "inline"); 
+            for (let elem of document.getElementsByClassName("guide_wavesModesHiddenBlock")) elem.style.setProperty("display", "none"); 
+            for (let elem of document.getElementsByClassName("guide_wavesModesShownBlock")) elem.style.setProperty("display", "block"); 
+        } 
+        else { 
+            for (let elem of document.getElementsByClassName("guide_wavesModesHidden")) elem.style.setProperty("display", "inline"); 
+            for (let elem of document.getElementsByClassName("guide_wavesModesShown")) elem.style.setProperty("display", "none"); 
+            for (let elem of document.getElementsByClassName("guide_wavesModesHiddenBlock")) elem.style.setProperty("display", "block"); 
+            for (let elem of document.getElementsByClassName("guide_wavesModesShownBlock")) elem.style.setProperty("display", "none"); 
+        } 
     }
     else if (screen == "Tile Viewer") {
         document.getElementById("tile_viewer").style.setProperty("display", "block");
@@ -4079,7 +4326,7 @@ function loadMode(mode) {
     loseRequirement = false;
     movementParameters = ["@VDir", "@HDir", "@SlideAmount"];
     postgameAllowed = true;
-    forcedSpawns = [];
+    start_forcedSpawns = [];
     tileDisplayKnownLevel = 3;
     mergeResultKnownLevel = 2;
     document.getElementById("mode_vars_line").style.setProperty("display", "none");
@@ -4088,7 +4335,7 @@ function loadMode(mode) {
     if (mode == 1) { // 2048
         // width = 4; height = 4;
         TileNumAmount = 1;
-        TileTypes = [[[0], 1, "#ffffff", "#776e65"], [[1], 2, "#f9eee3", "#9e856bff"], [[2], 4, "#ede0c8", "#776e65"], [[3], 8, "#f2b179", "#f9f6f2"],
+        TileTypes = [[[0], 1, "#ffffff", "#776e65"], [[1], 2, "#f9eee3", "#776e65"], [[2], 4, "#ede0c8", "#776e65"], [[3], 8, "#f2b179", "#f9f6f2"], 
         [[4], 16, "#f59563", "#f9f6f2"], [[5], 32, "#f67c5f", "#f9f6f2"], [[6], 64, "#f65e3b", "#f9f6f2"], [[7], 128, "#edcf72", "#f9f6f2"],
         [[8], 256, "#edcc61", "#f9f6f2"], [[9], 512, "#edc850", "#f9f6f2"], [[10], 1024, "#edc53f", "#f9f6f2"], [[11], 2048, "#edc22e", "#f9f6f2"],
         [[12], 4096, "#f29eff", "#f9f6f2"], [[13], 8192, "#eb75fd", "#f9f6f2"], [[14], 16384, "#e53bff", "#f9f6f2"], [[15], 32768, "#bd00db", "#f9f6f2"],
@@ -4925,7 +5172,7 @@ function loadMode(mode) {
         ]
         MergeRules = [
             [3, [["@Next 1 0", "=", "@This 0"], "&&", ["@Next 1 1", "=", "@This 1"], "&&", ["@Next 2 0", "=", "@This 0"], "&&", ["@Next 2 1", "=", "@This 1"], "&&", ["@This 1", "<=", 0], "&&", ["@This 1", ">", -2]], true, [["@This 0", ["@This 1", "-", 1]]], [25, "^", "@This 0", "*", [3, "^", ["@This 1", "*", -1], "*", 3]], [false, true, true]],
-            [2, [["@NextNE -1 0", "!=", "@This 0"], "||", ["@NextNE -1 1", "!=", "@This 1"], "&&", ["@Next 1 0", "=", "@This 0"], "&&", ["@Next 1 1", "=", "@This 1"], "&&", ["@This 1", ">=", 0], "&&", ["@This 1", "<", 4]], true, [["@This 0", ["@This 1", "+", 1]]], [25, "^", "@This 0", "*", [2, "^", "@This 1", "*", 2]], [false, true]],
+            [2, [["@NextNE -1 0", "!=", "@This 0"], "||", ["@NextNE -1 1", "!=", "@This 1"], "||", ["@This 1", "!=", 0], "&&", ["@Next 1 0", "=", "@This 0"], "&&", ["@Next 1 1", "=", "@This 1"], "&&", ["@This 1", ">=", 0], "&&", ["@This 1", "<", 4]], true, [["@This 0", ["@This 1", "+", 1]]], [25, "^", "@This 0", "*", [2, "^", "@This 1", "*", 2]], [false, true]], 
             [2, [["@Next 1 0", "=", "@This 0"], "&&", ["@This 1", "=", -2], "&&", ["@Next 1 1", "=", 4]], false, [[["@This 0", "+", 1], 0]], [25, "^", "@This 0", "*", 25], [false, true]],
         ]
         startTileSpawns = [[[0, 0], 90], [[0, 1], 5], [[0, -1], 5]];
@@ -5621,7 +5868,7 @@ function loadMode(mode) {
         // width = 5; height = 5;
         TileNumAmount = 2;
         TileTypes = [
-            [["@This 0", "=", "Div2"], "&#247;2", ["@linear-gradient", "#cccccc", "#444444"], "#765c8f"],
+            [[["@This 0", "=", "Div2"], "&&", ["@This 1", "=", "@Signless"]], "&#247;2", ["@linear-gradient", "#cccccc", "#444444"], "#765c8f"],
             [[0, 1], 1, "#ffffff", "#3f3d32"], [[0, 2], 0.5, "#999999", "#625b2f"],
             [[1, 1], 1.5, "#b5faff", "#3f3d32"], [[1, 2], 0.75, "#cfe1e2", "#625b2f"],
             [[2, 1], 2.25, "#76f6ff", "#3f3d32"], [[2, 2], 1.125, "#98d8dd", "#625b2f"],
@@ -5645,8 +5892,7 @@ function loadMode(mode) {
             [[20, 1], 1.5**20, "#947100", "#eeebda"], [[20, 2], 1.5**20/2, "#6f5e25", "#e3dbaf"],
             [[21, 1], 1.5**21, "#634c00", "#eeebda"], [[21, 2], 1.5**21/2, "#493d18", "#e3dbaf"],
             [["@This 1", "=", 1], [1.5, "^", "@This 0"], ["@HSLA", [13, "*", "@This 0", "-", 151], 100, [0.95, "^", ["@This 0", "-", 21], "*", 50], 1], "#eeebda"],
-            [["@This 1", "=", 2], [1.5, "^", "@This 0", "/", 2], ["@HSLA", [13, "*", "@This 0", "-", 151], 50, [0.95, "^", ["@This 0", "-", 21], "*", 50], 1], "#e3dbaf"],
-            //[[["@This 0", "=", "Div2"], "&&", ["@This 1", "=", "@Signless"]], "&#247;2", ["@linear-gradient", "#cccccc", "#444444"], "#765c8f"],
+            [["@This 1", "=", 2], [1.5, "^", "@This 0", "/", 2], ["@HSLA", [13, "*", "@This 0", "-", 151], 50, [0.95, "^", ["@This 0", "-", 21], "*", 50], 1], "#e3dbaf"]
         ];
         MergeRules = [
             [2, [["@Next 1 0", "=", "@This 0"], "&&", ["@This 1", "=", 1], "&&", ["@Next 1 1", "=", 1]], true, [[["@This 0", "+", 1], 1], ["@This 0", 2]], [1.5, "^", "@This 0", "*", 1.5], [false, false]],
@@ -6220,7 +6466,7 @@ function loadMode(mode) {
     else if (mode == 50) { // DIVE
         // width = 4; height = 4;
         TileNumAmount = 1;
-        mode_vars = [0, false, 0, 0, 4n]; // For the first entry, 0 means seeds can be unlocked and eliminated, -1 means seeds can be unlocked but not eliminated, and a positive number does away with the seeds system and just makes the spawning tiles the first n primes. The second entry is whether 1s can spawn. The third entry controls the seed unlock testing rules: 0 is largest to smallest, 2 is smallest to largest, 3 is "whatever order the seeds happen to be in", and 1 guarantees the minimum result but runs in exponential time. The fourth entry controls random goals, and the fifth entry is the minimum for the first random goal.
+        mode_vars = [0, false, 0, 0, 4n, (wavesUnleashed ? 1 : 0)]; // For the first entry, 0 means seeds can be unlocked and eliminated, -1 means seeds can be unlocked but not eliminated, and a positive number does away with the seeds system and just makes the spawning tiles the first n primes. The second entry is whether 1s can spawn. The third entry controls the seed unlock testing rules: 0 is largest to smallest, 2 is smallest to largest, 3 is "whatever order the seeds happen to be in", and 1 guarantees the minimum result but runs in exponential time. The fourth entry controls random goals, and the fifth entry is the minimum for the first random goal. Sixth entry controls the DIVE-3 variant we're in (regular DIVE for 0, DIVE-3B for 1, DIVE-3S for 2, DIVE-3L for 3) 
         start_game_vars = [[2n], [2n], [], [], 0, 4n, 0, false, false, 4n, 0] // The first entry is the current seeds, the second entry is all seeds discovered, the third entry is the seeds that are currently being added, the fourth entry is the seeds that are currently being removed. The fifth entry matches the third entry of mode_vars, the sixth entry is the current random goal, the seventh entry is the amount of random goals met so far, and the eighth entry is whether a random goal has been met this turn. The ninth entry is used when tile text is hidden to replace the announcement numbers with question marks. The tenth entry is the minimum for the first random goal. The eleventh entry controls the display of "all seeds seen".
         TileTypes = [
             [true, "@This 0", "@ColorScheme", "DIVE", ["@This 0"]]
@@ -7635,9 +7881,9 @@ function loadMode(mode) {
         document.documentElement.style.setProperty("--tile-color", "#ff693b");
         document.documentElement.style.setProperty("--text-color", "#4f3b1a");
         displayRules("rules_text", ["h2", "Pascal's Triangle"], ["h1", "1716"], ["p", "Tiles can be thought of as (unordered) pairs. An (a, b) tile can merge with an (a - 1, b + 1) tile to make a (a, b + 1) tile, or with an (a + 1, b - 1) tile to make an (a + 1, b) tile. Also, two equal (n, n + 1) tiles can merge into an (n + 1, n + 1 tile), and a 1 tile can serve as (1, n) for any n, meaning a (2, n) tile merges with a 1 to make a (2, n + 1) tile. Get to the 1716 (7, 8) tile to win!"],
-        ["p", "Spawning tiles: 1 (85%), 2 (8%), 3 (8%)"]);
+        ["p", "Spawning tiles: 1 (84%), 2 (8%), 3 (8%)"]);
         displayRules("gm_rules_text", ["h2", "Pascal's Triangle"], ["h1", "1716"], ["p", "Tiles can be thought of as (unordered) pairs. An (a, b) tile can merge with an (a - 1, b + 1) tile to make a (a, b + 1) tile, or with an (a + 1, b - 1) tile to make an (a + 1, b) tile. Also, two equal (n, n + 1) tiles can merge into an (n + 1, n + 1 tile), and a 1 tile can serve as (1, n) for any n, meaning a (2, n) tile merges with a 1 to make a (2, n + 1) tile. Get to the 1716 (7, 8) tile to win!"],
-        ["p", "Spawning tiles: 1 (85%), 2 (8%), 3 (8%)"]);
+        ["p", "Spawning tiles: 1 (84%), 2 (8%), 3 (8%)"]);
         document.getElementById("mode_vars_line").style.setProperty("display", "block");
         document.getElementById("1716_vars").style.setProperty("display", "flex");
     }
@@ -7892,6 +8138,7 @@ function loadMode(mode) {
         // width = 5; height = 5;
         TileNumAmount = 3;
         start_game_vars = [0]; // Used to help with merges
+        mode_vars = [true]; // Whether the "two other tiles are smaller" rule applies 
         TileTypes = [
         [["@This 2", "<", 15n], ["@This 2", "Number"], ["@HSLA", [43, "*", "@This 2", "-", 43], 65, ["@This 2", "*", -4, "+", 104], 1], "#464d52"],
         [true, ["@This 2", "Number"], ["@CalcArray", 0, "@if", ["@This 0", "<", 7], "2nd", [["@Literal", "#ffffff", "#71f1ff", "#e3ff71", "#ff855d", "#5f5fff", "#ffeb6c", "#ff7bff"], "arr_elem", "@This 0"], "@end-if", "@else", "2nd", ["@Literal", "@HSVA", [-97, "*", "@This 0", "+", 889], 60, [0.9, "^", ["@This 0", "-", 6], "*", 100], 1], "@end-else", "evaluateColor"], ["#665b57", "@if", ["@This 0", ">", 6], "2nd", "#f0dfd8", "@end-if"], "none", 2, 0, 
@@ -7905,10 +8152,10 @@ function loadMode(mode) {
         ]
         ];
         MergeRules = [
-            [3, [["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2", "<", 15n], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "%B", "@Next 2 2", "=", 0n]], false, [[0, "@This 1", ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
-            [3, [["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2", "=", 15n], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "%B", "@Next 2 2", "=", 0n]], false, [[1, ["@Literal", false, false, false, false, false, false, false], 15n]], 6, [false, true, true]],
-            [3, [["@Next 2 1", "arr_reduce", 0, ["+", "@Var -1"], "=", 6], "&&", [["@This 2", "<=", "@Next 2 2"], "&&", ["@Next 1 2", "<=", "@Next 2 2"]], "&&", ["@This 2", "+B", "@Next 1 2", "%B", 2n, "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "*B", ["@Next 2 1", "arr_indexOf", false, "*B", 2n, "+B", 1n], "/B", 2n, "=", "@Next 2 2"]], false, [[["@Next 2 0", "+", 1], [["@Literal"], "@repeat", 7, "arr_push", false, "@end-repeat"], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
-            [3, [false, "@edit_gvar", 0, ["@Next 2 2", "/BR", ["@This 2", "+B", "@Next 1 2"], "*BR", 2n], "@if", [["@This 2", "typeof", "!=", "bigint"], "||", ["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@Next 2 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 2n, "!=", new BigRational(1)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", 1n, "/B", 2n], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", 7n], "&&", ["@Next 2 1", "arr_elem", "@GVar 0", "!"]], "@end-else"], false, [["@Next 2 0", ["@Next 2 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]]
+            [3, [["@This 2", "typeof", "=", "bigint"], "&&", ["@Next 1 2", "typeof", "=", "bigint"], "&&", ["@Next 2 2", "typeof", "=", "bigint"], "&&", ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2", "<", 15n], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "%B", "@Next 2 2", "=", 0n]], false, [[0, "@This 1", ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
+            [3, [["@This 2", "typeof", "=", "bigint"], "&&", ["@Next 1 2", "typeof", "=", "bigint"], "&&", ["@Next 2 2", "typeof", "=", "bigint"], "&&", ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2", "=", 15n], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "%B", "@Next 2 2", "=", 0n]], false, [[1, ["@Literal", false, false, false, false, false, false, false], 15n]], 6, [false, true, true]],
+            [3, [["@This 2", "typeof", "=", "bigint"], "&&", ["@Next 1 2", "typeof", "=", "bigint"], "&&", ["@Next 2 2", "typeof", "=", "bigint"], "&&", ["@Next 2 1", "arr_reduce", 0, ["+", "@Var -1"], "=", 6], "&&", [["@This 2", "<=", "@Next 2 2"], "&&", ["@Next 1 2", "<=", "@Next 2 2"]], "&&", ["@This 2", "+B", "@Next 1 2", "%B", 2n, "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "*B", ["@Next 2 1", "arr_indexOf", false, "*B", 2n, "+B", 1n], "/B", 2n, "=", "@Next 2 2"]], false, [[["@Next 2 0", "+", 1], [["@Literal"], "@repeat", 7, "arr_push", false, "@end-repeat"], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
+            [3, [false, "@edit_gvar", 0, ["@Next 2 2", "/BR", ["@This 2", "+B", "@Next 1 2"], "*BR", 2n], "@if", [["@This 2", ">", "@Next 2 2"], "||", ["@Next 1 2", ">", "@Next 2 2"], "||", ["@This 2", "typeof", "!=", "bigint"], "||", ["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@Next 2 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 2n, "!=", new BigRational(1)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", 1n, "/B", 2n], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", 7n], "&&", ["@Next 2 1", "arr_elem", "@GVar 0", "!"]], "@end-else"], false, [["@Next 2 0", ["@Next 2 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]]
         ]
         startTileSpawns = [[[0, ["@Literal", true, true, true, true, true, true, true], 1n], 90], [[0, ["@Literal", true, true, true, true, true, true, true], 3n], 10]];
         winConditions = [[3, [false, false, false, false, false, false, false], 3375n]];
@@ -7925,6 +8172,8 @@ function loadMode(mode) {
         ["p", "Spawning tiles: 1 (90%), 3 (10%)"]);
         displayRules("gm_rules_text", ["h1", "Ratio-Fill 3375"], ["p","Three tiles less than 15 can merge if one of them is a multiple of the other two and their sum is not greater than 15. To get from one power of 15 to the next, a tile must merge with two tiles not larger than itself that add up to double itself, two-thirds of itself, two-fifths of itself, two-sevenths of itself, two-ninths of itself, two-elevenths of itself, or two-thirteenths of itself, once each in any order. Get to the 3375 tile to win!"],
         ["p", "Spawning tiles: 1 (90%), 3 (10%)"]);
+        document.getElementById("mode_vars_line").style.setProperty("display", "block"); 
+        document.getElementById("RF3375_vars").style.setProperty("display", "flex"); 
     }
     else if (mode == 91) { // 1845
         // width = 4; height = 4;
@@ -8053,6 +8302,7 @@ function loadMode(mode) {
     else if (mode == 94) { // Ratio-Fill 9261
         TileNumAmount = 3;
         start_game_vars = [0]; // Used to help with merges
+        mode_vars = [true]; // Whether the "two other tiles are smaller" rule applies 
         TileTypes = [
         [true, ["@This 2", "Number"], ["@CalcArray", 0, "@if", ["@This 0", "<", 6], "2nd", [["@Literal", "#c6ffc6", "#ffff80", "#6bddff", "#ff72ff", "#ff6363", "#6767ff"], "arr_elem", "@This 0"], "@end-if", "@else", "2nd", ["@Literal", "@HSVA", [113, "*", "@This 0", "-", 648], 66, [0.9, "^", ["@This 0", "-", 5], "*", 100], 1], "@end-else", "evaluateColor"], ["#554051", "@if", ["@This 0", ">", 5], "2nd", "#f3e7f1", "@end-if"], "none", 2, 0, 
             ["PrimeImage", ["@linear-gradient", ["@HSLA", 0, 60, [15, "@if", ["@This 1", "arr_elem", 0], "2nd", 75, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", 0, 60, [15, "@if", ["@This 1", "arr_elem", 0], "2nd", 75, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, 0, "#000", 0, 20, "#0000", 20]],
@@ -8063,10 +8313,10 @@ function loadMode(mode) {
         ]
         ];
         MergeRules = [
-            [3, [["@Next 2 1", "arr_reduce", 0, ["+", "@Var -1"], "=", 4], "&&", [["@This 2", "<=", "@Next 2 2"], "&&", ["@Next 1 2", "<=", "@Next 2 2"]], "&&", [["@This 2", "+B", "@Next 1 2", "%B", 2n, "=", 0n], "||", ["@Next 2 1", "arr_indexOf", false, "%", 2, "=", 1]], "&&", ["@This 2", "+B", "@Next 1 2", "*B", ["@Next 2 1", "arr_indexOf", false, "+B", 1n], "/B", 2n, "=", "@Next 2 2"]], false, [[["@Next 2 0", "+", 1], [["@Literal"], "@repeat", 5, "arr_push", false, "@end-repeat"], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
-            [3, [false, "@edit_gvar", 0, ["@Next 2 2", "/BR", ["@This 2", "+B", "@Next 1 2"], "*BR", 2n], "@if", [["@This 2", "typeof", "!=", "bigint"], "||", ["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@Next 2 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 1n, "!=", new BigRational(0)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", 1n], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", 5n], "&&", ["@Next 2 1", "arr_elem", "@GVar 0", "!"]], "@end-else"], false, [["@Next 2 0", ["@Next 2 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
-            [2, [["@Next 1 1", "arr_reduce", 0, ["+", "@Var -1"], "=", 4], "&&", ["@This 2", "<=", "@Next 1 2"], "&&", [["@This 2", "%B", 2n, "=", 0n], "||", ["@Next 1 1", "arr_indexOf", false, "%", 2, "=", 1]], "&&", ["@This 2", "*B", ["@Next 1 1", "arr_indexOf", false, "+B", 1n], "/B", 2n, "=", "@Next 1 2"], "&&", [[0, "mergeRuleApplies", -1, "!"], "&&", [1, "mergeRuleApplies", -1, "!"]]], false, [[["@Next 1 0", "+", 1], [["@Literal"], "@repeat", 5, "arr_push", false, "@end-repeat"], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
-            [2, [[false, "@edit_gvar", 0, ["@Next 1 2", "/BR", "@This 2", "*BR", 2n], "@if", [["@This 2", "typeof", "!=", "bigint"], "||", ["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 1n, "!=", new BigRational(0)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", 1n], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", 5n], "&&", ["@Next 1 1", "arr_elem", "@GVar 0", "!"]], "@end-else"], "@add_var", "@GVar 0", "&&", [[0, "mergeRuleApplies", -1, "!"], "&&", [1, "mergeRuleApplies", -1, "!"]], "@edit_gvar", 0, "@Var 0"], false, [["@Next 1 0", ["@Next 1 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]]
+            [3, [["@This 2", "typeof", "=", "bigint"], "&&", ["@Next 1 2", "typeof", "=", "bigint"], "&&", ["@Next 2 2", "typeof", "=", "bigint"], "&&", ["@Next 2 1", "arr_reduce", 0, ["+", "@Var -1"], "=", 4], "&&", [["@This 2", "<=", "@Next 2 2"], "&&", ["@Next 1 2", "<=", "@Next 2 2"]], "&&", [["@This 2", "+B", "@Next 1 2", "%B", 2n, "=", 0n], "||", ["@Next 2 1", "arr_indexOf", false, "%", 2, "=", 1]], "&&", ["@This 2", "+B", "@Next 1 2", "*B", ["@Next 2 1", "arr_indexOf", false, "+B", 1n], "/B", 2n, "=", "@Next 2 2"]], false, [[["@Next 2 0", "+", 1], [["@Literal"], "@repeat", 5, "arr_push", false, "@end-repeat"], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
+            [3, [false, "@edit_gvar", 0, ["@Next 2 2", "/BR", ["@This 2", "+B", "@Next 1 2"], "*BR", 2n], "@if", [["@This 2", ">", "@Next 2 2"], "||", ["@Next 1 2", ">", "@Next 2 2"], "||", ["@This 2", "typeof", "!=", "bigint"], "||", ["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@Next 2 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 1n, "!=", new BigRational(0)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", 1n], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", 5n], "&&", ["@Next 2 1", "arr_elem", "@GVar 0", "!"]], "@end-else"], false, [["@Next 2 0", ["@Next 2 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
+            [2, [["@This 2", "typeof", "=", "bigint"], "&&", ["@Next 1 2", "typeof", "=", "bigint"], "&&", ["@Next 1 1", "arr_reduce", 0, ["+", "@Var -1"], "=", 4], "&&", ["@This 2", "<=", "@Next 1 2"], "&&", [["@This 2", "%B", 2n, "=", 0n], "||", ["@Next 1 1", "arr_indexOf", false, "%", 2, "=", 1]], "&&", ["@This 2", "*B", ["@Next 1 1", "arr_indexOf", false, "+B", 1n], "/B", 2n, "=", "@Next 1 2"], "&&", [[0, "mergeRuleApplies", -1, "!"], "&&", [1, "mergeRuleApplies", -1, "!"]]], false, [[["@Next 1 0", "+", 1], [["@Literal"], "@repeat", 5, "arr_push", false, "@end-repeat"], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
+            [2, [[false, "@edit_gvar", 0, ["@Next 1 2", "/BR", "@This 2", "*BR", 2n], "@if", [["@This 2", ">", "@Next 1 2"], "||", ["@This 2", "typeof", "!=", "bigint"], "||", ["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 1n, "!=", new BigRational(0)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", 1n], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", 5n], "&&", ["@Next 1 1", "arr_elem", "@GVar 0", "!"]], "@end-else"], "@add_var", "@GVar 0", "&&", [[0, "mergeRuleApplies", -1, "!"], "&&", [1, "mergeRuleApplies", -1, "!"]], "@edit_gvar", 0, "@Var 0"], false, [["@Next 1 0", ["@Next 1 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]]
         ]
         startTileSpawns = [[[0, ["@Literal", false, false, false, false, false], 1n], 100]];
         winConditions = [[3, [false, false, false, false, false], 9261n]];
