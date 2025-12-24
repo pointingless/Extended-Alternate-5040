@@ -114,12 +114,12 @@ let forcedSpawns = [];
 Each entry of this array consists of a CalcArray expression, a string, a boolean, and one or more tile arrays.
 If the CalcArray expression is true this turn, then all of the tiles in this entry will be spawned this turn, either before or after the random spawns
 depending on the string. If there aren't enough spaces on the grid to spawn them all and the boolean is true, then you immediately lose.
-The boolean entry may instead be an array of multiple booleans. If so, its first entry is the game over one, and if its second entry is true, then that forced spawn is removed once it successfully spawns. 
+The boolean entry may instead be an array of multiple booleans. If so, its first entry is the game over one, and if its second entry is true, then that forced spawn is removed once it successfully spawns.
 */
-let start_forcedSpawns = [] //forcedSpawns is set to this at the beginning of each game 
+let start_forcedSpawns = [] //forcedSpawns is set to this at the beginning of each game
 let tileValueFunction = [0]; // A CalcArray function that, when called at particular coordinates, returns the numeric value of the tile there. Must be adjusted on a mode-by-mode basis. Assumed to return a number.
 let TileOrder = []; // This array is filled by MoveHandler while doing a move. Used to only exist within MoveHandler but now CalcArrays can access it
-let discoveredTilesFilter = [] // A CalcArray (missing its first entry) to be run on each potential new discovered tile before adding it to the discovered tiles list (if it's still undiscovered after doing so) 
+let discoveredTilesFilter = [] // A CalcArray (missing its first entry) to be run on each potential new discovered tile before adding it to the discovered tiles list (if it's still undiscovered after doing so)
 
 // These next two combined are a list of already-discovered tile displays that can be copied onto new tiles, so displayTile doesn't have to be run as many times
 let knownTileDisplayArrays = []; // Each entry is a pair: the array that is the tile being displayed, and the "type" of its display (Grid, NextTile, Score, etc.)
@@ -262,10 +262,10 @@ document.getElementById("gm_height_plus").addEventListener("click", function(){
     gmDisplayVars();
 });
 document.getElementById("gm_return").addEventListener("click", function(){
-    let page = Math.max(Math.floor(modes_order.indexOf(Math.floor(gamemode)) / 25), 0) + 1; 
-    if (gamemode == 50.7101113) page = 3 
-    if (gamemode == 101 || gamemode == 102) page = 4 
-    switchScreen("Menu", page) 
+    let page = Math.max(Math.floor(modes_order.indexOf(Math.floor(gamemode)) / 25), 0) + 1;
+    if (gamemode == 50.7101113) page = 3
+    if (gamemode == 101 || gamemode == 102) page = 4
+    switchScreen("Menu", page)
 });
 document.getElementById("return_button").addEventListener("click", function(){
     if (gamemode == 0) {
@@ -555,11 +555,11 @@ document.getElementById("DIVE_firstGoalMinimum_change").addEventListener("change
     mode_vars[4] = v;
     gmDisplayVars();
 });
-document.getElementById("DIVE3_variant_button").addEventListener("click", function(){ 
-    mode_vars[5] = (mode_vars[5] % 3) + 1; 
-    loadGridSize(50, mode_vars); 
-    gmDisplayVars(); 
-}); 
+document.getElementById("DIVE3_variant_button").addEventListener("click", function(){
+    mode_vars[5] = (mode_vars[5] % 3) + 1;
+    loadGridSize(50, mode_vars);
+    gmDisplayVars();
+});
 document.getElementById("3888_randomGoals_button").addEventListener("click", function(){
     mode_vars[0] = (mode_vars[0] + 1) % 3;
     gmDisplayVars();
@@ -991,9 +991,9 @@ document.getElementById("2496_mlengthMax_minus").addEventListener("click", funct
     else mode_vars[3]--;
     gmDisplayVars();
 });
-document.getElementById("RF3375_othersSmaller_button").addEventListener("click", function(){ 
-    mode_vars[0] = !(mode_vars[0]); 
-    gmDisplayVars(); 
+document.getElementById("RF3375_othersSmaller_button").addEventListener("click", function(){
+    mode_vars[0] = !(mode_vars[0]);
+    gmDisplayVars();
 });
 document.getElementById("1845_randomGoals_button").addEventListener("click", function(){
     mode_vars[0] = (mode_vars[0] + 1) % 3;
@@ -1051,10 +1051,10 @@ document.getElementById("TRIGAT_spawn2s_button").addEventListener("click", funct
     mode_vars[2] = !(mode_vars[2]);
     gmDisplayVars();
 });
-document.getElementById("RF9261_othersSmaller_button").addEventListener("click", function(){ 
-    mode_vars[0] = !(mode_vars[0]); 
-    gmDisplayVars(); 
-}); 
+document.getElementById("RF9261_othersSmaller_button").addEventListener("click", function(){
+    mode_vars[0] = !(mode_vars[0]);
+    gmDisplayVars();
+});
 document.getElementById("3385_exponent_plus").addEventListener("click", function(){
     mode_vars[0]++;
     loadGridSize(95, mode_vars);
@@ -1291,50 +1291,50 @@ document.getElementById("Alternate5040_fraction_denominator_change").addEventLis
     catch {}
     gmDisplayVars();
 });
-document.getElementById("DOFFET_offset_plus").addEventListener("click", function(){ 
-    mode_vars[0]++; 
-    mode_vars[1]++; 
-    if (mode_vars[0] == 0n) { 
-        mode_vars[0]++; 
-        mode_vars[1]++; 
-    } 
+document.getElementById("DOFFET_offset_plus").addEventListener("click", function(){
+    mode_vars[0]++;
+    mode_vars[1]++;
+    if (mode_vars[0] == 0n) {
+        mode_vars[0]++;
+        mode_vars[1]++;
+    }
     gmDisplayVars();
 });
-document.getElementById("DOFFET_offset_minus").addEventListener("click", function(){ 
-    mode_vars[0]--; 
-    mode_vars[1]--; 
-    if (mode_vars[0] == 0n) { 
-        mode_vars[0]--; 
-        mode_vars[1]--; 
-    } 
+document.getElementById("DOFFET_offset_minus").addEventListener("click", function(){
+    mode_vars[0]--;
+    mode_vars[1]--;
+    if (mode_vars[0] == 0n) {
+        mode_vars[0]--;
+        mode_vars[1]--;
+    }
     gmDisplayVars();
 });
-document.getElementById("DOFFET_largerOffset_plus").addEventListener("click", function(){ 
-    mode_vars[1]++; 
-    gmDisplayVars(); 
-}); 
-document.getElementById("DOFFET_largerOffset_minus").addEventListener("click", function(){ 
-    mode_vars[1]--; 
-    gmDisplayVars(); 
-}); 
-document.getElementById("DOFFET_randomGoals_button").addEventListener("click", function(){ 
-    mode_vars[2] = (mode_vars[2] + 1) % 4; 
-    gmDisplayVars(); 
-}); 
-document.getElementById("DOFFET_firstGoalMinimum_change").addEventListener("change", function() { 
-    let v; 
-    try { 
-        v = BigInt(this.value); 
-    } 
-    catch { 
+document.getElementById("DOFFET_largerOffset_plus").addEventListener("click", function(){
+    mode_vars[1]++;
+    gmDisplayVars();
+});
+document.getElementById("DOFFET_largerOffset_minus").addEventListener("click", function(){
+    mode_vars[1]--;
+    gmDisplayVars();
+});
+document.getElementById("DOFFET_randomGoals_button").addEventListener("click", function(){
+    mode_vars[2] = (mode_vars[2] + 1) % 4;
+    gmDisplayVars();
+});
+document.getElementById("DOFFET_firstGoalMinimum_change").addEventListener("change", function() {
+    let v;
+    try {
+        v = BigInt(this.value);
+    }
+    catch {
         v = 0n;
-    } 
-    if (v < 3n) v = 3n; 
-    mode_vars[3] = v; 
+    }
+    if (v < 3n) v = 3n;
+    mode_vars[3] = v;
     gmDisplayVars();
 });
-document.getElementById("FRUSEE_randomGoals_button").addEventListener("click", function(){ 
-    mode_vars[0] = (mode_vars[0] + 1) % 4; 
+document.getElementById("FRUSEE_randomGoals_button").addEventListener("click", function(){
+    mode_vars[0] = (mode_vars[0] + 1) % 4;
     gmDisplayVars();
 });
 document.getElementById("FRUSEE_firstGoalMinimum_change").addEventListener("change", function() {
@@ -1449,46 +1449,46 @@ document.getElementById("GaussianDIVE_quadrant3SpawnRatio_change").addEventListe
     }
     gmDisplayVars();
 });
-document.getElementById("Aquatic2496_productLimit_button").addEventListener("click", function(){ 
-    mode_vars[3] = !mode_vars[3]; 
-    gmDisplayVars(); 
-}); 
-document.getElementById("PartialFlowDIVE_coprimeMerge_button").addEventListener("click", function(){ 
-    mode_vars[3] = !mode_vars[3]; 
-    loadGridSize(34.50118, mode_vars); 
-    gmDisplayVars(); 
-}); 
-document.getElementById("PartialFlowDIVE_fullMoveReplenish_button").addEventListener("click", function(){ 
-    mode_vars[6] = (mode_vars[6] + 1) % 3; 
-    mode_vars[7] = [0, 1, 4][mode_vars[6]]; 
-    gmDisplayVars(); 
-}); 
-document.getElementById("PartialFlowDIVE_fullGridMoves_plus").addEventListener("click", function(){ 
-    mode_vars[7]++; 
-    gmDisplayVars(); 
-}); 
-document.getElementById("PartialFlowDIVE_fullGridMoves_minus").addEventListener("click", function(){ 
-    mode_vars[7]--; 
-    gmDisplayVars(); 
-}); 
-document.getElementById("DualTileDIVE_unordered_button").addEventListener("click", function(){ 
-    mode_vars[3] = !mode_vars[3]; 
-    gmDisplayVars(); 
-}); 
-document.getElementById("DivAddTor_232_240_merges_button").addEventListener("click", function(){ 
-    mode_vars[3] = (mode_vars[3] + 1) % 3; 
-    gmDisplayVars(); 
-}); 
-document.getElementById("DivAddTor_DualTileSeeds_button").addEventListener("click", function(){ 
-    mode_vars[4] = (mode_vars[4] + 1) % 3; 
-    loadGridSize(97.50118, mode_vars); 
-    gmDisplayVars(); 
-}); 
-document.getElementById("WildcardDIVE_possibilityChance_change").addEventListener("change", function() { 
-    let v = Number(this.value); 
-    if (v > 0 && v < 1) mode_vars[3] = v; 
-    gmDisplayVars(); 
-}); 
+document.getElementById("Aquatic2496_productLimit_button").addEventListener("click", function(){
+    mode_vars[3] = !mode_vars[3];
+    gmDisplayVars();
+});
+document.getElementById("PartialFlowDIVE_coprimeMerge_button").addEventListener("click", function(){
+    mode_vars[3] = !mode_vars[3];
+    loadGridSize(34.50118, mode_vars);
+    gmDisplayVars();
+});
+document.getElementById("PartialFlowDIVE_fullMoveReplenish_button").addEventListener("click", function(){
+    mode_vars[6] = (mode_vars[6] + 1) % 3;
+    mode_vars[7] = [0, 1, 4][mode_vars[6]];
+    gmDisplayVars();
+});
+document.getElementById("PartialFlowDIVE_fullGridMoves_plus").addEventListener("click", function(){
+    mode_vars[7]++;
+    gmDisplayVars();
+});
+document.getElementById("PartialFlowDIVE_fullGridMoves_minus").addEventListener("click", function(){
+    mode_vars[7]--;
+    gmDisplayVars();
+});
+document.getElementById("DualTileDIVE_unordered_button").addEventListener("click", function(){
+    mode_vars[3] = !mode_vars[3];
+    gmDisplayVars();
+});
+document.getElementById("DivAddTor_232_240_merges_button").addEventListener("click", function(){
+    mode_vars[3] = (mode_vars[3] + 1) % 3;
+    gmDisplayVars();
+});
+document.getElementById("DivAddTor_DualTileSeeds_button").addEventListener("click", function(){
+    mode_vars[4] = (mode_vars[4] + 1) % 3;
+    loadGridSize(97.50118, mode_vars);
+    gmDisplayVars();
+});
+document.getElementById("WildcardDIVE_possibilityChance_change").addEventListener("change", function() {
+    let v = Number(this.value);
+    if (v > 0 && v < 1) mode_vars[3] = v;
+    gmDisplayVars();
+});
 document.getElementById("839808_randomGoals_button").addEventListener("click", function(){
     mode_vars[0] = (mode_vars[0] + 1) % 3;
     gmDisplayVars();
@@ -1716,22 +1716,22 @@ document.getElementById("modifiers_spawnInterval_minus").addEventListener("click
     modifiers[19]--;
     displayModifiers(1);
 });
-document.getElementById("modifiers_randomUnmovingTiles_plus").addEventListener("click", function(){ 
-    modifiers[30]++; 
-    displayModifiers(1); 
-}); 
-document.getElementById("modifiers_randomUnmovingTiles_minus").addEventListener("click", function(){ 
-    modifiers[30]--; 
-    displayModifiers(1); 
-}); 
-document.getElementById("modifiers_randomUnmergingTiles_plus").addEventListener("click", function(){ 
-    modifiers[31]++; 
-    displayModifiers(1); 
-}); 
-document.getElementById("modifiers_randomUnmergingTiles_minus").addEventListener("click", function(){ 
-    modifiers[31]--; 
-    displayModifiers(1); 
-}); 
+document.getElementById("modifiers_randomUnmovingTiles_plus").addEventListener("click", function(){
+    modifiers[30]++;
+    displayModifiers(1);
+});
+document.getElementById("modifiers_randomUnmovingTiles_minus").addEventListener("click", function(){
+    modifiers[30]--;
+    displayModifiers(1);
+});
+document.getElementById("modifiers_randomUnmergingTiles_plus").addEventListener("click", function(){
+    modifiers[31]++;
+    displayModifiers(1);
+});
+document.getElementById("modifiers_randomUnmergingTiles_minus").addEventListener("click", function(){
+    modifiers[31]--;
+    displayModifiers(1);
+});
 document.getElementById("modifiers_multiMerge_button").addEventListener("click", function(){
     modifiers[3] = !(modifiers[3])
     displayModifiers(2);
@@ -3120,7 +3120,7 @@ for (f of document.getElementsByTagName("form")) {
 let currentScreen = "Menu";
 let subScreen = 1;
 let screenVars = [];
-let wavesUnleashed = false; 
+let wavesUnleashed = false;
 switchScreen("Menu", 1);
 let modes_order = [
     100, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
@@ -3128,9 +3128,9 @@ let modes_order = [
     54, 55, 56, 57, 68, 67, 77, 78, 80, 86, 89, 72, 61, 79, 91, 73, 88, 93, 95, 75, 85, 96, 92, 58, 41,
     31, 49, 81, 82, 40, 43, 59, 70, 69, 97, 34, 98, 35, 36, 62, 37, 71, 39, 60, 99, 45, 74, 50, 44, 1
 ]
-let waves_order = [ 
-    [96, 96.50118], [35, 101], [34, 34.50118], [70, 50.1], [69, 50.22], [91, 91.50118], [73, 73.50118], [89, 89.50118], [97, 97.50118], [37, 102], [40, 50.248], [95, 50.7101113], [50, 50] 
-] 
+let waves_order = [
+    [96, 96.50118], [35, 101], [34, 34.50118], [70, 50.1], [69, 50.22], [91, 91.50118], [73, 73.50118], [89, 89.50118], [97, 97.50118], [37, 102], [40, 50.248], [95, 50.7101113], [50, 50]
+]
 let wavesModeModified = [96.50118, 34.50118, 50.22, 91.50118, 73.50118, 89.50118, 97.50118, 50.248]
 for (let t = 1; t <= modes_order.length; t++) { //Adding event listeners to the main mode tiles on the menu
     let mtile = document.getElementById("menu_grid_storage").firstElementChild;
@@ -3154,35 +3154,35 @@ for (let t = 1; t <= modes_order.length; t++) { //Adding event listeners to the 
         });
     }
 }
-document.getElementById("UnleashTheWaves_button").addEventListener("click", function(){ 
-    wavesUnleashed = true; 
-    wavesMenuSwitch(true); 
-    switchScreen("Menu", 3); 
-}); 
-document.getElementById("RetractTheWaves_button").addEventListener("click", function(){ 
-    wavesUnleashed = false; 
-    wavesMenuSwitch(false); 
-    switchScreen("Menu", 3); 
-}); 
-for (let t = 0; t < waves_order.length; t++) { //Adding event listeners to the main mode tiles on the menu 
-    let mtile = document.getElementById("waves_grid_storage").children[t]; 
-    let position = modes_order.indexOf(waves_order[t][0]); 
-    mtile.style.setProperty("left", "calc(var(--menu_grid_size) * " + ((position % 5) * 14.75 + 1.25) + " / 75)"); 
-    mtile.style.setProperty("top", "calc(var(--menu_grid_size) * " + ((Math.floor((position % 25) / 5)) * 14.75 + 1.25) + " / 75)"); 
-    mtile.id = "waves_tile_" + waves_order[t][1]; 
-    mtile.addEventListener("click", function(){ 
-        loadMode(waves_order[t][1]); 
-        document.getElementById("gm_big_tile").style.setProperty("display", "flex"); 
-        document.getElementById("gm_big_tile").style.setProperty("background-color", getComputedStyle(this).getPropertyValue("background-color")); 
-        document.getElementById("gm_big_tile").innerHTML = this.innerHTML; 
-        document.getElementById("gm_big_tile").style.setProperty("background-image", getComputedStyle(this).getPropertyValue("background-image")); 
-        document.getElementById("gm_big_tile").style.setProperty("--gm_tfs", getComputedStyle(this).getPropertyValue("--tile_font_size") * 1.25); 
-        OSTDEUpdate(0); 
-    }); 
-    mtile.addEventListener("mouseenter", function(){ 
-        OSTDEUpdate(0); 
-    }); 
-} 
+document.getElementById("UnleashTheWaves_button").addEventListener("click", function(){
+    wavesUnleashed = true;
+    wavesMenuSwitch(true);
+    switchScreen("Menu", 3);
+});
+document.getElementById("RetractTheWaves_button").addEventListener("click", function(){
+    wavesUnleashed = false;
+    wavesMenuSwitch(false);
+    switchScreen("Menu", 3);
+});
+for (let t = 0; t < waves_order.length; t++) { //Adding event listeners to the main mode tiles on the menu
+    let mtile = document.getElementById("waves_grid_storage").children[t];
+    let position = modes_order.indexOf(waves_order[t][0]);
+    mtile.style.setProperty("left", "calc(var(--menu_grid_size) * " + ((position % 5) * 14.75 + 1.25) + " / 75)");
+    mtile.style.setProperty("top", "calc(var(--menu_grid_size) * " + ((Math.floor((position % 25) / 5)) * 14.75 + 1.25) + " / 75)");
+    mtile.id = "waves_tile_" + waves_order[t][1];
+    mtile.addEventListener("click", function(){
+        loadMode(waves_order[t][1]);
+        document.getElementById("gm_big_tile").style.setProperty("display", "flex");
+        document.getElementById("gm_big_tile").style.setProperty("background-color", getComputedStyle(this).getPropertyValue("background-color"));
+        document.getElementById("gm_big_tile").innerHTML = this.innerHTML;
+        document.getElementById("gm_big_tile").style.setProperty("background-image", getComputedStyle(this).getPropertyValue("background-image"));
+        document.getElementById("gm_big_tile").style.setProperty("--gm_tfs", getComputedStyle(this).getPropertyValue("--tile_font_size") * 1.25);
+        OSTDEUpdate(0);
+    });
+    mtile.addEventListener("mouseenter", function(){
+        OSTDEUpdate(0);
+    });
+}
 document.getElementById("menu_tile_37").addEventListener("click", function(){
     if (otherSecretStats[1]) loadMode(37.71);
     else loadMode(37);
@@ -3621,7 +3621,7 @@ function prime(n) {//Returns the nth prime; uses numbers or BigInts depending on
 }
 
 function gaussian_prime(n) {//Returns the nth gaussian prime.
-    while (gaussian_primes.length < n) gaussianPrimesUpdate(gaussian_primes[gaussian_primes.length - 1].norm() * 2n); 
+    while (gaussian_primes.length < n) gaussianPrimesUpdate(gaussian_primes[gaussian_primes.length - 1].norm() * 2n);
     if ((typeof n == "number") && (n % 1 != 0)) return undefined;
     let an = Math.abs(Number(n));
     let answer = 0n;
@@ -4138,12 +4138,12 @@ function switchScreen(screen, subscreen) {
             document.getElementById("menu_grid_3").style.setProperty("display", "none");
             document.getElementById("menu_grid_4").style.setProperty("display", "none");
         }
-        if (wavesUnleashed && subScreen >= 3) { 
-            document.getElementById("waves_background").style.setProperty("display", "block"); 
-        } 
-        else { 
-            document.getElementById("waves_background").style.setProperty("display", "none"); 
-        } 
+        if (wavesUnleashed && subScreen >= 3) {
+            document.getElementById("waves_background").style.setProperty("display", "block");
+        }
+        else {
+            document.getElementById("waves_background").style.setProperty("display", "none");
+        }
         if ((window.screen.width / window.screen.height) <= 3/4) document.getElementById("menu_extra").innerHTML = "Switch Pages (" + subScreen + " / 4)" 
         else document.getElementById("menu_extra").innerHTML = "Switch Pages<br>(" + subScreen + " / 4)"; 
     }
@@ -4247,12 +4247,12 @@ function switchScreen(screen, subscreen) {
             document.documentElement.style.setProperty("background-image", "radial-gradient(#00552f, #00e980)");
             document.getElementById("regularGuide").style.setProperty("display", "block");
             document.getElementById("guide").style.setProperty("color", "#9affd1");
-            if (wavesUnleashed) { 
-                document.getElementById("guide_wavesModes").style.setProperty("display", "block"); 
-            } 
-            else { 
-                document.getElementById("guide_wavesModes").style.setProperty("display", "none"); 
-            } 
+            if (wavesUnleashed) {
+                document.getElementById("guide_wavesModes").style.setProperty("display", "block");
+            }
+            else {
+                document.getElementById("guide_wavesModes").style.setProperty("display", "none");
+            }
         }
         else if (subscreen == "CustomMode") {
             document.documentElement.style.setProperty("background-image", "radial-gradient(#370064, #8000e9)");
@@ -4292,18 +4292,18 @@ function switchScreen(screen, subscreen) {
             if (secretsFound.slice(1).indexOf(false) == -1) document.getElementById("secretOffice_completeBox").style.setProperty("display", "block");
             else document.getElementById("secretOffice_completeBox").style.setProperty("display", "none");
         }
-        if (wavesUnleashed) { 
-            for (let elem of document.getElementsByClassName("guide_wavesModesHidden")) elem.style.setProperty("display", "none"); 
-            for (let elem of document.getElementsByClassName("guide_wavesModesShown")) elem.style.setProperty("display", "inline"); 
-            for (let elem of document.getElementsByClassName("guide_wavesModesHiddenBlock")) elem.style.setProperty("display", "none"); 
-            for (let elem of document.getElementsByClassName("guide_wavesModesShownBlock")) elem.style.setProperty("display", "block"); 
-        } 
-        else { 
-            for (let elem of document.getElementsByClassName("guide_wavesModesHidden")) elem.style.setProperty("display", "inline"); 
-            for (let elem of document.getElementsByClassName("guide_wavesModesShown")) elem.style.setProperty("display", "none"); 
-            for (let elem of document.getElementsByClassName("guide_wavesModesHiddenBlock")) elem.style.setProperty("display", "block"); 
-            for (let elem of document.getElementsByClassName("guide_wavesModesShownBlock")) elem.style.setProperty("display", "none"); 
-        } 
+        if (wavesUnleashed) {
+            for (let elem of document.getElementsByClassName("guide_wavesModesHidden")) elem.style.setProperty("display", "none");
+            for (let elem of document.getElementsByClassName("guide_wavesModesShown")) elem.style.setProperty("display", "inline");
+            for (let elem of document.getElementsByClassName("guide_wavesModesHiddenBlock")) elem.style.setProperty("display", "none");
+            for (let elem of document.getElementsByClassName("guide_wavesModesShownBlock")) elem.style.setProperty("display", "block");
+        }
+        else {
+            for (let elem of document.getElementsByClassName("guide_wavesModesHidden")) elem.style.setProperty("display", "inline");
+            for (let elem of document.getElementsByClassName("guide_wavesModesShown")) elem.style.setProperty("display", "none");
+            for (let elem of document.getElementsByClassName("guide_wavesModesHiddenBlock")) elem.style.setProperty("display", "block");
+            for (let elem of document.getElementsByClassName("guide_wavesModesShownBlock")) elem.style.setProperty("display", "none");
+        }
     }
     else if (screen == "Tile Viewer") {
         document.getElementById("tile_viewer").style.setProperty("display", "block");
