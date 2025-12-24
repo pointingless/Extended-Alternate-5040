@@ -1077,7 +1077,7 @@
                         <div id="2496_firstGoalMinimum_minus" class="gm_grid_button minus_button">-</div>
                     </div>
                 </div>
-                <div id="RF3375_vars" class="gm_var_line">
+                 <div id="RF3375_vars" class="gm_var_line">
                     <div id="RF3375_othersSmaller" class="gm_var_switch_container">
                         <p id="RF3375_othersSmaller_text" class="gm_var_text">The tile that's getting a ratio filled has to be the largest tile in the merge.</p>
                         <div class="gmSwitchButtonLine">
@@ -1139,7 +1139,7 @@
                         </form>
                     </div>
                 </div>
-                <div id="RF9261_vars" class="gm_var_line">
+                 <div id="RF9261_vars" class="gm_var_line">
                     <div id="RF9261_othersSmaller" class="gm_var_switch_container">
                         <p id="RF9261_othersSmaller_text" class="gm_var_text">The tile that's getting a ratio filled has to be the largest tile in the merge.</p>
                         <div class="gmSwitchButtonLine">
@@ -1254,10 +1254,52 @@
                             <div id="Alternate5040_basePrimorials_button" class="gmSwitchModifier hover_grow">Switch This Modifier!</div>
                         </div>
                     </div>
+                    <div id="Alternate5040_baseSubfactorials" class="gm_var_switch_container">
+                        <p id="Alternate5040_baseSubfactorials_text" class="gm_var_text" style="color:#339944">Tiles progress through subfactorials.</p>
+                        <div class="gmSwitchButtonLine">
+                            <div id="Alternate5040_baseSubfactorials_button" class="gmSwitchModifier hover_grow">Switch This Modifier!</div>
+                        </div>
+                    </div>
                     <div id="Alternate5040_variant" class="gm_var_switch_container">
                         <p id="Alternate5040_variant_text" class="gm_var_text">The merges are based on paths to tiles in 1762.</p>
                         <div class="gmSwitchButtonLine">
                             <div id="Alternate5040_variant_button" class="gmSwitchModifier hover_grow">Switch This Modifier!</div>
+                        </div>
+                    </div>
+                    <div id="Alternate5040_diff" class="gm_var_switch_container">
+                        <p id="Alternate5040_diff_text" class="gm_var_text" style="color:#224498">Tiles are their normal values.</p>
+                        <div class="gmSwitchButtonLine">
+                            <div id="Alternate5040_diff_button" class="gmSwitchModifier hover_grow">Switch This Modifier!</div>
+                        </div>
+                    </div>
+                    <div id="Alternate5040_extra" class="gm_var_switch_container">
+                        <p id="Alternate5040_extra_text" class="gm_var_text">Merges occur between two tiles, normally including a 1.</p>
+                        <div class="gmSwitchButtonLine">
+                            <div id="Alternate5040_extra_button" class="gmSwitchModifier hover_grow">Switch This Modifier!</div>
+                        </div>
+                    </div>
+                    <div id="Alternate5040_extra2" class="gm_var_switch_container">
+                        <p id="Alternate5040_extra2_text" class="gm_var_text"></p>
+                        <div class="gmSwitchButtonLine">
+                            <div id="Alternate5040_extra2_button" class="gmSwitchModifier hover_grow">Switch This Modifier!</div>
+                        </div>
+                    </div>
+                    <div id="Alternate5040_num" class="gm_var_switch_container" style="color:#970097">
+                        <p id="Alternate5040_num_title" class="gm_var_title">Maximum Merge Length:</p>
+                        <p id="Alternate5040_num_counter" class="gm_var_counter"></p>
+                        <div id="Alternate5040_num_plus" class="gm_grid_button plus_button">+</div>
+                        <div id="Alternate5040_num_minus" class="gm_grid_button minus_button">-</div>
+                    </div>
+                    <div id="Alternate5040_fraction" class="gm_var_switchForm_container">
+                        <p id="Alternate5040_fraction_text" class="gm_var_title" style="color:#c52400">Ratio: </p>
+                        <div id="Alternate5040_fraction_formLine" class="gm_var_rationalFormLine">
+                            <form id="Alternate5040_fraction_numerator_form" class="gm_var_form">
+                                <input type="number" step="any" id="Alternate5040_fraction_numerator_change" name="Alternate5040_fraction_numerator_change">
+                            </form>
+                            <p style="color:#c52400" class="gm_var_rationalForm_middle">/</p>
+                            <form id="Alternate5040_fraction_denominator_form" class="gm_var_form">
+                                <input type="number" step="any" id="Alternate5040_fraction_denominator_change" name="Alternate5040_fraction_denominator_change">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -1266,6 +1308,10 @@
                     <form id="Alternate5040_baseList_form0" class="customForm_size2">
                         <input type="text" id="Alternate5040_baseList_input0" name="Alternate5040_baseList_input0">
                     </form>
+                    
+                </div>
+                <div id="Alternate5040_baseListRandomize" class="gmSwitchButtonLine">
+                        <div id="Alternate5040_baseListRandomize_button" class="gmSwitchModifier hover_grow">Randomize Cycle!</div>
                 </div>
                 <div id="DOFFET_vars" class="gm_var_line">
                     <div id="DOFFET_offset" class="gm_var_switch_container" style="color: #009084">
@@ -1743,13 +1789,21 @@
                             <div id="modifiers_garbage0_button" class="hover_grow SwitchModifier">Switch This Modifier!</div>
                         </div>
                         <div class="modifiers_box_2x2_entry">
-                            <p id="modifiers_hiddenTileText_text" class="modifier_text">Tile numbers are shown as normal.</p>
-                            <div id="modifiers_hiddenTileText_button" class="hover_grow SwitchModifier">Switch This Modifier!</div>
-                        </div>
-                        <div class="modifiers_box_2x2_entry">
                             <p id="modifiers_negativetiles_text" class="modifier_text">Negative Tiles: OFF</p>
                             <p id="modifiers_negativetiles_info" class="modifier_subtext">When this modifier is on, both positive tiles and negative tiles can spawn. Tiles only merge with other tiles of their own sign, and you must get the winning tile in both positive and negative forms to win (in modes with multiple win conditions, you need to get twice as many winning tiles to win, but they don't necessarily have to have a mix of positive and negative), but if this modifier is set to Interacting, then when a tile and its own negative collide, they're both destroyed (some modes have additional special behavior with Interacting Negatives on!).</p>
                             <div id="modifiers_negativetiles_button" class="hover_grow SwitchModifier">Switch This Modifier!</div>
+                        </div>
+                        <div class="modifiers_box_2x2_entry">
+                            <p id="modifiers_multicolorTiles_text" class="modifier_text">Multicolor Tiles: 1</p>
+                            <p id="modifiers_multicolorTiles_info" class="modifier_subtext">When this modifier is above 1, tiles come in a certain number of colors. Tiles that would normally be able to merge with each other can only merge if they form a cycle of colors, and the resulting tile will be the color that is next in the cycle. The cycle of colors follows the order of colors in a rainbow (Red, Yellow, Green, Blue, Purple). This cycle of colors can start at any point and with sufficiently long merges may contain more than one instance of the colors in the cycle. This modifier does not work on certain modes, namely XXXX, Ratio-Fill 9261, mod 27, 2496 and Pro-Add-Uct where the maximum length merge is at least two greater than the minimum, and the secret mode [SPMAG].</p>
+                            <div id="modifiers_multicolorTiles_numeric" class="modifiers_flexbox">
+                                <div id="modifiers_multicolorTiles_amount" class="modifiers_var_container">
+                                    <p id="modifiers_multicolorTiles_title" class="gm_var_title">Amount of colors:</p>
+                                    <p id="modifiers_multicolorTiles_counter" class="gm_var_counter"></p>
+                                    <div id="modifiers_multicolorTiles_plus" class="gm_grid_button plus_button">+</div>
+                                    <div id="modifiers_multicolorTiles_minus" class="gm_grid_button minus_button">-</div>
+                                </div>
+                            </div>
                         </div>
                         <div id="modifiers_negativetiles_SpawnRatios" class="modifiers_box_2x2_entry">
                             <div id="modifiers_negativetiles_positiveSpawnRatio" class="modifiers_var_container negativeTiles_spawnFormBox">
@@ -1774,9 +1828,6 @@
                     </div>
                 </div>
                 <div id="modifiers_page_5" class="modifiers_page">
-                    <p id="modifiers_tricolortiles_text" class="modifier_text">Tricolor Tiles: OFF</p>
-                    <p id="modifiers_tricolortiles_info" class="modifier_subtext">When this modifier is on, in modes where all merges occur between two tiles, tiles come in three colors. Two tiles can only merge if they are different colors, and the resulting tile will be the color that neither of its components were. In modes where all merges occur between three tiles, there are four colors. This modifier does not work on modes with merges of multiple lengths, Partial Absorb modes, or Bicolor modes.</p>
-                    <div id="modifiers_tricolortiles_button" class="hover_grow SwitchModifier">Switch This Modifier!</div>
                     <div id="modifiers_temporaryHoles_numeric" class="modifiers_flexbox">
                         <div id="modifiers_temporaryHoles_amount" class="modifiers_var_container">
                             <p id="modifiers_temporaryHoles_amount_title" class="gm_var_title">Temporary Holes per Spawn:</p>
@@ -1860,6 +1911,28 @@
                         <div id="modifiers_AutoMoves_buttonsLine">
                             <div id="modifiers_AutoMoves_add" class="hover_grow ModifierAdd">Add an Automatic Move</div>
                             <div id="modifiers_AutoMoves_remove" class="hover_grow ModifierRemove">Remove this Automatic Move</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="modifiers_page_7" class="modifiers_page">
+                    <div class="modifiers_flexbox">
+                        <div class="modifiers_box_2x2_entry">
+                            <p id="modifiers_hiddenTileText_text" class="modifier_text">Tile backgrounds are shown as normal.</p>
+                            <div id="modifiers_hiddenTileText_button" class="hover_grow SwitchModifier">Switch This Modifier!</div>
+                        </div>
+                        <div class="modifiers_box_2x2_entry">
+                            <p id="modifiers_hiddenTileBackground_text" class="modifier_text">Tile numbers are shown as normal.</p>
+                            <div id="modifiers_hiddenTileBackground_button" class="hover_grow SwitchModifier">Switch This Modifier!</div>
+                        </div>
+                        <div class="modifiers_box_2x2_entry">
+                            <p id="modifiers_memoryMode_text" class="modifier_text">Tiles always show as normal.</p>
+                            <div id="modifiers_memoryMode_button" class="hover_grow SwitchModifier">Switch This Modifier!</div>
+                        </div>
+                        <div id="modifiers_memoryMode_turnNum" class="modifiers_var_container">
+                            <p id="modifiers_memoryMode_turnNum_title" class="gm_var_title">Turns before Disappearing</p>
+                            <p id="modifiers_memoryMode_turnNum_counter" class="gm_var_counter"></p>
+                            <div id="modifiers_memoryMode_turnNum_plus" class="gm_grid_button plus_button">+</div>
+                            <div id="modifiers_memoryMode_turnNum_minus" class="gm_grid_button minus_button">-</div>
                         </div>
                     </div>
                 </div>
@@ -3017,7 +3090,7 @@
                             when the merge length is different from normal in FACTUP, fixed a bug with Interacting Negative Tiles in Bitwise 2048, made the
                             positive/negative spawn ratios work in 1825, and fixed a couple other bugs, including incorrect win conditions in multiple modes.
                             Also, added pausing and speed changing during replays (credit to Quasitruncated Hexahedron for implementing this).
-                      </li>
+                            </li>
                       <br>
                       <li>
                             v2.2.5 (Sep. 3, 2025): Fixed hidden tile numbers not working on
@@ -3063,12 +3136,16 @@
                       </li>
                       <br>
                       <li>
-                        <b>
-                            v2.3.2 (Nov. 29, 2025) [Current Version]: Removed the "spawning tile can't be larger than the largest discovered tile" rule in Aquatic 2496 by default (because it allowed
+                            v2.3.2 (Nov. 29, 2025): Removed the "spawning tile can't be larger than the largest discovered tile" rule in Aquatic 2496 by default (because it allowed
                             trivial chaining to exponential scores; there's now a mode modifier to bring it back if you wish), added options for extra turns after the grid fills up before the game ends
                             in Partial Flow DIVE, and added a mode modifier to Div-Add-Tor to make seed checks work like in Dual-Tile DIVE.
                             Fixed a bug where Alternate 5040's goal with base cycle could be 1 if the first base was huge, and fixed a bug where the "seeds are unlocked permanently"
                             mode modifier in Unordered Dual-Tile DIVE did not work.
+                      </li>
+                      <br>
+                      <li>
+                        <b>
+                            v2.4 (?) [Current Version]: Added the subfactorial base and the -1 tile value modifier to Alternate 5040. Added the following variants to Alternate 5040: 3125 Variant (with a Strict 3125 modifier), XXXX Variant, 180 Variant, 2520 Variant (with a modifier to choose between absolute and relative versions), 2401 Variant, 3375 Variant (with Digitwise 3375 and Easier 2401 modifiers, and a choice of base), 1847 Variant (with a changeable ratio), ? Variant (with an option between Triple and Quintiple versions), 1845 Variant, X^Y Variant (with a 378 modifier), 10 Variant (with a Survival Challenge modifier), Harderer 1762 Variant, Ratio-Fill 1296 Variant (with a changeable denominator for the first ratio), and Turatin Variant. Added a chooseable "shift" to the 1762 Variant, a 2049 modifier to the 2047 Variant, a Partial Absorb 19,683 modifier and Balanced Partial Absorb modifier to the Partial Absorb 243 Variant, a changeable merge length and easier version for each Partial Absorb 243 option, a Partial Absorb 255 modifier to the Partial Absorb 257 Variant, a changeable merge length to both Partial Absorb 257 options, a changeable difference to the SCAPRIM Variant, and a button to randomize the base cycle. Moved the tricolor tile modifier to Page 4 of the modifiers and changed it to multicolor tiles. Moved the hidden tile numbers modifier to a new Page 7 of the modifiers and added a hidden color scheme modifier and a memory mode modifier.
                         </b>
                       </li>
                     </ul>
@@ -3271,7 +3348,7 @@
                     <div class="guide_subbox customGuide_exampleCodeBox customGuide_exampleRecreation">
                         <h3>2048 Recreation</h3>
                         <div class="customGuide_exampleReveal hover_grow">Show Save Code</div>
-                        <p class="customGuide_exampleCode">@2048PowCompCustom|2.0|W2ZhbHNlLFsxLDg1XSxbMiwxMl0sWzQsM11d|W1sxLFsxLCJASW5maW5pdHkiLDAsMV0sW1t0cnVlLDBdXSxbW3RydWUsMV1dLGZhbHNlXV0=|W1swLFsxXSxbWyJASFNMQSIsMCwwLDEwMCwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDMwLDgsNDMsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dLFswLFsyXSxbWyJASFNMQSIsMzAsNjUsOTMsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzMCw4LDQzLDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbM10sW1siQEhTTEEiLDM5LDUxLDg2LDEsMSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwLjk3NSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzAsOCw0MywxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzRdLFtbIkBIU0xBIiwyOCw4Miw3MSwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDM0LDM3LDk2LDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbNV0sW1siQEhTTEEiLDIxLDg4LDY3LDEsMSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwLjk3NSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzQsMzcsOTYsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dLFswLFs2XSxbWyJASFNMQSIsMTIsODksNjcsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzddLFtbIkBIU0xBIiwxMSw5MSw2MCwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDM0LDM3LDk2LDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbOF0sW1siQEhTTEEiLDQ1LDc3LDY5LDEsMSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwLjk3NSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzQsMzcsOTYsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dLFswLFs5XSxbWyJASFNMQSIsNDYsODAsNjUsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzEwXSxbWyJASFNMQSIsNDYsODEsNjIsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzExXSxbWyJASFNMQSIsNDYsODMsNTksMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzEyXSxbWyJASFNMQSIsNDYsODQsNTUsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzEzXSxbWyJASFNMQSIsMjkyLDEwMCw4MSwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDM0LDM3LDk2LDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbMTRdLFtbIkBIU0xBIiwyOTIsOTcsNzMsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzE1XSxbWyJASFNMQSIsMjkyLDEwMCw2MiwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDM0LDM3LDk2LDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbMTZdLFtbIkBIU0xBIiwyOTIsMTAwLDQzLDEsMSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwLjk3NSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzQsMzcsOTYsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dLFswLFsxN10sW1siQEhTTEEiLDI5MiwxMDAsMjcsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzE4XSxbWyJASFNMQSIsMjQyLDc3LDYxLDEsMSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwLjk3NSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzQsMzcsOTYsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dLFswLFsxOV0sW1siQEhTTEEiLDI0Miw3Niw1MSwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDM0LDM3LDk2LDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbMjBdLFtbIkBIU0xBIiwyNDIsOTUsMzcsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzEsWzIxLCJASW5maW5pdHkiLDAsMV0sW1siQEhTTEEiLDIyMCwxMDAsMzYsMSwyMSxmYWxzZSwtMTUsMC45NSxmYWxzZSwwLDAuOTc1LHRydWUsMCwwLjksZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzQsMzcsOTYsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dXQ==|W1siQGxpbmVhci1ncmFkaWVudCIsMCxbMF0sW1siQEhTTEEiLDQ0LDEwMCw5MywxXV1dLFsiQHJhZGlhbC1ncmFkaWVudCIsMCxbMCwxNTBdLFtbIkBIU0xBIiw0NiwxMDAsNTAsMV0sWyJASFNMQSIsMCwxMDAsMTAwLDFdXV0sWyJAbGluZWFyLWdyYWRpZW50IiwwLFswXSxbWyJASFNMQSIsNDMsNTMsODMsMV1dXSxbIkBsaW5lYXItZ3JhZGllbnQiLDAsWzBdLFtbIkBIU0xBIiw0MywyMiw3MiwxXV1dLFsiQGxpbmVhci1ncmFkaWVudCIsMCxbMF0sW1siQEhTTEEiLDMwLDgsMzAsMV1dXV0=|WzEsMTJd|WzBd|WyJDdXN0b20gTW9kZSBSZWNyZWF0aW9uIiwiMjA0OCIsIk1lcmdlcyBvY2N1ciBiZXR3ZWVuIHR3byB0aWxlcyBvZiB0aGUgc2FtZSBudW1iZXIuIEdldCB0byB0aGUgMjA0OCB0aWxlIHRvIHdpbiEiLDRd|</p>
+                        <p class="customGuide_exampleCode">@2048PowCompCustom|2.0|W2ZhbHNlLFsxLDg1XSxbMiwxMl0sWzQsM11d|W1sxLFsxLCJASW5maW5pdHkiLDAsMV0sW1t0cnVlLDBdXSxbW3RydWUsMV1dLGZhbHNlXV0=|W1swLFsxXSxbWyJASFNMQSIsMCwwLDEwMCwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDMwLDgsNDMsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dLFswLFsyXSxbWyJASFNMQSIsMzAsNjUsOTMsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzMCw4LDQzLDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbM10sW1siQEhTTEEiLDM5LDUxLDg2LDEsMSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwLjk3NSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzAsOCw0MywxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzRdLFtbIkBIU0xBIiwyOCw4Miw3MSwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDM0LDM3LDk2LDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbNV0sW1siQEhTTEEiLDIxLDg4LDY3LDEsMSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwLjk3NSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzQsMzcsOTYsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dLFswLFs2XSxbWyJASFNMQSIsMTIsODksNjcsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzddLFtbIkBIU0xBIiwxMSw5MSw2MCwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDM0LDM3LDk2LDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbOF0sW1siQEhTTEEiLDQ1LDc3LDY5LDEsMSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwLjk3NSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzQsMzcsOTYsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dLFswLFs5XSxbWyJASFNMQSIsNDYsODAsNjUsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzEwXSxbWyJASFNMQSIsNDYsODEsNjIsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzExXSxbWyJASFNMQSIsNDYsODMsNTksMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzEyXSxbWyJASFNMQSIsNDYsODQsNTUsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzEzXSxbWyJASFNMQSIsMjkyLDEwMCw4MSwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDM0LDM3LDk2LDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbMTRdLFtbIkBIU0xBIiwyOTIsOTcsNzMsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzE1XSxbWyJASFNMQSIsMjkyLDEwMCw2MiwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDM0LDM3LDk2LDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbMTZdLFtbIkBIU0xBIiwyOTIsMTAwLDQzLDEsMSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwLjk3NSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzQsMzcsOTYsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dLFswLFsxN10sW1siQEhTTEEiLDI5MiwxMDAsMjcsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzAsWzE4XSxbWyJASFNMQSIsMjQyLDc3LDYxLDEsMSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwLjk3NSxmYWxzZSwwLDAuOTUsZmFsc2UsMCwwXV0sWzBdLFsiQGxpbmVhci1ncmFkaWVudCIsMF0sWyJASFNMQSIsMzQsMzcsOTYsMSwxLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMF1dLFswLFsxOV0sW1siQEhTTEEiLDI0Miw3Niw1MSwxLDEsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMC45NzUsZmFsc2UsMCwwLjk1LGZhbHNlLDAsMF1dLFswXSxbIkBsaW5lYXItZ3JhZGllbnQiLDBdLFsiQEhTTEEiLDM0LDM3LDk2LDEsMSxmYWxzZSwwLDAsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDBdXSxbMCxbMjBdLFtbIkBIU0xBIiwyNDIsOTUsMzcsMSwxLGZhbHNlLDAsMC45NSxmYWxzZSwwLDAuOTc1LGZhbHNlLDAsMC45NSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV0sWzEsWzIxLCJASW5maW5pdHkiLDAsMV0sW1siQEhTTEEiLDIyMCwxMDAsMzYsMSwxLGZhbHNlLC0xNSwwLjk1LGZhbHNlLDAsMC45NzUsdHJ1ZSwwLDAuOSxmYWxzZSwwLDBdXSxbMF0sWyJAbGluZWFyLWdyYWRpZW50IiwwXSxbIkBIU0xBIiwzNCwzNyw5NiwxLDEsZmFsc2UsMCwwLGZhbHNlLDAsMCxmYWxzZSwwLDAsZmFsc2UsMCwwXV1d|W1siQGxpbmVhci1ncmFkaWVudCIsMCxbMF0sW1siQEhTTEEiLDQ0LDEwMCw5MywxXV1dLFsiQHJhZGlhbC1ncmFkaWVudCIsMCxbMCwxNTBdLFtbIkBIU0xBIiw0NiwxMDAsNTAsMV0sWyJASFNMQSIsMCwxMDAsMTAwLDFdXV0sWyJAbGluZWFyLWdyYWRpZW50IiwwLFswXSxbWyJASFNMQSIsNDMsNTMsODMsMV1dXSxbIkBsaW5lYXItZ3JhZGllbnQiLDAsWzBdLFtbIkBIU0xBIiw0MywyMiw3MiwxXV1dLFsiQGxpbmVhci1ncmFkaWVudCIsMCxbMF0sW1siQEhTTEEiLDMwLDgsMzAsMV1dXV0=|WzEsMTJd|WzBd|WyJDdXN0b20gTW9kZSBSZWNyZWF0aW9uIiwiMjA0OCIsIk1lcmdlcyBvY2N1ciBiZXR3ZWVuIHR3byB0aWxlcyBvZiB0aGUgc2FtZSBudW1iZXIuIEdldCB0byB0aGUgMjA0OCB0aWxlIHRvIHdpbiEiLDRd|</p>
                     </div>
                     <div class="guide_subbox customGuide_exampleCodeBox customGuide_exampleRecreation">
                         <h3>1296 Recreation</h3>
