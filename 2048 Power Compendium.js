@@ -26572,7 +26572,7 @@ function threeFactorColor(factors, scheme) {
             g *= 0.5;
             b *= 0.5;
         }
-        if (invert) {
+        if (invert != scheme.includes("Anti")) {
             r = 255 - r;
             g = 255 - g;
             b = 255 - b;
@@ -26588,7 +26588,7 @@ function threeFactorColor(factors, scheme) {
         else if (factors[0] >= factors[2] && factors[1] >= factors[2]) answer = HSVtoString(((factors[1] - factors[2]) / (factors[0] + factors[1] - factors[2] * 2) * 120), (0.7 ** factors[2] * 100), (lightnessPow ** (gcd((factors[0] - factors[2]), (factors[1] - factors[2])) - 1) * 100));
         else if (factors[1] >= factors[0] && factors[2] >= factors[0]) answer = HSVtoString(((factors[2] - factors[0]) / (factors[1]  + factors[2] - factors[0] * 2) * 120 + 120), (0.7 ** factors[0] * 100), (lightnessPow ** (gcd((factors[2] - factors[0]), (factors[1] - factors[0])) - 1) * 100));
         else if (factors[2] >= factors[1] && factors[0] >= factors[1]) answer = HSVtoString(((factors[0] - factors[1]) / (factors[2] + factors[0] - factors[1] * 2) * 120 + 240), (0.7 ** factors[1] * 100), (lightnessPow ** (gcd((factors[2] - factors[1]), (factors[0] - factors[1])) - 1) * 100));
-        if (invert != scheme.includes("Anti")) {
+        if (invert) {
             answer = answer.split(", ");
             answer[0] = "hsla(" + (Number(answer[0].slice(5)) + 180);
             answer[2] = (100 - Number(answer[2].slice(0, answer[2].length - 1))) + "%";
@@ -29591,7 +29591,7 @@ function exportSave(midgame) { // A save code where midgame = true saves a game 
         let SaveCode = "";
         if (midgame) SaveCode = "@2048PowCompGame|";
         else SaveCode = "@2048PowCompMode|";
-        SaveCode += "2.3.1|"
+        SaveCode += "2.3|"
         SaveCode += window.btoa(String(width));
         SaveCode += "|";
         SaveCode += window.btoa(String(height));
@@ -29888,7 +29888,6 @@ function importSave(code) {
         let codebits = code.split("|");
         if (codebits[0] == "@2048PowCompGame" || codebits[0] == "@2048PowCompMode") {
             if (validSaveCodeVersions.indexOf(codebits[1]) > 0) {
-                console.log(codebits);
                 coderesults.push(Number(window.atob(codebits[2]))); //coderesults[0] is width
                 if (isNaN(coderesults[0]) || coderesults[0] < 1 || (coderesults[0] % 1) != 0) throw "Invalid width";
                 coderesults.push(Number(window.atob(codebits[3]))); //coderesults[1] is height
@@ -29943,7 +29942,8 @@ function importSave(code) {
                 }
                 if (codebits[0] == "@2048PowCompGame") {
                     let midgameStart;
-                    if (validSaveCodeVersions.indexOf(codebits[1]) > 11) midgameStart = 41;
+                    if (validSaveCodeVersions.indexOf(codebits[1]) > 14) midgameStart = 42;
+                    else if (validSaveCodeVersions.indexOf(codebits[1]) > 11) midgameStart = 41;
                     else if (validSaveCodeVersions.indexOf(codebits[1]) > 10) midgameStart = 40;
                     else if (validSaveCodeVersions.indexOf(codebits[1]) > 9) midgameStart = 39;
                     else if (validSaveCodeVersions.indexOf(codebits[1]) > 3) midgameStart = 36;
@@ -29975,6 +29975,9 @@ function importSave(code) {
                     if (validSaveCodeVersions.indexOf(codebits[1]) > 12) {
 						coderesults.push(SCparse(window.atob(codebits[midgameStart + 22]))); //coderesults[midgameStart + 22] is replayOtherSpawns
 					}
+                    if (validSaveCodeVersions.indexOf(codebits[1]) > 14) {
+						coderesults.push(SCparse(window.atob(codebits[midgameStart + 23]))); //coderesults[midgameStart + 23] is forcedSpawns
+					}
                 }
                 //If we've gotten this far, the import is a success, so it's time to do the actual importing
                 width = coderesults[0];
@@ -29987,7 +29990,7 @@ function importSave(code) {
                 TileTypes = coderesults[7];
                 MergeRules = coderesults[8];
                 startTileSpawns = coderesults[9];
-                forcedSpawns = coderesults[10];
+                start_forcedSpawns = coderesults[10];
                 winConditions = coderesults[11];
                 winRequirement = coderesults[12];
                 loseConditions = coderesults[13];
@@ -30040,11 +30043,18 @@ function importSave(code) {
                 else {
                     tileValueFunction = [0];
                 }
+                if (validSaveCodeVersions.indexOf(codebits[1]) > 14) {
+                    discoveredTilesFilter = coderesults[39];
+                }
+                else {
+                    discoveredTilesFilter = [];
+                }
                 gamemode = 0;
                 startGame();
                 if (codebits[0] == "@2048PowCompGame") {
                     let midgameStart;
-                    if (validSaveCodeVersions.indexOf(codebits[1]) > 11) midgameStart = 39;
+                    if (validSaveCodeVersions.indexOf(codebits[1]) > 14) midgameStart = 40;
+                    else if (validSaveCodeVersions.indexOf(codebits[1]) > 11) midgameStart = 39;
                     else if (validSaveCodeVersions.indexOf(codebits[1]) > 10) midgameStart = 38;
                     else if (validSaveCodeVersions.indexOf(codebits[1]) > 9) midgameStart = 37;
                     else if (validSaveCodeVersions.indexOf(codebits[1]) > 3) midgameStart = 34;
@@ -30094,6 +30104,12 @@ function importSave(code) {
                             }
                         }
                         if (autoProblematic && validSaveCodeVersions.indexOf(codebits[1]) > 11) alert("Warning: A replay produced continuing from this point will not play properly.");
+                    }
+                    if (validSaveCodeVersions.indexOf(codebits[1]) > 14) {
+                        forcedSpawns = coderesults[midgameStart + 23];
+                    }
+                    else {
+                        forcedSpawns = compendiumStructuredClone(start_forcedSpawns);
                     }
                     displayGrid();
                     displayButtons(true);
@@ -30203,12 +30219,13 @@ function importSave(code) {
                 postgameAllowed = true;
                 auto_directions = [];
                 start_modifier_vars = [];
-                forcedSpawns = [];
+                start_forcedSpawns = [];
                 hexagonal = false;
                 hiddenTileText = false;
                 tileDisplayKnownLevel = 2;
                 mergeResultKnownLevel = 0;
                 tileValueFunction = [0];
+                discoveredTilesFilter = [];
                 gamemode = 0;
                 startGame();
                 if (codebits[0] == "@2048PowCompGame") {
@@ -30273,7 +30290,7 @@ function importSave(code) {
                 coderesults.push(SCparse(window.atob(codebits[3]))); //coderesults[1] is auto_directions
                 if (coderesults[0][5] === "Custom") {
                     coderesults.push(SCparse(window.atob(codebits[4]))); //coderesults[2] is width
-                    coderesults.push(SCparse(window.atob(codebits[5]))); //coderesults[3] is height
+                    coderesults.push(SCparse(window.atob(codebits[5]))); //coderesults[3] is height || codebits[1] == "2.3"
                     coderesults.push(SCparse(window.atob(codebits[6]))); //coderesults[4] is hexagonal
                     coderesults.push(SCparse(window.atob(codebits[7]))); //coderesults[5] is startingGrid
                     coderesults.push(SCparse(window.atob(codebits[8]))); //coderesults[6] is directions
@@ -30302,7 +30319,7 @@ function importSave(code) {
             else throw "Invalid update";
         }
         else if (codebits[0] == "@2048PowCompReplay") {
-            if (codebits[1] == "2.2" || codebits[1] == "2.2.2") {
+            if (codebits[1] == "2.2" || codebits[1] == "2.2.2" || codebits[1] == "2.3.1") {
                 coderesults.push(Number(window.atob(codebits[2]))); //coderesults[0] is width
                 if (isNaN(coderesults[0]) || coderesults[0] < 1 || (coderesults[0] % 1) != 0) throw "Invalid width";
                 coderesults.push(Number(window.atob(codebits[3]))); //coderesults[1] is height
@@ -30316,7 +30333,7 @@ function importSave(code) {
                 coderesults.push(SCparse(window.atob(codebits[9]))); //coderesults[7] is TileTypes
                 coderesults.push(SCparse(window.atob(codebits[10]))); //coderesults[8] is MergeRules
                 coderesults.push(SCparse(window.atob(codebits[11]))); //coderesults[9] is startTileSpawns
-                coderesults.push(SCparse(window.atob(codebits[12]))); //coderesults[10] is forcedSpawns
+                coderesults.push(SCparse(window.atob(codebits[12]))); //coderesults[10] is start_forcedSpawns
                 coderesults.push(SCparse(window.atob(codebits[13]))); //coderesults[11] is winConditions
                 coderesults.push(SCparse(window.atob(codebits[14]))); //coderesults[12] is winRequirement
                 coderesults.push(SCparse(window.atob(codebits[15]))); //coderesults[13] is loseConditions
@@ -30345,13 +30362,19 @@ function importSave(code) {
 				coderesults.push(Number(window.atob(codebits[37]))); //coderesults[35] is mergeResultKnownLevel
 				coderesults.push(Number(window.atob(codebits[38]))); //coderesults[36] is knownMergeLookbackDistance
                 coderesults.push(Number(window.atob(codebits[39]))); //coderesults[37] is knownMergeMaxLength
-                coderesults.push(Number(window.atob(codebits[40]))); //coderesults[38] is tileValueFunction
-                coderesults.push(SCparse(window.atob(codebits[41]))); //coderesults[39] is movesPlayed
-				coderesults.push(SCparse(window.atob(codebits[42]))); //coderesults[40] is currentMovePlayed
-				coderesults.push(SCparse(window.atob(codebits[43]))); //coderesults[41] is otherRandomEvents
-				coderesults.push(Number(window.atob(codebits[44]))); //coderesults[42] is gameWon
-                if (codebits[1] == "2.2.2") {
-                    coderesults.push(SCparse(window.atob(codebits[45]))); //coderesults[43] is replayOtherSpawns
+                coderesults.push(SCparse(window.atob(codebits[40]))); //coderesults[38] is tileValueFunction
+                if (codebits[1] == "2.3.1") {
+                    coderesults.push(SCparse(window.atob(codebits[41]))); //coderesults[39] is forcedSpawns
+                    coderesults.push(SCparse(window.atob(codebits[42]))); //coderesults[40] is discoveredTilesFilter
+                }
+                let replayStart = 41;
+                if (codebits[1] == "2.3.1") replayStart = 43;
+                coderesults.push(SCparse(window.atob(codebits[replayStart]))); //coderesults[replayStart] is movesPlayed
+				coderesults.push(SCparse(window.atob(codebits[replayStart + 1]))); //coderesults[replayStart + 1] is currentMovePlayed
+				coderesults.push(SCparse(window.atob(codebits[replayStart + 2]))); //coderesults[replayStart + 2] is otherRandomEvents
+				coderesults.push(Number(window.atob(codebits[replayStart + 3]))); //coderesults[replayStart + 3] is gameWon
+                if (codebits[1] == "2.2.2" || codebits[1] == "2.3.1") {
+                    coderesults.push(SCparse(window.atob(codebits[replayStart + 4]))); //coderesults[43] is replayOtherSpawns
                 }
                 //If we've gotten this far, the import is a success, so it's time to do the actual importing
                 width = coderesults[0];
@@ -30405,15 +30428,24 @@ function importSave(code) {
                 knownMergeLookbackDistance = coderesults[36];
                 knownMergeMaxLength = coderesults[37];
                 tileValueFunction = coderesults[38];
+                if (codebits[1] == "2.3.1") {
+                    forcedSpawns = coderesults[39];
+                    discoveredTilesFilter = coderesults[40]
+                }
+                else {
+                    forcedSpawns = start_forcedSpawns;
+                    discoveredTilesFilter = [];
+                }
                 gamemode = 0;
                 startGame(true);
                 Grid = compendiumStructuredClone(startingGrid);
-                let replayStart = 39;
+                replayStart = 39;
+                if (codebits[1] == "2.3.1") replayStart = 41;
                 movesPlayed = coderesults[replayStart];
 				movesPlayed.push(coderesults[replayStart + 1]);
 				otherRandomEvents = coderesults[replayStart + 2];
 				gameWon = coderesults[replayStart + 3];
-                if (codebits[1] == "2.2.2") {
+                if (codebits[1] == "2.2.2" || codebits[1] == "2.3.1") {
                     replayOtherSpawns = coderesults[replayStart + 4].reverse();
                 }
                 else {
@@ -30498,6 +30530,17 @@ function displaySaveCodeMode(screen, mode) {
     }
 }
 
+function wavesMenuSwitch(wavesActive) {
+    for (let wo of waves_order) {
+        let regularTile = document.getElementById("menu_tile_" + wo[0]);
+        let wavesTile = document.getElementById("waves_tile_" + wo[1]);
+        let regularPrevious = regularTile.previousSibling;
+        let wavesPrevious = wavesTile.previousSibling;
+        regularPrevious.after(wavesTile);
+        wavesPrevious.after(regularTile);
+    }
+}
+
 // Some secret stuff
 
 function OSTDEUpdate(index) {
@@ -30537,7 +30580,7 @@ function OSTDEUpdate(index) {
     }
 }
 
-let tileViewerOrder = ["Wildcard 2048", "mod 27", "1321", "180", "DIVE", "2295", "3069", "Odds-Only 3069", "SQUART", "Three-Tile SQUART", "Turatin", "3307", "Bitwise 2048", "SCAPRIM", "1845", "3385", "LOCEF", "TRIGAT", "Partial Absorb 180", "Rational DIVE", "Gaussian DIVE"]
+let tileViewerOrder = ["Wildcard 2048", "mod 27", "1321", "180", "DIVE", "2295", "3069", "Odds-Only 3069", "SQUART", "Three-Tile SQUART", "Turatin", "3307", "Bitwise 2048", "SCAPRIM", "1845", "3385", "LOCEF", "TRIGAT", "Anti-DIVE", "Gaussian DIVE", "Partial Absorb 180", "RACUTE"]
 
 function displayViewerTile() {
     knownTileDisplayArrays = [];
@@ -30550,7 +30593,7 @@ function displayViewerTile() {
         document.getElementById("viewer_gaussian_imaginary_change").value = screenVars[0].imaginary;
         document.getElementById("viewer_gaussian_number_i").innerHTML = "i";
     }
-    else if (subScreen == "Partial Absorb 180" || subScreen == "Rational DIVE") {
+    else if (subScreen == "Partial Absorb 180" || subScreen == "RACUTE") {
         document.getElementById("viewer_number").style.setProperty("display", "none");
         document.getElementById("viewer_gaussian_number").style.setProperty("display", "none");
         document.getElementById("viewer_rational_number").style.setProperty("display", "block");
@@ -30683,9 +30726,15 @@ function displayViewerTile() {
         document.getElementById("viewer_primes").style.setProperty("display", "block");
         document.getElementById("viewer_primes_change").value = screenVars[1];
     }
-    else if (subScreen == "Rational DIVE") {
-        document.getElementById("tile_viewer_scheme").style.setProperty("color", "#5a5041");
-        document.getElementById("viewer_tile").style.setProperty("border-color", "#b09367");
+    else if (subScreen == "RACUTE") {
+        document.getElementById("tile_viewer_scheme").style.setProperty("color", "#a550be");
+        document.getElementById("viewer_tile").style.setProperty("border-color", "#52325b");
+        document.getElementById("viewer_primes").style.setProperty("display", "block");
+        document.getElementById("viewer_primes_change").value = screenVars[1];
+    }
+    else if (subScreen == "Anti-DIVE") {
+        document.getElementById("tile_viewer_scheme").style.setProperty("color", "#bb9977");
+        document.getElementById("viewer_tile").style.setProperty("border-color", "#613c18");
         document.getElementById("viewer_primes").style.setProperty("display", "block");
         document.getElementById("viewer_primes_change").value = screenVars[1];
     }
@@ -30731,18 +30780,18 @@ function changeViewerScheme(increment) {
     let oldSubScreen = subScreen;
     subScreen = tileViewerOrder[mod((index + increment), tileViewerOrder.length)];
     index = mod(index + increment, tileViewerOrder.length)
-    if (subScreen == "Gaussian DIVE" && !secretsFound[1]) subScreen = tileViewerOrder[mod((index + increment), tileViewerOrder.length)];
+    // if (subScreen == "Gaussian DIVE" && !secretsFound[1]) subScreen = tileViewerOrder[mod((index + increment), tileViewerOrder.length)];
     let oldtype = 0;
     if (oldSubScreen == "Gaussian DIVE") oldtype = 1;
-    if (oldSubScreen == "Partial Absorb 180" || oldSubScreen == "Rational DIVE") oldtype = 2;
+    if (oldSubScreen == "Partial Absorb 180" || oldSubScreen == "RACUTE") oldtype = 2;
     let newtype = 0;
     if (subScreen == "Gaussian DIVE") newtype = 1;
-    if (subScreen == "Partial Absorb 180" || subScreen == "Rational DIVE") newtype = 2;
+    if (subScreen == "Partial Absorb 180" || subScreen == "RACUTE") newtype = 2;
     if (oldtype != newtype) {
         let transition = [0n, 0n];
         if (oldtype == 0) transition = [screenVars[0], (newtype == 2 ? 1n : 0n)];
-        else if (oldtype == 1) transition = [screenVars[0].real, screenVars[0].imaginary];
-        else if (oldtype == 2) transition = [screenVars[0].numerator, screenVars[0].denominator];
+        else if (oldtype == 1) transition = [screenVars[0].real, (newtype == 2 ? 1n : 0n)];
+        else if (oldtype == 2) transition = [screenVars[0].numerator, (newtype == 2 ? 1n : 0n)];
         if (newtype == 0) screenVars[0] = transition[0];
         else if (newtype == 1) screenVars[0] = new GaussianBigInt(transition);
         else if (newtype == 2) screenVars[0] = new BigRational(transition);
@@ -30760,7 +30809,7 @@ function changeViewerScheme(increment) {
         screenVars[1] = 1;
         screenVars[3] = 0;
     }
-    else if (subScreen == "DIVE" || subScreen == "SQUART" || subScreen == "Three-Tile SQUART" || subScreen == "3385" || subScreen == "LOCEF" || subScreen == "Rational DIVE") {
+    else if (subScreen == "DIVE" || subScreen == "SQUART" || subScreen == "Three-Tile SQUART" || subScreen == "3385" || subScreen == "LOCEF" || subScreen == "RACUTE" || subScreen == "Anti-DIVE") {
         screenVars[1] = 168;
         if (subScreen == "3385") screenVars[3] = 2;
     }
