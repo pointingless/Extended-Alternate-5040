@@ -11676,7 +11676,7 @@ function gmDisplayVars() {
                 displayRules("gm_rules_text", ["h1", "Coprime (232, 240)"], ["p", "Tiles are ordered pairs, and two tiles can merge if they share at least one absolute value number in common (even if that common number is in opposite positions). When two tiles merge, the resulting numbers are divided by their GCD, so that the two numbers in any tile are always coprime. This variant doesn't have a win condition - see what tiles you can discover, or how balanced of a ratio other than (1, 1) itself you can get! (In this variant you tend never to lose, so just play until you've grown bored of it or accomplish some goal)"],
                 ["p", "Spawning tiles: (1, 0) (12.5%), (0, 1) (12.5%), (1, 1) (12.5%), (-1, 0) (12.5%), (0, -1) (12.5%), (-1, -1) (12.5%), (1, -1) (12.5%), (-1, 1) (12.5%)"]);
             }
-            scripts.push([["@global_var_retain", [["@Var -1", "arr_elem", 0], "/BR", ["@Var -1", "arr_elem", 1], "absBR"], "@if", [["@Parent -3", "numeratorBR", "!=", 0n], "&&", ["@Parent -3", "denominatorBR", "!=", 0n], "&&", ["@Parent -3", "!=", new BigRational(1n)]], "@if", ["@Parent -2", "<", 1n], "recipBR", "@end-if", "-BR", 1n, "recipBR", "+BR", 1n, "@if", ["@Parent -2", ">", "@GVar 2"], "@edit_gvar", 2, ["@Parent -2", "Number"], "@end-if", "@end-if"], "Merge"])
+            scripts.push([["@global_var_retain", [["@Var -1", "arr_elem", 0, "arr_elem", 0], "/BR", ["@Var -1", "arr_elem", 0, "arr_elem", 1], "absBR"], "@if", [["@Parent -3", "numeratorBR", "!=", 0n], "&&", ["@Parent -3", "denominatorBR", "!=", 0n], "&&", ["@Parent -3", "!=", new BigRational(1n)]], "@if", ["@Parent -2", "<", 1n], "recipBR", "@end-if", "-BR", 1n, "recipBR", "+BR", 1n, "@if", ["@Parent -2", ">", "@GVar 2"], "@edit_gvar", 2, ["@Parent -2", "Number"], "@end-if", "@end-if"], "Merge"])
         }
     }
     if (gamemode == 70) { // 16+16i
@@ -12151,17 +12151,17 @@ function gmDisplayVars() {
             document.getElementById("1716_equalDisappear_text").innerHTML = "Any two equal tiles can merge, disappearing if that's not a valid merge."
             document.getElementById("1716_equalDisappear_text").style.setProperty("color", "#932e0f");
             displayRules("rules_text", ["h2", "Pascal's Triangle"], ["h1", "1716"], ["p", "Tiles can be thought of as (unordered) pairs. An (a, b) tile can merge with an (a - 1, b + 1) tile to make a (a, b + 1) tile, or with an (a + 1, b - 1) tile to make an (a + 1, b) tile. Also, two equal (n, n + 1) tiles can merge into an (n + 1, n + 1 tile), and a 1 tile can serve as (1, n) for any n, meaning a (2, n) tile merges with a 1 to make a (2, n + 1) tile. If any two equal tiles other than the aforementioned cases collide, they'll disappear. Get to the 1716 (7, 8) tile to win!"],
-            ["p", "Spawning tiles: 1 (85%), 2 (8%), 3 (8%)"]);
+            ["p", "Spawning tiles: 1 (84%), 2 (8%), 3 (8%)"]);
             displayRules("gm_rules_text", ["h2", "Pascal's Triangle"], ["h1", "1716"], ["p", "Tiles can be thought of as (unordered) pairs. An (a, b) tile can merge with an (a - 1, b + 1) tile to make a (a, b + 1) tile, or with an (a + 1, b - 1) tile to make an (a + 1, b) tile. Also, two equal (n, n + 1) tiles can merge into an (n + 1, n + 1 tile), and a 1 tile can serve as (1, n) for any n, meaning a (2, n) tile merges with a 1 to make a (2, n + 1) tile. If any two equal tiles other than the aforementioned cases collide, they'll disappear. Get to the 1716 (7, 8) tile to win!"],
-            ["p", "Spawning tiles: 1 (85%), 2 (8%), 3 (8%)"]);
+            ["p", "Spawning tiles: 1 (84%), 2 (8%), 3 (8%)"]);
         }
         else {
             document.getElementById("1716_equalDisappear_text").innerHTML = "Only valid equal tile merges can occur."
             document.getElementById("1716_equalDisappear_text").style.setProperty("color", "#99861a");
             displayRules("rules_text", ["h2", "Pascal's Triangle"], ["h1", "1716"], ["p", "Tiles can be thought of as (unordered) pairs. An (a, b) tile can merge with an (a - 1, b + 1) tile to make a (a, b + 1) tile, or with an (a + 1, b - 1) tile to make an (a + 1, b) tile. Also, two equal (n, n + 1) tiles can merge into an (n + 1, n + 1 tile), and a 1 tile can serve as (1, n) for any n, meaning a (2, n) tile merges with a 1 to make a (2, n + 1) tile. A merge only gives score if both entries in the resulting tile's pair are at least 3. Get to the 1716 (7, 8) tile to win!"],
-            ["p", "Spawning tiles: 1 (85%), 2 (8%), 3 (8%)"]);
+            ["p", "Spawning tiles: 1 (84%), 2 (8%), 3 (8%)"]);
             displayRules("gm_rules_text", ["h2", "Pascal's Triangle"], ["h1", "1716"], ["p", "Tiles can be thought of as (unordered) pairs. An (a, b) tile can merge with an (a - 1, b + 1) tile to make a (a, b + 1) tile, or with an (a + 1, b - 1) tile to make an (a + 1, b) tile. Also, two equal (n, n + 1) tiles can merge into an (n + 1, n + 1 tile), and a 1 tile can serve as (1, n) for any n, meaning a (2, n) tile merges with a 1 to make a (2, n + 1) tile. A merge only gives score if both entries in the resulting tile's pair are at least 3. Get to the 1716 (7, 8) tile to win!"],
-            ["p", "Spawning tiles: 1 (85%), 2 (8%), 3 (8%)"]);
+            ["p", "Spawning tiles: 1 (84%), 2 (8%), 3 (8%)"]);
         }
     }
     else if (gamemode == 85) { // 2669
@@ -12402,6 +12402,24 @@ function gmDisplayVars() {
             ["p", "Spawning tiles: 1 (90%), 2 (10%)"]);
         }
     }
+    else if (gamemode == 90) { // Ratio-Fill 3375
+        if (!mode_vars[0]) {
+            document.getElementById("RF3375_othersSmaller_text").innerHTML = "The tile that's getting a ratio filled does not have to be the largest tile in the merge.";
+            document.getElementById("RF3375_othersSmaller_text").style.setProperty("color", "#2b849b");
+            displayRules("rules_text", ["h1", "Ratio-Fill 3375"], ["p","Three tiles less than 15 can merge if one of them is a multiple of the other two and their sum is not greater than 15. To get from one power of 15 to the next, a tile must merge with two tiles that add up to double itself, two-thirds of itself, two-fifths of itself, two-sevenths of itself, two-ninths of itself, two-elevenths of itself, or two-thirteenths of itself, once each in any order. Get to the 3375 tile to win!"],
+            ["p", "Spawning tiles: 1 (90%), 3 (10%)"]);
+            displayRules("gm_rules_text", ["h1", "Ratio-Fill 3375"], ["p","Three tiles less than 15 can merge if one of them is a multiple of the other two and their sum is not greater than 15. To get from one power of 15 to the next, a tile must merge with two tiles that add up to double itself, two-thirds of itself, two-fifths of itself, two-sevenths of itself, two-ninths of itself, two-elevenths of itself, or two-thirteenths of itself, once each in any order. Get to the 3375 tile to win!"],
+            ["p", "Spawning tiles: 1 (90%), 3 (10%)"]);
+        }
+        else {
+            document.getElementById("RF3375_othersSmaller_text").innerHTML = "The tile that's getting a ratio filled has to be the largest tile in the merge.";
+            document.getElementById("RF3375_othersSmaller_text").style.setProperty("color", "#9b412b");
+            displayRules("rules_text", ["h1", "Ratio-Fill 3375"], ["p","Three tiles less than 15 can merge if one of them is a multiple of the other two and their sum is not greater than 15. To get from one power of 15 to the next, a tile must merge with two tiles not larger than itself that add up to double itself, two-thirds of itself, two-fifths of itself, two-sevenths of itself, two-ninths of itself, two-elevenths of itself, or two-thirteenths of itself, once each in any order. Get to the 3375 tile to win!"],
+            ["p", "Spawning tiles: 1 (90%), 3 (10%)"]);
+            displayRules("gm_rules_text", ["h1", "Ratio-Fill 3375"], ["p","Three tiles less than 15 can merge if one of them is a multiple of the other two and their sum is not greater than 15. To get from one power of 15 to the next, a tile must merge with two tiles not larger than itself that add up to double itself, two-thirds of itself, two-fifths of itself, two-sevenths of itself, two-ninths of itself, two-elevenths of itself, or two-thirteenths of itself, once each in any order. Get to the 3375 tile to win!"],
+            ["p", "Spawning tiles: 1 (90%), 3 (10%)"]);
+        }
+    }
     else if (gamemode == 91) { // 1845
         if (mode_vars[0] == 0) {
             document.getElementById("1845_randomGoals_text").innerHTML = "Random goals are disabled.";
@@ -12469,9 +12487,9 @@ function gmDisplayVars() {
             document.getElementById("TRIGAT_spawn2s_text").innerHTML = "Both 3s and 2s spawn.";
             document.getElementById("TRIGAT_spawn2s_text").style.setProperty("color", "#ca1e1e");
             displayRules("rules_text", ["h1", "TRIGAT"], ["p", 'Two tiles can merge if they are equal or if the smaller tile is a multiple of (the ratio between the two tiles * 2 - 1): for example, 30 and 12 can merge because 12 is a multiple of (30/12 * 2 - 1 = 4). (Another way of thinking about it is "a smaller tile can merge with its triangular number, even if they\'re not integers, and if a + b = c is a valid merge, then so is na + nb = nc for an integer n". This rule is equivalent to the "ratio * 2 - 1" rule). This mode has a lot of possible tiles, so it doesn\'t have a win condition. If you want a goal to strive for, see how many triangular numbers you can make multiples of.'],
-            ["p", "Spawning tiles: 2 (50%), 3 (50%)"]);
+            ["p", "Spawning tiles: 3 (50%), 2 (50%)"]);
             displayRules("gm_rules_text", ["h1", "TRIGAT"], ["p", 'Two tiles can merge if they are equal or if the smaller tile is a multiple of (the ratio between the two tiles * 2 - 1): for example, 30 and 12 can merge because 12 is a multiple of (30/12 * 2 - 1 = 4). (Another way of thinking about it is "a smaller tile can merge with its triangular number, even if they\'re not integers, and if a + b = c is a valid merge, then so is na + nb = nc for an integer n". This rule is equivalent to the "ratio * 2 - 1" rule). This mode has a lot of possible tiles, so it doesn\'t have a win condition. If you want a goal to strive for, see how many triangular numbers you can make multiples of.'],
-            ["p", "Spawning tiles: 2 (50%), 3 (50%)"]);
+            ["p", "Spawning tiles: 3 (50%), 2 (50%)"]);
         }
         else {
             document.getElementById("TRIGAT_spawn2s_text").innerHTML = "Only 3s spawn.";
@@ -12480,6 +12498,24 @@ function gmDisplayVars() {
             ["p", "Spawning tiles: 3 (100%)"]);
             displayRules("gm_rules_text", ["h1", "TRIGAT"], ["p", 'Two tiles can merge if they are equal or if the smaller tile is a multiple of (the ratio between the two tiles * 2 - 1): for example, 30 and 12 can merge because 12 is a multiple of (30/12 * 2 - 1 = 4). (Another way of thinking about it is "a smaller tile can merge with its triangular number, even if they\'re not integers, and if a + b = c is a valid merge, then so is na + nb = nc for an integer n". This rule is equivalent to the "ratio * 2 - 1" rule). This mode has a lot of possible tiles, so it doesn\'t have a win condition. If you want a goal to strive for, see how many triangular numbers you can make multiples of.'],
             ["p", "Spawning tiles: 3 (100%)"]);
+        }
+    }
+    else if (gamemode == 94) { // Ratio-Fill 9261
+        if (!mode_vars[0]) {
+            document.getElementById("RF9261_othersSmaller_text").innerHTML = "The tile that's getting a ratio filled does not have to be the largest tile in the merge.";
+            document.getElementById("RF9261_othersSmaller_text").style.setProperty("color", "#2b849b");
+            displayRules("rules_text", ["h1", "Ratio-Fill 9261"], ["p","To get from one power of 21 to the next, a tile must merge with one or two tiles that add up to double itself, equal to itself, two-thirds of itself, two-fourths of itself, or two-fifths of itself, once each in any order. Get to the 9261 tile to win!"],
+            ["p", "Spawning tiles: 1 (100%)"]);
+            displayRules("gm_rules_text", ["h1", "Ratio-Fill 9261"], ["p","To get from one power of 21 to the next, a tile must merge with one or two tiles that add up to double itself, equal to itself, two-thirds of itself, two-fourths of itself, or two-fifths of itself, once each in any order. Get to the 9261 tile to win!"],
+            ["p", "Spawning tiles: 1 (100%)"]);
+        }
+        else {
+            document.getElementById("RF9261_othersSmaller_text").innerHTML = "The tile that's getting a ratio filled has to be the largest tile in the merge.";
+            document.getElementById("RF9261_othersSmaller_text").style.setProperty("color", "#9b412b");
+            displayRules("rules_text", ["h1", "Ratio-Fill 9261"], ["p","To get from one power of 21 to the next, a tile must merge with one or two tiles not larger than itself that add up to double itself, equal to itself, two-thirds of itself, two-fourths of itself, or two-fifths of itself, once each in any order. Get to the 9261 tile to win!"],
+            ["p", "Spawning tiles: 1 (100%)"]);
+            displayRules("gm_rules_text", ["h1", "Ratio-Fill 9261"], ["p","To get from one power of 21 to the next, a tile must merge with one or two tiles not larger than itself that add up to double itself, equal to itself, two-thirds of itself, two-fourths of itself, or two-fifths of itself, once each in any order. Get to the 9261 tile to win!"],
+            ["p", "Spawning tiles: 1 (100%)"]);
         }
     }
     else if (gamemode == 95) { // 3385
@@ -13030,6 +13066,10 @@ function gmDisplayVars() {
                     [["@This 0", ">=", 0n], [[arrayProduct, "^BR", ["@This 0", "/B", mode_vars[1].length]], "*BR", [arraySubproducts, "arr_elem", ["@This 0", "mod", mode_vars[1].length]], "*BR", "@This 1"], ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^BR", "@This 0", "*BR", "@This 1", ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", ["@This 1", "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^BR", "@This 0", "*BR", "@This 1", ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^BR", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"]],
                     [["@This 0", "<", 0n], [[arrayProduct, "^BR", ["@This 0", "/BR", mode_vars[1].length, "floorBR", 1, "BigInt"]], "*BR", [arraySubproducts, "arr_elem", ["@This 0", "mod", mode_vars[1].length]], "*BR", "@This 1"], ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^BR", "@This 0", "*BR", "@This 1", "<=", 1/512], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 50, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length))), "abs"], "*", 75, "+", 10], 1], 30, 60, ["@HSLA", ["@This 1", "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^BR", "@This 0", "*BR", "@This 1", "<=", 1/512], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^BR", "@This 0", "<=", 1/512], "2nd", "#ffffd3", "@end-if"]]
                 ]
+                //TileTypes = [
+                //    [["@This 0", ">=", 0n], [mode_vars[1], "^BR", "@This 0", "*BR", "@This 1"], ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", (Number(mode_vars[1]) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(mode_vars[1]))], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", ["@This 1", "log", mode_vars[1], "*", 360], 100, [40, "@if", [mode_vars[1], "^BR", "@This 0", ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [mode_vars[1], "^BR", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"]],
+                //    [["@This 0", "<", 0n], [mode_vars[1], "^BR", "@This 0", "*BR", "@This 1"], ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", (Number(mode_vars[1]) - 2) * 222.49223595], 50, [0.925, "^", ["@This 0", "*", Math.log2(Number(mode_vars[1])), "abs"], "*", 75, "+", 10], 1], 0, 60, ["@HSLA", ["@This 1", "log", mode_vars[1], "*", 360], 100, [40, "@if", [mode_vars[1], "^BR", "@This 0", "<=", 1/512], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [mode_vars[1], "^BR", "@This 0", "<=", 1/512], "2nd", "#ffffd3", "@end-if"]]
+                //];
                 goalPow = BigInt(Math.floor(Math.log(2048)/Math.log(Number(arrayProduct))));
                 let lowergoal = arrayProduct.pow(goalPow);
                 goalPow *= BigInt(mode_vars[1].length);
@@ -13041,7 +13081,7 @@ function gmDisplayVars() {
                     index = (index + 1) % mode_vars[1].length;
                     goalPow++;
                 }
-                if (Math.log(Number(uppergoal) - 2048) <= Math.log(2048 - Number(lowergoal))) arrayWinCondition = uppergoal;
+                if (Number(lowergoal) == 1 || Math.log(Number(uppergoal) - 2048) <= Math.log(2048 - Number(lowergoal))) arrayWinCondition = uppergoal;
                 else {
                     arrayWinCondition = lowergoal;
                     goalPow--;
@@ -13103,7 +13143,7 @@ function gmDisplayVars() {
                     index = (index + 1) % mode_vars[1].length;
                     goalPow++;
                 }
-                if (Math.log(Number(uppergoal) - 2048) <= Math.log(2048 - Number(lowergoal))) arrayWinCondition = uppergoal;
+                if (Number(lowergoal) == 1 || Math.log(Number(uppergoal) - 2048) <= Math.log(2048 - Number(lowergoal))) arrayWinCondition = uppergoal;
                 else {
                     arrayWinCondition = lowergoal;
                     goalPow--;
@@ -16026,6 +16066,74 @@ function gmDisplayVars() {
             }
         }
     }
+    else if (gamemode == 101) { // DOFFET
+        document.getElementById("DOFFET_largerOffset").style.setProperty("display", "none");
+        let spawnDescription = "Spawning tiles: 1 (100%)";
+        if (mode_vars[0] > 0n) {
+            if (modifiers[13] == "None") {
+                startTileSpawns = [[[1n], 1]];
+                spawnDescription = "Spawning tiles: 1 (100%)";
+            }
+            else {
+                startTileSpawns = [[[1n], modifiers[22]], [[mode_vars[0] * -2n - 1n], modifiers[23]]];
+                spawnDescription = "Spawning tiles: 1 (50%), " + (mode_vars[0] * -2n - 1n) + " (50%)";
+            }
+        }
+        else {
+            if (modifiers[13] == "None") {
+                startTileSpawns = [[[mode_vars[0] * -2n + 1n], 1]];
+                spawnDescription = "Spawning tiles: " + (mode_vars[0] * -2n + 1n) + " (100%)";
+            }
+            else {
+                startTileSpawns = [[[mode_vars[0] * -2n + 1n], modifiers[22]], [[-1n], modifiers[23]]];
+                spawnDescription = "Spawning tiles: " + (mode_vars[0] * -2n + 1n) + " (50%), -1 (50%)";
+            }
+        }
+        displayRules("rules_text", ["h1", "DOFFET " + mode_vars[0] + ", " + mode_vars[1]], ["p", "Two tiles can merge if (the larger tile + " + mode_vars[1] + ") is a multiple of (the smaller tile + " + mode_vars[0] + "). This mode has a lot of possible tiles, so it doesn't have a win condition."], ["p", spawnDescription]);
+        displayRules("gm_rules_text", ["h1", "DOFFET " + mode_vars[0] + ", " + mode_vars[1]], ["p", "Two tiles can merge if (the larger tile + " + mode_vars[0] + ") is a multiple of (the smaller tile + " + mode_vars[1] + "). This mode has a lot of possible tiles, so it doesn't have a win condition."], ["p", spawnDescription]);
+        document.getElementById("DOFFET_offset_counter").innerHTML = mode_vars[0];
+        document.getElementById("DOFFET_largerOffset_counter").innerHTML = mode_vars[1];
+        if (mode_vars[1] == 1) document.getElementById("DOFFET_largerOffset_minus").style.setProperty("display", "none");
+        else document.getElementById("DOFFET_largerOffset_minus").style.setProperty("display", "flex");
+        if (mode_vars[2] == 0) {
+            document.getElementById("DOFFET_randomGoals_text").innerHTML = "Random goals are disabled.";
+            document.getElementById("DOFFET_randomGoals_text").style.setProperty("color", "#22002d");
+        }
+        else if (mode_vars[2] == 1) {
+            document.getElementById("DOFFET_randomGoals_text").innerHTML = "Random goals build upon the previous goals.";
+            document.getElementById("DOFFET_randomGoals_text").style.setProperty("color", "#732a8b");
+        }
+        else if (mode_vars[2] == 2) {
+            document.getElementById("DOFFET_randomGoals_text").innerHTML = "Each random goal builds upon the previous goal, but not necessarily the ones before.";
+            document.getElementById("DOFFET_randomGoals_text").style.setProperty("color", "#a01acd");
+        }
+        else if (mode_vars[2] == 3) {
+            document.getElementById("DOFFET_randomGoals_text").innerHTML = "Random goals are entirely random.";
+            document.getElementById("DOFFET_randomGoals_text").style.setProperty("color", "#ba77d0");
+        }
+        document.getElementById("DOFFET_firstGoalMinimum").style.setProperty("display", (mode_vars[2] == 0) ? "none" : "block");
+        document.getElementById("DOFFET_firstGoalMinimum_change").value = mode_vars[3];
+    }
+    else if (gamemode == 50.7101113) { // FRUSEE
+        if (mode_vars[0] == 0) {
+            document.getElementById("FRUSEE_randomGoals_text").innerHTML = "Random goals are disabled.";
+            document.getElementById("FRUSEE_randomGoals_text").style.setProperty("color", "#22002d");
+        }
+        else if (mode_vars[0] == 1) {
+            document.getElementById("FRUSEE_randomGoals_text").innerHTML = "Random goals build upon the previous goals.";
+            document.getElementById("FRUSEE_randomGoals_text").style.setProperty("color", "#732a8b");
+        }
+        else if (mode_vars[0] == 2) {
+            document.getElementById("FRUSEE_randomGoals_text").innerHTML = "Each random goal builds upon the previous goal, but not necessarily the ones before.";
+            document.getElementById("FRUSEE_randomGoals_text").style.setProperty("color", "#a01acd");
+        }
+        else if (mode_vars[0] == 3) {
+            document.getElementById("FRUSEE_randomGoals_text").innerHTML = "Random goals are entirely random.";
+            document.getElementById("FRUSEE_randomGoals_text").style.setProperty("color", "#ba77d0");
+        }
+        document.getElementById("FRUSEE_firstGoalMinimum").style.setProperty("display", (mode_vars[0] == 0) ? "none" : "block");
+        document.getElementById("FRUSEE_firstGoalMinimum_change").value = mode_vars[1];
+    }
     else if (gamemode == 50.1) { // Gaussian DIVE
         let seedCheckDescription = "";
         let seedSpawnDescription = "";
@@ -16094,6 +16202,11 @@ function gmDisplayVars() {
             document.getElementById("GaussianDIVE_unlockRules_text").style.setProperty("color", "#fa6756");
             seedCheckDescription = " (Seeds are checked smallest to largest.) "
         }
+        else if (mode_vars[4] == 4) {
+            document.getElementById("GaussianDIVE_unlockRules_text").innerHTML = "When deciding what new seed to unlock, the maximum possibility is always chosen. (This may be laggy.)";
+            document.getElementById("GaussianDIVE_unlockRules_text").style.setProperty("color", "#e219d1");
+            seedCheckDescription = " (Seeds are checked in a way that gives the maximum possible outcome.) "
+        }
         else {
             document.getElementById("GaussianDIVE_unlockRules_text").innerHTML = "When deciding what new seed to unlock, seeds are checked in the order they were unlocked.";
             document.getElementById("GaussianDIVE_unlockRules_text").style.setProperty("color", "#58c2dc");
@@ -16107,8 +16220,231 @@ function gmDisplayVars() {
         if (mode_vars[1]) seedSpawnDescription += "If there are no remaining multiples of a spawning tile on the board, that tile is removed from the spawn pool, and you gain points equal to its value."
         displayRules("rules_text", ["h1", "Gaussian DIVE"], ["p", "DIVE, but the tiles are complex integers instead of just real integers."],
         ["p", seedSpawnDescription]);
-        displayRules("gm_rules_text", ["p", "You found a hidden mode!"], ["h1", "Gaussian DIVE"], ["p", "DIVE, but the tiles are complex integers instead of just real integers."],
+        displayRules("gm_rules_text", ["h1", "Gaussian DIVE"], ["p", "DIVE, but the tiles are complex integers instead of just real integers."],
         ["p", seedSpawnDescription]);
+    }
+    else if (wavesModeModified.indexOf(gamemode) != -1) { // The rest of the waves modes
+        document.getElementById("WavesModes_vars").style.setProperty("display", "flex");
+        document.getElementById("WavesModes_unlockRules_text").style.setProperty("display", "block");
+        let seedUnlockDescription = "";
+        if (mode_vars[0] == 0) {
+            document.getElementById("WavesModes_seeds_text").innerHTML = "Spawning tiles, a.k.a. seeds, can be unlocked and eliminated.";
+            document.getElementById("WavesModes_seeds_text").style.setProperty("color", "#060");
+            seedUnlockDescription = " Seeds can be unlocked and eliminated.";
+        }
+        else if (mode_vars[0] == -1) {
+            document.getElementById("WavesModes_seeds_text").innerHTML = "Spawning tiles, a.k.a. seeds, are unlocked permanently.";
+            document.getElementById("WavesModes_seeds_text").style.setProperty("color", "#400");
+            seedUnlockDescription = " Seeds are unlocked permanently.";
+        }
+        else if (mode_vars[0] == 1) {
+            document.getElementById("WavesModes_seeds_text").innerHTML = "Seeds are disabled, only 1s spawn.";
+            document.getElementById("WavesModes_seeds_text").style.setProperty("color", "#008");
+            seedUnlockDescription = "";
+            document.getElementById("WavesModes_unlockRules_text").style.setProperty("display", "block");
+        }
+        let seedCheckDescription = "";
+        if (mode_vars[2] == 0) {
+            document.getElementById("WavesModes_unlockRules_text").innerHTML = "When deciding what new seed to unlock, seeds are checked largest to smallest.";
+            document.getElementById("WavesModes_unlockRules_text").style.setProperty("color", "#b7ff3c");
+            seedCheckDescription = " (Seeds are checked largest to smallest.) "
+        }
+        else if (mode_vars[2] == 1) {
+            document.getElementById("WavesModes_unlockRules_text").innerHTML = "When deciding what new seed to unlock, the minimum possibility is always chosen, as in the original DIVE. (This may be laggy.)";
+            document.getElementById("WavesModes_unlockRules_text").style.setProperty("color", "#e3ae79");
+            seedCheckDescription = " (Seeds are checked in a way that gives the minimum possible outcome.) "
+        }
+        else if (mode_vars[2] == 2) {
+            document.getElementById("WavesModes_unlockRules_text").innerHTML = "When deciding what new seed to unlock, seeds are checked smallest to largest.";
+            document.getElementById("WavesModes_unlockRules_text").style.setProperty("color", "#fa6756");
+            seedCheckDescription = " (Seeds are checked smallest to largest.) "
+        }
+        else if (mode_vars[2] == 4) {
+            document.getElementById("WavesModes_unlockRules_text").innerHTML = "When deciding what new seed to unlock, the maximum possibility is always chosen. (This may be laggy.)";
+            document.getElementById("WavesModes_unlockRules_text").style.setProperty("color", "#e219d1");
+            seedCheckDescription = " (Seeds are checked in a way that gives the maximum possible outcome.) "
+        }
+        else {
+            document.getElementById("WavesModes_unlockRules_text").innerHTML = "When deciding what new seed to unlock, seeds are checked in the order they were unlocked.";
+            document.getElementById("WavesModes_unlockRules_text").style.setProperty("color", "#58c2dc");
+            seedCheckDescription = " (Seeds are checked in the order they were unlocked.) "
+        }
+        if (gamemode == 91.50118) {
+            document.getElementById("WavesModes_1s").style.setProperty("display", "none");
+        }
+        else {
+            document.getElementById("WavesModes_1s").style.setProperty("display", "block");
+            if (mode_vars[1]) {
+                document.getElementById("WavesModes_1s_text").innerHTML = "1s are as likely to spawn as any other spawning tile.";
+                document.getElementById("WavesModes_1s_text").style.setProperty("color", "#000");
+            }
+            else {
+                document.getElementById("WavesModes_1s_text").innerHTML = "1s cannot spawn.";
+                document.getElementById("WavesModes_1s_text").style.setProperty("color", "#fff");
+            }
+        }
+        let title = "";
+        let modeRulesDescription = "";
+        let modeSpawnDescription = "";
+        let randomGoalsMVStart = -1;
+        let randomGoalsGVStart = -1;
+        if (gamemode == 96.50118) { // HICEM
+            title = "HICEM";
+            modeRulesDescription = "Three tiles can merge if one of the tiles is the greatest common divisor of the other two. When three tiles merge, the score gained from the merge is only the smaller value out of the three tiles (rather than the value of the new tile). This mode has no win condition, so just try to get as high of a score as you can!";
+            modeSpawnDescription = "The starting seed is " + (mode_vars[1] ? 1 : 3) + ". Seeds are unlocked in the same way as DIVE.";
+            randomGoalsMVStart = 3;
+            randomGoalsGVStart = 7;
+        }
+        if (gamemode == 34.50118) { // Partial Flow DIVE
+            title = "Partial Flow DIVE";
+            modeRulesDescription = "Any two tiles can merge, but the larger tile only absorbs an amount from the smaller tile equal to the GCD of the two tiles. When two tiles merge, score is only gained if the merge was full, and the score gained from the merge is only the smaller value out of the two tiles (rather than the value of the new tile).";
+            if (!mode_vars[3]) {
+                title = "Non-Coprime Partial Flow DIVE";
+                modeRulesDescription = "Any two tiles can merge (unless they are coprime and neither tile has an absolute value of 1), but the larger tile only absorbs an amount from the smaller tile equal to the GCD of the two tiles. When two tiles merge, score is only gained if the merge was full, and the score gained from the merge is only the smaller value out of the two tiles (rather than the value of the new tile)."
+            }
+            modeSpawnDescription = "The starting seed is " + (mode_vars[1] ? 1 : 2) + ". Seeds are unlocked in the same way as DIVE. Seed eliminations do not give score.";
+            if (mode_vars[3]) {
+                document.getElementById("PartialFlowDIVE_coprimeMerge_text").innerHTML = "Coprime tiles can merge.";
+                document.getElementById("PartialFlowDIVE_coprimeMerge_text").style.setProperty("color", "#c2f0ff");
+            }
+            else {
+                document.getElementById("PartialFlowDIVE_coprimeMerge_text").innerHTML = "Coprime tiles cannot merge unless one divides the other.";
+                document.getElementById("PartialFlowDIVE_coprimeMerge_text").style.setProperty("color", "#1c2b30");
+            }
+            if (mode_vars[6] == 0) {
+                modeRulesDescription += " If there are no empty spaces left on the grid, the game ends. This mode has no win condition, so just try to get as high of a score as you can!";
+                document.getElementById("PartialFlowDIVE_fullGridMoves").style.setProperty("display", "none");
+                document.getElementById("PartialFlowDIVE_fullMoveReplenish_text").innerHTML = "When the grid is full, you lose immediately.";
+                document.getElementById("PartialFlowDIVE_fullMoveReplenish_text").style.setProperty("color", "#200043");
+            }
+            else {
+                document.getElementById("PartialFlowDIVE_fullGridMoves").style.setProperty("display", "block");
+                document.getElementById("PartialFlowDIVE_fullGridMoves_counter").innerHTML = mode_vars[7];
+                if (mode_vars[7] < 2) document.getElementById("PartialFlowDIVE_fullGridMoves_minus").style.setProperty("display", "none");
+                else document.getElementById("PartialFlowDIVE_fullGridMoves_minus").style.setProperty("display", "inline-block");
+                if (mode_vars[6] == 1) {
+                    modeRulesDescription += " Once there are no empty spaces left on the grid, you have " + mode_vars[7] + " more move(s) to clear up at least one empty space, then the game ends if you fail to do so. This mode has no win condition, so just try to get as high of a score as you can!";
+                    document.getElementById("PartialFlowDIVE_fullMoveReplenish_text").innerHTML = "Full grid moves reset when the grid is no longer full.";
+                    document.getElementById("PartialFlowDIVE_fullMoveReplenish_text").style.setProperty("color", "#bf83ff");
+                }
+                else {
+                    modeRulesDescription += " The game ends once the grid has had no empty spaces on it for a total of " + (mode_vars[7] + 1) + " moves. This mode has no win condition, so just try to get as high of a score as you can!";
+                    document.getElementById("PartialFlowDIVE_fullMoveReplenish_text").innerHTML = "Full grid moves do not reset when the grid is no longer full.";
+                    document.getElementById("PartialFlowDIVE_fullMoveReplenish_text").style.setProperty("color", "#6630a1");
+                }
+            }
+            randomGoalsMVStart = 4;
+            randomGoalsGVStart = 7;
+        }
+        if (gamemode == 50.22) { // Dual-Tile DIVE
+            title = "Dual-Tile DIVE";
+            modeRulesDescription = "DIVE, but tiles have two numbers, and all math operations are done componentwise. For example, 2 3 + 4 9 is 6 12, and 2 3 * 4 9 is 8 27. When two tiles merge, the score gained from the merge is only the smaller sum out of the two tiles (rather than the sum of the new tile). This mode has no win condition, so just try to get as high of a score as you can!";
+            if (mode_vars[3]) {
+                title = "Unordered Dual-Tile DIVE";
+                modeRulesDescription = "DIVE, but tiles have two numbers, and all math operations are done componentwise, though the components are not ordered. When two tiles merge, the score gained from the merge is only the smaller sum out of the two tiles (rather than the sum of the new tile). This mode has no win condition, so just try to get as high of a score as you can!"
+            }
+            modeSpawnDescription = (mode_vars[1] ? "The starting seeds are 1 1 and 1 2. Seeds are unlocked in the same way as DIVE." : "The starting seed is 1 2. Seeds are unlocked in the same way as DIVE.");
+            if (mode_vars[3]) {
+                document.getElementById("DualTileDIVE_unordered_text").innerHTML = "The order of the components does not matter.";
+                document.getElementById("DualTileDIVE_unordered_text").style.setProperty("color", "#815bce");
+            }
+            else {
+                document.getElementById("DualTileDIVE_unordered_text").innerHTML = "The order of the components matters.";
+                document.getElementById("DualTileDIVE_unordered_text").style.setProperty("color", "#250070");
+            }
+        }
+        if (gamemode == 91.50118) { // Aquatic 1845
+            title = "Aquatic 1845";
+            modeRulesDescription = "Two tiles can merge if their ratio is 1, 2, or a sum of a whole number and a non-1/1 unit fraction. When two tiles merge, the score gained from the merge is only the smaller value out of the two tiles (rather than the value of the new tile). This mode has no win condition, so just try to get as high of a score as you can!";
+            modeSpawnDescription = "The starting seed is 1. Seeds are unlocked in the same way as DIVE.";
+            randomGoalsMVStart = 3;
+            randomGoalsGVStart = 7;
+        }
+        if (gamemode == 73.50118) { // Aquatic SQUART
+            title = "Aquatic SQUART";
+            modeRulesDescription = "Two tiles can merge if the square of one of the tiles is a multiple of the other tile but the first tile itself is not a multiple of the other tile, or if one tile is a multiple of the other tile. Only the former type of merge gives score, and if this is true, the score gained from the merge is only the smaller value out of the two tiles (rather than the value of the new tile). This mode has no win condition, so just try to get as high of a score as you can!";
+            modeSpawnDescription = "The starting seed is " + (mode_vars[1] ? 1 : 2) + ". Seeds are unlocked in the same way as DIVE, but there's also a second list of seeds that only works with the non-squarefree parts of numbers (meaning all seeds there are perfect squares), and seeds there are only eliminated if their square root would be eliminated. Seed eliminations do not give score.";
+            randomGoalsMVStart = 3;
+            randomGoalsGVStart = 12;
+        }
+        if (gamemode == 89.50118) { // Aquatic 2496
+            title = "Aquatic 2496";
+            modeRulesDescription = "Tiles are products of two integers, and two tiles can merge if they have at least one integer in common, even if they're not in the same position: for example, a 2 × 6 tile and a 6 × 7 tile can merge into a 6 × 9 tile. If the tiles are equal, the larger number is the one considered to be matching. The score given from a merge is whatever the matching number is. This mode has no win condition, so just try to get as high of a score as you can!";
+            modeSpawnDescription = "The starting seed is " + (mode_vars[1] ? 1 : 2) + ". Seeds are unlocked in the same way as DIVE, using the values of the products. Seeds are single integers, so the spawning tile is a product of two (not necessarily distinct) seeds, such that the product is not larger than the largest tile discovered so far.";
+            if (!mode_vars[3]) {
+                modeSpawnDescription = "The starting seed is " + (mode_vars[1] ? 1 : 2) + ". Seeds are unlocked in the same way as DIVE, using the values of the products. Seeds are single integers, so the spawning tile is a product of two (not necessarily distinct) seeds, such that the product is not larger than the largest tile discovered so far.";
+                document.getElementById("Aquatic2496_productLimit_text").innerHTML = "Spawning tiles cannot be larger than all existing tiles.";
+                document.getElementById("Aquatic2496_productLimit_text").style.setProperty("color", "#721c00");
+            }
+            else {
+                modeSpawnDescription = "The starting seed is " + (mode_vars[1] ? 1 : 2) + ". Seeds are unlocked in the same way as DIVE, using the values of the products. Seeds are single integers, so the spawning tile is a product of two (not necessarily distinct) seeds.";
+                document.getElementById("Aquatic2496_productLimit_text").innerHTML = "Spawning tiles can be larger than all existing tiles.";
+                document.getElementById("Aquatic2496_productLimit_text").style.setProperty("color", "#d43500");
+            }
+        }
+        if (gamemode == 97.50118) { // Div-Add-Tor
+            if (mode_vars[3] == 0) {
+                title = "Div-Add-Tor";
+                modeRulesDescription = "Tiles include two integers. Two tiles can merge if the product of one tile's two integers is a multiple of the product of the other tile's two integers. When tiles merge, their left two numbers are added and their right two numbers are added. The score from a merge is the smaller of the two products. This mode has no win condition, so just try to get as high of a score as you can!";
+                document.getElementById("DivAddTor_232_240_merges_text").innerHTML = "(232, 240)-style merges are not allowed.";
+                document.getElementById("DivAddTor_232_240_merges_text").style.setProperty("color", "#a4cf3f");
+            }
+            if (mode_vars[3] == 1) {
+                title = "Div-Add-Tor (with (232, 240) merges)";
+                modeRulesDescription = "Tiles include two integers. Two tiles can merge if the product of one tile's two integers is a multiple of the product of the other tile's two integers, or if the tiles have the same number in at least one of the two positions. When tiles merge, their left two numbers are added and their right two numbers are added. The score from a merge is the smaller of the two products. This mode has no win condition, so just try to get as high of a score as you can!";
+                document.getElementById("DivAddTor_232_240_merges_text").innerHTML = "(232, 240)-style merges are allowed.";
+                document.getElementById("DivAddTor_232_240_merges_text").style.setProperty("color", "#c37fff");
+            }
+            if (mode_vars[3] == 2) {
+                title = "Div-Add-Tor (with Unordered (232, 240) merges)";
+                modeRulesDescription = "Tiles include two integers. Two tiles can merge if the product of one tile's two integers is a multiple of the product of the other tile's two integers, or if the tiles have at least one number in common. When tiles merge, their left two numbers are added and their right two numbers are added. The score from a merge is the smaller of the two products. This mode has no win condition, so just try to get as high of a score as you can!";
+                document.getElementById("DivAddTor_232_240_merges_text").innerHTML = "Unordered (232, 240)-style merges are allowed.";
+                document.getElementById("DivAddTor_232_240_merges_text").style.setProperty("color", "#ff91da");
+            }
+            modeSpawnDescription = "The starting seed is " + (mode_vars[1] ? 1 : 2) + ".";
+            if (mode_vars[4] == 0) {
+                modeSpawnDescription += " Seeds are unlocked in the same way as DIVE, treating each member of a product independently."
+                document.getElementById("DivAddTor_DualTileSeeds_text").innerHTML = "Members of a product are treated independently for seed checks.";
+                document.getElementById("DivAddTor_DualTileSeeds_text").style.setProperty("color", "#6b4c7a");
+            }
+            if (mode_vars[4] == 1) {
+                modeSpawnDescription += " Seeds are unlocked in the same way as Dual-Tile DIVE."
+                document.getElementById("DivAddTor_DualTileSeeds_text").innerHTML = "Seed checks work like they do in Dual-Tile DIVE.";
+                document.getElementById("DivAddTor_DualTileSeeds_text").style.setProperty("color", "#5555af");
+            }
+            if (mode_vars[4] == 2) {
+                modeSpawnDescription += " Seeds are unlocked in the same way as Unordered Dual-Tile DIVE."
+                document.getElementById("DivAddTor_DualTileSeeds_text").innerHTML = "Seed checks work like they do in Unordered Dual-Tile DIVE.";
+                document.getElementById("DivAddTor_DualTileSeeds_text").style.setProperty("color", "#af5555");
+            }
+        }
+        if (gamemode == 50.248) { // Wildcard DIVE
+            title = "Wildcard DIVE";
+            modeRulesDescription = "DIVE, but some tiles can act as multiple tiles, like in Wildcard 2048. Two of these \"wildcard\" tiles can merge as long as they have at least one possibility pair that could merge, and the result of their merge is a tile that contains all of the possible tiles that could be the result of a valid merge between some possibility pair of those two tiles. Each of these possibile merges has its smaller tile added up to get the sum used for the score gain from the merge. This mode has no win condition, so just try to get as high of a score as you can!";
+            modeSpawnDescription = "The starting seed is " + (mode_vars[1] ? 1 : 2) + ". Seeds are unlocked in the same way as DIVE, treating each possibility of a tile independently. A tile will always include at least one possibility; after the first, there's a " + mode_vars[3] * 100 + "% chance for the tile to have an additional possibility, then the same chance after the second for the third, and repeat.";
+            document.getElementById("WildcardDIVE_possibilityChance_change").value = mode_vars[3];
+            randomGoalsMVStart = 4;
+            randomGoalsGVStart = 10;
+        }
+        displayRules("rules_text", ["h1", title], ["p", modeRulesDescription], ["p", modeSpawnDescription + seedUnlockDescription + seedCheckDescription]);
+        displayRules("gm_rules_text", ["h1", title], ["p", modeRulesDescription], ["p", modeSpawnDescription + seedUnlockDescription + seedCheckDescription]);
+        if (randomGoalsMVStart != -1) {
+            if (mode_vars[randomGoalsMVStart] == 0) {
+                document.getElementById("WavesModes_randomGoals_text").innerHTML = "Random goals are disabled.";
+                document.getElementById("WavesModes_randomGoals_text").style.setProperty("color", "#22002d");
+            }
+            else if (mode_vars[randomGoalsMVStart] == 1) {
+                document.getElementById("WavesModes_randomGoals_text").innerHTML = "Random goals build upon the previous goals.";
+                document.getElementById("WavesModes_randomGoals_text").style.setProperty("color", "#732a8b");
+            }
+            else {
+                document.getElementById("WavesModes_randomGoals_text").innerHTML = "Random goals are entirely random.";
+                document.getElementById("WavesModes_randomGoals_text").style.setProperty("color", "#ba77d0");
+            }
+            document.getElementById("WavesModes_firstGoalMinimum").style.setProperty("display", (mode_vars[randomGoalsMVStart] == 0) ? "none" : "block");
+            document.getElementById("WavesModes_firstGoalMinimum_change").value = mode_vars[randomGoalsMVStart + 1];
+            start_game_vars[randomGoalsGVStart + 3] = mode_vars[randomGoalsMVStart + 1];
+        }
     }
     else if (gamemode == 37.71) { // 839,808
         if (mode_vars[0] == 0) {
@@ -16472,6 +16808,22 @@ function displayModifiers(page) {
         else document.getElementById("modifiers_spawnInterval_minus").style.setProperty("display", "inline-block");
         document.getElementById("modifiers_spawnInterval_plus").style.setProperty("display", "inline-block");
         document.getElementById("modifiers_replaySpeed_change").value = modifiers[29];
+        if (secretsFound[9]) {
+            document.getElementById("modifiers_randomUnmovingTiles").style.setProperty("display", "block");
+            document.getElementById("modifiers_randomUnmovingTiles_counter").innerHTML = modifiers[30];
+            if (modifiers[30] <= 0) document.getElementById("modifiers_randomUnmovingTiles_minus").style.setProperty("display", "none");
+            else document.getElementById("modifiers_randomUnmovingTiles_minus").style.setProperty("display", "inline-block");
+            document.getElementById("modifiers_randomUnmovingTiles_plus").style.setProperty("display", "inline-block");
+            document.getElementById("modifiers_randomUnmergingTiles").style.setProperty("display", "block");
+            document.getElementById("modifiers_randomUnmergingTiles_counter").innerHTML = modifiers[31];
+            if (modifiers[31] <= 0) document.getElementById("modifiers_randomUnmergingTiles_minus").style.setProperty("display", "none");
+            else document.getElementById("modifiers_randomUnmergingTiles_minus").style.setProperty("display", "inline-block");
+            document.getElementById("modifiers_randomUnmergingTiles_plus").style.setProperty("display", "inline-block");
+        }
+        else {
+            document.getElementById("modifiers_randomUnmovingTiles").style.setProperty("display", "none");
+            document.getElementById("modifiers_randomUnmergingTiles").style.setProperty("display", "none");
+        }
     }
     else if (page == 2) {
         if (modifiers[3]) {
