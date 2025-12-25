@@ -21322,7 +21322,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@GVar 1"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
-                if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[24] > 1 && mode_vars[0] < 3) sBox.push("arr_push", 1);
                 if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
             }
@@ -21339,7 +21339,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"], 1];
                 if (modifiers[24] > 1) sBox.push(1);
-                if (modifiers[30] > 0) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
@@ -21546,7 +21546,7 @@ function loadModifiers() {
                 let sBox = ["@GVar 1"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
-                if (modifiers[30] > 0) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
             }
         }
@@ -21643,7 +21643,7 @@ function loadModifiers() {
                 let sBox = ["@GVar 4"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
-                if (modifiers[30] > 0) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 5"]);
             }
         }
@@ -21896,7 +21896,7 @@ function loadModifiers() {
                     let sBox = ["@GVar 1"];
                     if (modifiers[13] != "None") sBox.push("arr_push", 1);
                     if (modifiers[24] > 1) sBox.push("arr_push", 1);
-                    if (modifiers[30] > 0) sBox.push(1);
+                    if (modifiers[30] > 0) sBox.push("arr_push", 1);
                     statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
                 }
             }
@@ -21946,7 +21946,7 @@ function loadModifiers() {
                 let sBox = ["@GVar 0", "arr_concat", "@GVar 3"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
-                if (modifiers[30] > 0) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
             TileTypes[1][3][1][4] = mode_vars[2] - 1;
@@ -22072,7 +22072,7 @@ function loadModifiers() {
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[13] != "None") sBox.push(1);
                 if (modifiers[24] > 1) sBox.push(1);
-                if (modifiers[30] > 0) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
@@ -22123,7 +22123,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[24] > 1) sBox.push(1);
-                if (modifiers[30] > 0) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
                 start_game_vars[4] = mode_vars[1];
             }
@@ -22203,7 +22203,7 @@ function loadModifiers() {
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 1"]];
                 if (modifiers[13] != "None") sBox.push(1);
                 if (modifiers[24] > 1) sBox.push(1);
-                if (modifiers[30] > 0) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
                 start_game_vars[5] = mode_vars[3];
             }
@@ -22222,7 +22222,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[24] > 1) sBox.push(1);
-                if (modifiers[30] > 0) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
                 start_game_vars[4] = mode_vars[2];
             }
@@ -22230,18 +22230,18 @@ function loadModifiers() {
         else if (gamemode == 97) { // Pro-Add-Uct
             if (modifiers[13] == "None") {
                 MergeRules = [
-                    [mode_vars[0], [[[["@This 0", "max", 1n], "*B", ["@This 1", "max", 1n]], "=", [["@Next 1 0", "max", 1n], "*B", ["@Next 1 1", "max", 1n]]], "&&", [["@NextNE -1 0", "typeof", "!=", "bigint"], "||", [[["@This 0", "max", 1n], "*B", ["@This 1", "max", 1n]], "!=", [["@NextNE -1 0", "max", 1n], "*B", ["@NextNE -1 1", "max", 1n]]], "||", ["@MLength", "=", mode_vars[1]]]], true, [[["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]]], ["@Next", "arr_reduce", "@This 1", ["+B", ["@var_retain", "@Var -1", "arr_elem", 1]]]]], ["@Next", "arr_reduce", ["@This 0", "*", "@This 1"], ["+", ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0], "*", ["@var_retain", "@Var -1", "arr_elem", 1]]], "/", ["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "/", [["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "abs"]], [], 2, [0, 1], 1, Math.min(mode_vars[1], Math.max(width, height))]
+                    [mode_vars[0], [[[["@This 0", "max", 1n], "*B", ["@This 1", "max", 1n]], "=", [["@Next 1 0", "max", 1n], "*B", ["@Next 1 1", "max", 1n]]], "&&", [["@NextNE -1 0", "typeof", "!=", "bigint"], "||", [[["@This 0", "max", 1n], "*B", ["@This 1", "max", 1n]], "!=", [["@NextNE -1 0", "max", 1n], "*B", ["@NextNE -1 1", "max", 1n]]], "||", ["@MLength", "=", mode_vars[1]]]], true, [[["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]]], ["@Next", "arr_reduce", "@This 1", ["+B", ["@var_retain", "@Var -1", "arr_elem", 1]]]]], ["@Next", "arr_reduce", ["@This 0", "*", "@This 1", "abs"], ["+", ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0, "abs"], "*", ["@var_retain", "@Var -1", "arr_elem", 1, "abs"]]], "/", ["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "/", [["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "abs"]], [], 2, [0, 1], 1, Math.min(mode_vars[1], Math.max(width, height))]
                 ];
             }
             else if (modifiers[13] == "Non-Interacting") {
                 MergeRules = [
-                    [mode_vars[0], [[["@This 0", "max", 1n], "*B", ["@This 1", "max", 1n]], "=", [["@Next 1 0", "max", 1n], "*B", ["@Next 1 1", "max", 1n]], "&&", ["@This 2", "=", "@Next 1 2"], "&&", [["@NextNE -1 0", "typeof", "!=", "bigint"], "||", [[["@This 0", "max", 1n], "*B", ["@This 1", "max", 1n]], "!=", [["@NextNE -1 0", "max", 1n], "*B", ["@NextNE -1 1", "max", 1n]]], "||", ["@This 2", "!=", "@NextNE -1 2"], "||", ["@MLength", "=", mode_vars[1]]]], true, [[["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]]], ["@Next", "arr_reduce", "@This 1", ["+B", ["@var_retain", "@Var -1", "arr_elem", 1]]]]], ["@Next", "arr_reduce", ["@This 0", "*", "@This 1"], ["+", ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0], "*", ["@var_retain", "@Var -1", "arr_elem", 1]]], "/", ["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "/", [["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "abs"]], [], 2, [0, 1], 1, Math.min(mode_vars[1], Math.max(width, height))]
+                    [mode_vars[0], [[["@This 0", "max", 1n], "*B", ["@This 1", "max", 1n]], "=", [["@Next 1 0", "max", 1n], "*B", ["@Next 1 1", "max", 1n]], "&&", ["@This 2", "=", "@Next 1 2"], "&&", [["@NextNE -1 0", "typeof", "!=", "bigint"], "||", [[["@This 0", "max", 1n], "*B", ["@This 1", "max", 1n]], "!=", [["@NextNE -1 0", "max", 1n], "*B", ["@NextNE -1 1", "max", 1n]]], "||", ["@This 2", "!=", "@NextNE -1 2"], "||", ["@MLength", "=", mode_vars[1]]]], true, [[["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]]], ["@Next", "arr_reduce", "@This 1", ["+B", ["@var_retain", "@Var -1", "arr_elem", 1]]], "@This 2"]], ["@Next", "arr_reduce", ["@This 0", "*", "@This 1", "abs"], ["+", ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0, "abs"], "*", ["@var_retain", "@Var -1", "arr_elem", 1, "abs"]]], "/", ["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "/", [["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "abs"]], [], 2, [0, 1], 1, Math.min(mode_vars[1], Math.max(width, height))]
                 ];
             }
             else {
                 MergeRules = [
                     [2, [["@This 0", "*B", -1n, "=", "@Next 1 0"], "&&", ["@This 1", "*B", -1n, "=", "@Next 1 1"]], true, [], 0, [true, true]],
-                    [mode_vars[0], [[["@This 0", "absB", "max", 1n], "*B", ["@This 1", "absB", "max", 1n]], "=", [["@Next 1 0", "absB", "max", 1n], "*B", ["@Next 1 1", "absB", "max", 1n]], "&&", [["@NextNE -1 0", "typeof", "!=", "bigint"], "||", [[["@This 0", "absB", "max", 1n], "*B", ["@This 1", "absB", "max", 1n]], "!=", [["@NextNE -1 0", "absB", "max", 1n], "*B", ["@NextNE -1 1", "absB", "max", 1n]]], "||", ["@MLength", "=", mode_vars[1]]]], true, [[["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]]], ["@Next", "arr_reduce", "@This 1", ["+B", ["@var_retain", "@Var -1", "arr_elem", 1]]]]], ["@Next", "arr_reduce", ["@This 0", "*", "@This 1"], ["+", ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0], "*", ["@var_retain", "@Var -1", "arr_elem", 1]]], "/", ["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "/", [["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "abs"]], [], 2, [0, 1], 1, Math.min(mode_vars[1], Math.max(width, height))]
+                    [mode_vars[0], [[["@This 0", "absB", "max", 1n], "*B", ["@This 1", "absB", "max", 1n]], "=", [["@Next 1 0", "absB", "max", 1n], "*B", ["@Next 1 1", "absB", "max", 1n]], "&&", [["@NextNE -1 0", "typeof", "!=", "bigint"], "||", [[["@This 0", "absB", "max", 1n], "*B", ["@This 1", "absB", "max", 1n]], "!=", [["@NextNE -1 0", "absB", "max", 1n], "*B", ["@NextNE -1 1", "absB", "max", 1n]]], "||", ["@MLength", "=", mode_vars[1]]]], true, [[["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]]], ["@Next", "arr_reduce", "@This 1", ["+B", ["@var_retain", "@Var -1", "arr_elem", 1]]]]], ["@Next", "arr_reduce", ["@This 0", "*", "@This 1", "abs"], ["+", ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0, "abs"], "*", ["@var_retain", "@Var -1", "arr_elem", 1, "abs"]]], "/", ["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "/", [["@Next", "arr_reduce", "@This 0", ["gcdB", ["@var_retain", "@Var -1", "arr_elem", 0]], "abs"], "abs"]], [], 2, [0, 1], 1, Math.min(mode_vars[1], Math.max(width, height))]
                 ];
             }
             knownMergeMaxLength = mode_vars[1];
@@ -22274,6 +22274,46 @@ function loadModifiers() {
                 }
             }
         }
+        else if (gamemode == 101) { // DOFFET
+            start_game_vars[0] = mode_vars[0];
+            start_game_vars[1] = mode_vars[1];
+            if (mode_vars[2] > 0) {
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 3"], "@edit_gvar", 5, true, "@end-if"], "Merge"]);
+                if (mode_vars[0] == 1) {
+                    scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 5", "@edit_gvar", 4, ["@GVar 4", "+", 1], "@edit_gvar", 5, false, "@repeat", ["@GVar 6", "arr_length", ">", "@Var 1"], "@if", ["@GVar 6", "arr_elem", "@Var 1", ">", "@GVar 3"], "@edit_var", 1, 1e300, "@end-if", "@else-if", ["@GVar 3", "+B", "@GVar 1", "%B", ["@GVar 6", "arr_elem", "@Var 1", "+B", "@GVar 0", "absB", "max", 1n], "=", 0n], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 6", "arr_elem", "@Var 1"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "2nd", ["@GVar 3", "+B", ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]]], "@edit_gvar", 3, "@Parent -1", "@edit_gvar", 6, ["@GVar 6", "arr_push", "@Parent -2"], "@end-if"], "EndTurn"])
+                }
+                else if (mode_vars[0] == 2) {
+                    scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 5", "@edit_gvar", 4, ["@GVar 4", "+", 1], "@edit_gvar", 5, false, "@repeat", ["@GVar 6", "arr_length", ">", "@Var 1"], "@if", ["@GVar 6", "arr_elem", "@Var 1", ">", "@GVar 3"], "@edit_var", 1, 1e300, "@end-if", "@else-if", ["@GVar 3", "+B", "@GVar 1", "%B", ["@GVar 6", "arr_elem", "@Var 1", "+B", "@GVar 0", "absB", "max", 1n], "=", 0n], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 6", "arr_elem", "@Var 1", "+B", "@GVar 3"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@edit_gvar", 3, ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]], "@edit_var", 1, 0, "@repeat", ["@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@GVar 6", "arr_indexOf", ["@Var 0", "arr_elem", "@Var 1"], "=", -1], "@edit_gvar", 6, ["@GVar 6", "arr_binaryInsert", ["@Var 0", "arr_elem", "@Var 1"]], "@end-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@end-if"], "EndTurn"])
+                }
+                else {
+                    scripts.push([["@global_var_retain_inner", ["@Literal"], 0, 0n, "@end_vars", 0, "@if", "@GVar 5", "@edit_gvar", 4, ["@GVar 4", "+", 1], "@edit_gvar", 5, false, "@edit_var", 2, ["@GVar 6", "arr_elem", ["@GVar 6", "arr_length", "-", 1, "rand_int", 0]], "@repeat", ["@Var 2", "<=", "@GVar 3"], "@edit_var", 1, 0, "@repeat", ["@GVar 6", "arr_length", ">", "@Var 1"], "@if", ["@GVar 6", "arr_elem", "@Var 1", ">", "@Var 2"], "@edit_var", 1, 1e300, "@end-if", "@else-if", ["@Var 2", "+B", "@GVar 1", "%B", ["@GVar 6", "arr_elem", "@Var 1", "+B", "@GVar 0", "absB", "max", 1n], "=", 0n], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 6", "arr_elem", "@Var 1", "+B", "@Var 2"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@edit_var", 2, ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]], "@edit_var", 1, 0, "@repeat", ["@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@GVar 6", "arr_indexOf", ["@Var 0", "arr_elem", "@Var 1"], "=", -1], "@edit_gvar", 6, ["@GVar 6", "arr_binaryInsert", ["@Var 0", "arr_elem", "@Var 1"]], "@end-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@edit_var", 0, ["@Literal"], "@end-repeat", "@edit_gvar", 3, "@Var 2", "@end-if"], "EndTurn"])
+                }
+                let sBox = ["@Literal", ["@CalcArray", "@GVar 3"]];
+                if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push(1);
+                statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 4"]);
+                start_game_vars[7] = mode_vars[3];
+            }
+        }
+        else if (gamemode == 50.7101113) { // FRUSEE
+            if (mode_vars[0] > 0) {
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                if (mode_vars[0] == 1) {
+                    scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@GVar 1", "+", 1], "@edit_gvar", 2, false, "@repeat", ["@GVar 3", "arr_length", ">", "@Var 1"], "@if", ["@GVar 3", "arr_elem", "@Var 1", ">", "@GVar 0"], "@edit_var", 1, 1e300, "@end-if", "@else-if", ["@GVar 0", "%B", ["@GVar 3", "arr_elem", "@Var 1"], "=", 0n, "&&", ["@GVar 3", "arr_elem", "@Var 1", "+B", "@GVar 0", "primeFactorizeB", 1, "arr_reduce", 0n, ["max", ["@var_retain", "@Var -1", "arr_elem", 1]], "<", 2n]], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 3", "arr_elem", "@Var 1"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@if", ["@Var 0", "arr_length", "=", 0], "@edit_gvar", 0, 14n, "@edit_gvar", 3, ["@Literal", 1n, 2n, 3n, 6n, 7n, 14n], "@edit_var", 0, ["@Literal", 1n, 7n], "@end-if", "2nd", ["@GVar 0", "+B", ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]]], "@edit_gvar", 0, "@Parent -1", "@edit_gvar", 3, ["@GVar 3", "arr_push", "@Parent -2"], "@end-if"], "EndTurn"])
+                }
+                else if (mode_vars[0] == 2) {
+                    scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@GVar 1", "+", 1], "@edit_gvar", 2, false, "@repeat", ["@GVar 3", "arr_length", ">", "@Var 1"], "@if", ["@GVar 3", "arr_elem", "@Var 1", ">", "@GVar 0"], "@edit_var", 1, 1e300, "@end-if", "@else-if", ["@GVar 0", "%B", ["@GVar 3", "arr_elem", "@Var 1"], "=", 0n, "&&", ["@GVar 3", "arr_elem", "@Var 1", "+B", "@GVar 0", "primeFactorizeB", 1, "arr_reduce", 0n, ["max", ["@var_retain", "@Var -1", "arr_elem", 1]], "<", 2n]], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 3", "arr_elem", "@Var 1", "+B", "@GVar 0"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@if", ["@Var 0", "arr_length", "=", 0], "@edit_gvar", 0, 14n, "@edit_gvar", 3, ["@Literal", 1n, 2n, 3n, 6n, 7n, 14n], "@edit_var", 0, ["@Literal", 15n, 21n], "@end-if", "@edit_gvar", 0, ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]], "@edit_var", 1, 0, "@repeat", ["@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@GVar 3", "arr_indexOf", ["@Var 0", "arr_elem", "@Var 1"], "=", -1], "@edit_gvar", 3, ["@GVar 3", "arr_binaryInsert", ["@Var 0", "arr_elem", "@Var 1"]], "@end-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@end-if"], "EndTurn"])
+                }
+                else {
+                    scripts.push([["@global_var_retain_inner", ["@Literal"], 0, 0n, "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_var", 2, ["@GVar 3", "arr_elem", ["@GVar 3", "arr_length", "-", 1, "rand_int", 0]], "@repeat", ["@Var 2", "<=", "@GVar 0"], "@edit_var", 1, 0, "@repeat", ["@GVar 3", "arr_length", ">", "@Var 1"], "@if", ["@GVar 3", "arr_elem", "@Var 1", ">", "@Var 2"], "@edit_var", 1, 1e300, "@end-if", "@else-if", ["@Var 2", "%B", ["@GVar 3", "arr_elem", "@Var 1"], "=", 0n, "&&", ["@GVar 3", "arr_elem", "@Var 1", "+B", "@Var 2", "primeFactorizeB", 1, "arr_reduce", 0n, ["max", ["@var_retain", "@Var -1", "arr_elem", 1]], "<", 2n]], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 3", "arr_elem", "@Var 1", "+B", "@Var 2"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@if", ["@Var 0", "arr_length", "=", 0], "@edit_var", 2, 14n, "@edit_gvar", 3, ["@Literal", 1n, 2n, 3n, 6n, 7n, 14n], "@edit_var", 0, ["@Literal", 15n, 21n], "@end-if", "@edit_var", 2, ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]], "@edit_var", 1, 0, "@repeat", ["@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@GVar 3", "arr_indexOf", ["@Var 0", "arr_elem", "@Var 1"], "=", -1], "@edit_gvar", 3, ["@GVar 3", "arr_binaryInsert", ["@Var 0", "arr_elem", "@Var 1"]], "@end-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@edit_var", 0, ["@Literal"], "@end-repeat", "@edit_gvar", 0, "@Var 2", "@end-if"], "EndTurn"])
+                }
+                let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
+                if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push(1);
+                statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
+                start_game_vars[4] = mode_vars[1];
+            }
+        }
         else if (gamemode == 50.1) { // Gaussian DIVE
             if (mode_vars[0] == 0) start_game_vars[0] = [new GaussianBigInt(1n, 1n)];
             else if (mode_vars[0] == 1) start_game_vars[0] = [new GaussianBigInt(1n, 1n), new GaussianBigInt(1n, -1n)];
@@ -22287,10 +22327,252 @@ function loadModifiers() {
             start_game_vars[5] = modifiers[21];
             if (!mode_vars[1]) scripts = [scripts[0], scripts[2]];
         }
+        else if (wavesModeModified.indexOf(gamemode) != -1) { // The rest of the waves modes
+            if (gamemode == 97.50118 && mode_vars[4] != 0) { // Div-Add-Tor with Dual-Tile DIVE spawns
+                statBoxes = [["Score", "@Score", false, false, "Tile", "DIVE"], ["Seeds", "@GVar 0", false, false, "TileArray", "Self"], ["Seeds Seen", ["@GVar 1", "arr_length"], ...[,,,,], ["@GVar 5", "=", 0], [0, "@edit_gvar", 5, 1], true], ["All Seeds Seen", "@GVar 1", true, false, "TileArray", "Self", ["@GVar 5", "=", 1], [0, "@edit_gvar", 5, 0], true]];
+                start_game_vars[0] = [[1n, 2n]];
+                start_game_vars[1] = [[1n, 2n]]
+                if (mode_vars[4] == 1) {
+                    if (modifiers[13] == "None") {
+                        startTileSpawns = [[[["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "arr_elem", "@GVar 7", "arr_elem", 0], ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 1]], 1]];
+                    }
+                    else {
+                        if (modifiers[13] == "Non-Interacting") {
+                            startTileSpawns = [[[["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "arr_elem", "@GVar 7", "arr_elem", 0], ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 1]], modifiers[22]], [[["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "arr_elem", "@GVar 7", "arr_elem", 0, "*B", -1n], ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 1, "*B", -1n]], modifiers[23]]];
+                        }
+                        else {
+                            startTileSpawns = [[[["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "arr_elem", "@GVar 7", "arr_elem", 0, "*B", [["@Literal", 1, -1], "weightedRandomArrayEntry", ["@Literal", modifiers[22], modifiers[23]]]], ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 1, "*B", [["@Literal", 1, -1], "weightedRandomArrayEntry", ["@Literal", modifiers[22], modifiers[23]]]]], 1]];
+                        }
+                    }
+                    scripts = [
+                        [
+                            ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0], "@end_vars", "@Var -1",
+                            "customDIVESeedUnlock", ["@GVar 0", "arr_map", ["@Var -1", "arr_map", ["@Var -1", "absB"]]], "@GVar 6",
+                            ["@global_var_retain", ["@Literal"], "arr_push", [["@Var -2", "arr_elem", 0], "*B", ["@Var -1", "arr_elem", 0]], "arr_push", [["@Var -2", "arr_elem", 1], "*B", ["@Var -1", "arr_elem", 1]]],
+                            ["@global_var_retain", ["@Literal"], "arr_push", [["@Var -2", "arr_elem", 0], "/B", ["@Var -1", "arr_elem", 0]], "arr_push", [["@Var -2", "arr_elem", 1], "/B", ["@Var -1", "arr_elem", 1]]],
+                            ["@global_var_retain", [["@Var -2", "arr_elem", 0], "modB", ["@Var -1", "arr_elem", 0, "max", 1n], "=", 0n], "&&", [["@Var -2", "arr_elem", 1], "modB", ["@Var -1", "arr_elem", 1, "max", 1n], "=", 0n]],
+                            ["@global_var_retain", [0, "@if", [[["@Var -2", "arr_elem", 0], "*B", ["@Var -2", "arr_elem", 1]], "!=", [["@Var -1", "arr_elem", 0], "*B", ["@Var -1", "arr_elem", 1]]], "2nd", [["@Var -2", "arr_elem", 0], "*B", ["@Var -2", "arr_elem", 1]], "-B", [["@Var -1", "arr_elem", 0], "*B", ["@Var -1", "arr_elem", 1]], "Number", "@end-if", "@else-if", [[["@Var -2", "arr_elem", 0], "+B", ["@Var -2", "arr_elem", 1]], "!=", [["@Var -1", "arr_elem", 0], "+B", ["@Var -1", "arr_elem", 1]]], "2nd", [["@Var -2", "arr_elem", 0], "+B", ["@Var -2", "arr_elem", 1]], "-B", [["@Var -1", "arr_elem", 0], "+B", ["@Var -1", "arr_elem", 1]], "Number", "@end-else-if", "@else", "2nd", [["@Var -2", "arr_elem", 0], "-", ["@Var -1", "arr_elem", 0]], "@end-else"]],
+                            ["@global_var_retain", [["@Var -2", "arr_elem", 0], "gcdB", ["@Var -1", "arr_elem", 0], "=", 1n], "&&", [["@Var -2", "arr_elem", 1], "gcdB", ["@Var -1", "arr_elem", 1], "=", 1n]],
+                            ["@Literal", 1n, 1n],
+                            ["@global_var_retain", ["@Var -1", "arr_elem", 0, ">=", 1n], "&&", ["@Var -1", "arr_elem", 1, ">=", 1n]],
+                            ["@global_var_retain", ["@Var -1", "arr_elem", 0, "=", 1n], "&&", ["@Var -1", "arr_elem", 1, "=", 1n]],
+                            "@if", [[["@Parent -4", "arr_elem", 0, ">", 1n], "||", ["@Parent -4", "arr_elem", 1, ">", 1n]], "&&", ["@GVar 2", "arr_indexOf", "@Parent -3", "=", -1]], "@edit_gvar", 2, ["@GVar 2", "arr_push", "@Parent -2"], "@end-if"], "Merge"
+                        ],
+                        [["@GVar 0", 0, 0n, "@end_vars", true, "@repeat", ["@var_retain", "@Var 0", "arr_length"], "@edit_var", 2, ["@var_retain", "@Var 0", "arr_elem", "@Var 1"], "2nd", ["@var_retain", "@Grid", "arr_flat", 1, "arr_filter", ["@Var -1", "arr_elem", 0, "typeof", "=", "bigint", "&&", ["@var_retain", "@Var 1", "arr_elem", 0, "!=", 0n], "&&", ["@var_retain", "@Var 1", "arr_elem", 1, "!=", 0n]], "arr_reduce", true, ["@global_var_copy", "@if", [[["@Var -1", "arr_elem", 0, "absB"], "%B", ["@Var 2", "arr_elem", 0, "absB", "max", 1n], "=", 0n], "&&", [["@Var -1", "arr_elem", 1, "absB"], "%B", ["@Var 2", "arr_elem", 1, "absB", "max", 1n], "=", 0n]], "2nd", false, "@end-if"]], "@if", "@Parent -1", "@edit_gvar", 3, ["@var_retain", "@GVar 3", "arr_push", "@Var 1"], "@end-if", "@edit_var", 1, ["@var_retain", "@Var 1", "+", 1], "@end-repeat"], "EndMovement"],
+                        [[0, 0n, "@end_vars", 0, "@repeat", ["@GVar 2", "arr_length"], "@edit_var", 1, ["@var_retain", "@GVar 2", "arr_elem", "@Var 0"], "@edit_gvar", 0, ["@var_retain", "@GVar 0", "arr_push", "@Var 1"], "@if", ["@var_retain", "@GVar 1", "arr_indexOf", "@Var 1", "=", -1], "@edit_gvar", 1, ["@var_retain", "@GVar 1", "arr_push", "@Var 1", "arr_sort", ["@Var -2", "-B", "@Var -1", "Number"]], "@end-if", "@edit_var", 0, ["@var_retain", "@Var 0", "+", 1], "@end-repeat", "@if", ["@GVar 2", "arr_length", ">", 0], "@if", ["@GVar 2", "arr_length", "=", 1], "announce", [["@GVar 2", "arr_elem", 0, "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", 0, "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " unlocked!"], 2500, "@end-if", "@else-if", ["@GVar 2", "arr_length", "=", 2], "announce", [["@GVar 2", "arr_elem", 0, "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", 0, "arr_elem", 1], "String", "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " and ", "str_concat", [["@GVar 2", "arr_elem", 1, "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", 1, "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", " unlocked!"], 2500, "@end-else-if", "@else", "announce", ["@GVar 2", "arr_pop", "arr_reduce", "", ["str_concat", ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0], "str_concat", " ", "str_concat", ["@var_retain", "@Var -1", "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", ", "], "str_concat", "and ", "str_concat", ["@GVar 2", "arr_elem", ["@GVar 2", "arr_length", "-", 1], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", ["@GVar 2", "arr_length", "-", 1], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " unlocked!"], 2500, "@end-else", "@end-if", "@edit_gvar", 2, ["@Literal"]], "EndMovement"],
+                        [[0, 0, "@end_vars", 0, "@if", [["@GVar 3", "arr_length", ">", 0], "&&", [["@GVar 3", "arr_length"], "<", ["@GVar 0", "arr_length"]]], "@if", ["@GVar 3", "arr_length", "=", 1], "announce", [["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " eliminated!"], 2500, "@end-if", "@else-if", ["@GVar 3", "arr_length", "=", 2], "announce", [["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " and ", "str_concat", [["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 1], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 1], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", " eliminated!"], 2500, "@end-else-if", "@else", "announce", ["@GVar 3", "arr_pop", "arr_reduce", "", ["str_concat", ["@var_retain", ["@var_retain", "@GVar 0", "arr_elem", "@Var -1", "arr_elem", 0], "str_concat", " ", "str_concat", ["@var_retain", "@GVar 0", "arr_elem", "@Var -1", "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", ", "], "str_concat", "and ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", ["@GVar 3", "arr_length", "-", 1]], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", ["@GVar 3", "arr_length", "-", 1]], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " eliminated!"], 2500, "@end-else", "@repeat", ["@GVar 3", "arr_length"], "@edit_var", 1, ["@var_retain", "@GVar 3", "arr_elem", "@Var 0"], "@add_score", ["@var_retain", "@GVar 0", "arr_elem", "@Var 1"], "@edit_gvar", 0, ["@var_retain", "@GVar 0", "arr_splice", ["@var_retain", "@Var 1", "-", "@Var 0"], 1, ["@Literal"]], "@edit_var", 0, ["@var_retain", "@Var 0", "+", 1], "@end-repeat", "@end-if", "@edit_gvar", 3, ["@Literal"]], "EndMovement"]
+                    ];
+                }
+                else {
+                    if (modifiers[13] == "None") {
+                        startTileSpawns = [[[["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "@edit_gvar", 7, ["@GVar 0", "arr_elem", "@GVar 7"], "@if", [0, "rand_int", 1, "=", 1], "@edit_gvar", 7, ["@GVar 7", "arr_reverse"], "@end-if", "2nd", "@GVar 7", "arr_elem", 0], ["@GVar 7", "arr_elem", 1]], 1]];
+                    }
+                    else {
+                        if (modifiers[13] == "Non-Interacting") {
+                            startTileSpawns = [[[["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "@edit_gvar", 7, ["@GVar 0", "arr_elem", "@GVar 7"], "@if", [0, "rand_int", 1, "=", 1], "@edit_gvar", 7, ["@GVar 7", "arr_reverse"], "@end-if", "2nd", "@GVar 7", "arr_elem", 0], ["@GVar 7", "arr_elem", 1]], modifiers[22]], [[["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "@edit_gvar", 7, ["@GVar 0", "arr_elem", "@GVar 7"], "@if", [0, "rand_int", 1, "=", 1], "@edit_gvar", 7, ["@GVar 7", "arr_reverse"], "@end-if", "2nd", "@GVar 7", "arr_elem", 0, "*B", -1n], ["@GVar 7", "arr_elem", 1, "*B", -1n]], modifiers[23]]];
+                        }
+                        else {
+                            startTileSpawns = [[["@CalcArray", ["@Literal"], "arr_push", ["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "@edit_gvar", 7, ["@GVar 0", "arr_elem", "@GVar 7"], "@if", [0, "rand_int", 1, "=", 1], "@edit_gvar", 7, ["@GVar 7", "arr_reverse"], "@end-if", "2nd", "@GVar 7", "arr_elem", 0, "*B", [["@Literal", 1, -1], "weightedRandomArrayEntry", ["@Literal", modifiers[22], modifiers[23]]]], "arr_push", ["@GVar 7", "arr_elem", 1, "*B", [["@Literal", 1, -1], "weightedRandomArrayEntry", ["@Literal", modifiers[22], modifiers[23]]]]], 1]];
+                        }
+                    }
+                    scripts = [
+                        [
+                            ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0], "@end_vars", "@Var -1",
+                            "customDIVESeedUnlock", ["@GVar 0", "arr_map", ["@Var -1", "arr_map", ["@Var -1", "absB"]]], "@GVar 6",
+                            ["@global_var_retain", ["@Literal"], "arr_push", [["@Var -2", "arr_elem", 0], "*B", ["@Var -1", "arr_elem", 0]], "arr_push", [["@Var -2", "arr_elem", 1], "*B", ["@Var -1", "arr_elem", 1]], "arr_sort", ["@Var -2", "-B", "@Var -1", "Number"]],
+                            ["@global_var_retain", ["@Literal"], "@if", [[["@Var -2", "arr_elem", 0], "modB", ["@Var -1", "arr_elem", 0, "max", 1n], "=", 0n], "&&", [["@Var -2", "arr_elem", 1], "modB", ["@Var -1", "arr_elem", 1, "max", 1n], "=", 0n]], "arr_push", [["@Var -2", "arr_elem", 0], "/B", ["@Var -1", "arr_elem", 0]], "arr_push", [["@Var -2", "arr_elem", 1], "/B", ["@Var -1", "arr_elem", 1]], "@end-if", "@else", "arr_push", [["@Var -2", "arr_elem", 0], "/B", ["@Var -1", "arr_elem", 1]], "arr_push", [["@Var -2", "arr_elem", 1], "/B", ["@Var -1", "arr_elem", 0]], "@end-else", "arr_sort", ["@Var -2", "-B", "@Var -1", "Number"]],
+                            ["@global_var_retain", [[["@Var -2", "arr_elem", 0], "modB", ["@Var -1", "arr_elem", 0, "max", 1n], "=", 0n], "&&", [["@Var -2", "arr_elem", 1], "modB", ["@Var -1", "arr_elem", 1, "max", 1n], "=", 0n]], "||", [[["@Var -2", "arr_elem", 0], "modB", ["@Var -1", "arr_elem", 1, "max", 1n], "=", 0n], "&&", [["@Var -2", "arr_elem", 1], "modB", ["@Var -1", "arr_elem", 0, "max", 1n], "=", 0n]]],
+                            ["@global_var_retain", [0, "@if", [[["@Var -2", "arr_elem", 0], "*B", ["@Var -2", "arr_elem", 1]], "!=", [["@Var -1", "arr_elem", 0], "*B", ["@Var -1", "arr_elem", 1]]], "2nd", [["@Var -2", "arr_elem", 0], "*B", ["@Var -2", "arr_elem", 1]], "-B", [["@Var -1", "arr_elem", 0], "*B", ["@Var -1", "arr_elem", 1]], "Number", "@end-if", "@else-if", [[["@Var -2", "arr_elem", 0], "+B", ["@Var -2", "arr_elem", 1]], "!=", [["@Var -1", "arr_elem", 0], "+B", ["@Var -1", "arr_elem", 1]]], "2nd", [["@Var -2", "arr_elem", 0], "+B", ["@Var -2", "arr_elem", 1]], "-B", [["@Var -1", "arr_elem", 0], "+B", ["@Var -1", "arr_elem", 1]], "Number", "@end-else-if", "@else", "2nd", [["@Var -2", "arr_elem", 0], "-", ["@Var -1", "arr_elem", 0]], "@end-else"]],
+                            false,
+                            ["@Literal", 1n, 1n],
+                            ["@global_var_retain", ["@Var -1", "arr_elem", 0, ">=", 1n], "&&", ["@Var -1", "arr_elem", 1, ">=", 1n]],
+                            ["@global_var_retain", ["@Var -1", "arr_elem", 0, "=", 1n], "&&", ["@Var -1", "arr_elem", 1, "=", 1n]],
+                            "@if", [[["@Parent -4", "arr_elem", 0, ">", 1n], "||", ["@Parent -4", "arr_elem", 1, ">", 1n]], "&&", ["@GVar 2", "arr_indexOf", "@Parent -3", "=", -1], "&&", ["@GVar 0", "arr_indexOf", "@Parent -3", "=", -1]], "@edit_gvar", 2, ["@GVar 2", "arr_push", "@Parent -2"], "@end-if"], "Merge"
+                        ],
+                        [["@GVar 0", 0, 0n, "@end_vars", true, "@repeat", ["@var_retain", "@Var 0", "arr_length"], "@edit_var", 2, ["@var_retain", "@Var 0", "arr_elem", "@Var 1"], "2nd", ["@var_retain", "@Grid", "arr_flat", 1, "arr_filter", ["@Var -1", "arr_elem", 0, "typeof", "=", "bigint", "&&", ["@var_retain", "@Var 1", "arr_elem", 0, "!=", 0n], "&&", ["@var_retain", "@Var 1", "arr_elem", 1, "!=", 0n]], "arr_reduce", true, ["@global_var_copy", "@if", [[[["@Var -1", "arr_elem", 0, "absB"], "%B", ["@Var 2", "arr_elem", 0, "absB", "max", 1n], "=", 0n], "&&", [["@Var -1", "arr_elem", 1, "absB"], "%B", ["@Var 2", "arr_elem", 1, "absB", "max", 1n], "=", 0n]], "||", [[["@Var -1", "arr_elem", 0, "absB"], "%B", ["@Var 2", "arr_elem", 1, "absB", "max", 1n], "=", 0n], "&&", [["@Var -1", "arr_elem", 1, "absB"], "%B", ["@Var 2", "arr_elem", 0, "absB", "max", 1n], "=", 0n]]], "2nd", false, "@end-if"]], "@if", "@Parent -1", "@edit_gvar", 3, ["@var_retain", "@GVar 3", "arr_push", "@Var 1"], "@end-if", "@edit_var", 1, ["@var_retain", "@Var 1", "+", 1], "@end-repeat"], "EndMovement"],
+                        [[0, 0n, "@end_vars", 0, "@repeat", ["@GVar 2", "arr_length"], "@edit_var", 1, ["@var_retain", "@GVar 2", "arr_elem", "@Var 0"], "@edit_gvar", 0, ["@var_retain", "@GVar 0", "arr_push", "@Var 1"], "@if", ["@var_retain", "@GVar 1", "arr_indexOf", "@Var 1", "=", -1], "@edit_gvar", 1, ["@var_retain", "@GVar 1", "arr_push", "@Var 1", "arr_sort", ["@Var -2", "-B", "@Var -1", "Number"]], "@end-if", "@edit_var", 0, ["@var_retain", "@Var 0", "+", 1], "@end-repeat", "@if", ["@GVar 2", "arr_length", ">", 0], "@if", ["@GVar 2", "arr_length", "=", 1], "announce", [["@GVar 2", "arr_elem", 0, "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", 0, "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " unlocked!"], 2500, "@end-if", "@else-if", ["@GVar 2", "arr_length", "=", 2], "announce", [["@GVar 2", "arr_elem", 0, "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", 0, "arr_elem", 1], "String", "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " and ", "str_concat", [["@GVar 2", "arr_elem", 1, "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", 1, "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", " unlocked!"], 2500, "@end-else-if", "@else", "announce", ["@GVar 2", "arr_pop", "arr_reduce", "", ["str_concat", ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0], "str_concat", " ", "str_concat", ["@var_retain", "@Var -1", "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", ", "], "str_concat", "and ", "str_concat", ["@GVar 2", "arr_elem", ["@GVar 2", "arr_length", "-", 1], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", ["@GVar 2", "arr_length", "-", 1], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " unlocked!"], 2500, "@end-else", "@end-if", "@edit_gvar", 2, ["@Literal"]], "EndMovement"],
+                        [[0, 0, "@end_vars", 0, "@if", [["@GVar 3", "arr_length", ">", 0], "&&", [["@GVar 3", "arr_length"], "<", ["@GVar 0", "arr_length"]]], "@if", ["@GVar 3", "arr_length", "=", 1], "announce", [["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " eliminated!"], 2500, "@end-if", "@else-if", ["@GVar 3", "arr_length", "=", 2], "announce", [["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " and ", "str_concat", [["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 1], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 1], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", " eliminated!"], 2500, "@end-else-if", "@else", "announce", ["@GVar 3", "arr_pop", "arr_reduce", "", ["str_concat", ["@var_retain", ["@var_retain", "@GVar 0", "arr_elem", "@Var -1", "arr_elem", 0], "str_concat", " ", "str_concat", ["@var_retain", "@GVar 0", "arr_elem", "@Var -1", "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", ", "], "str_concat", "and ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", ["@GVar 3", "arr_length", "-", 1]], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", ["@GVar 3", "arr_length", "-", 1]], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " eliminated!"], 2500, "@end-else", "@repeat", ["@GVar 3", "arr_length"], "@edit_var", 1, ["@var_retain", "@GVar 3", "arr_elem", "@Var 0"], "@add_score", ["@var_retain", "@GVar 0", "arr_elem", "@Var 1"], "@edit_gvar", 0, ["@var_retain", "@GVar 0", "arr_splice", ["@var_retain", "@Var 1", "-", "@Var 0"], 1, ["@Literal"]], "@edit_var", 0, ["@var_retain", "@Var 0", "+", 1], "@end-repeat", "@end-if", "@edit_gvar", 3, ["@Literal"]], "EndMovement"]
+                    ];
+                }
+            }
+            if (gamemode == 50.22 && mode_vars[3]) { // Dual-Tile DIVE
+                if (modifiers[13] == "None") {
+                    MergeRules = [
+                        [2, [[["@Next 1 0", "modB", ["@This 0", "absB", "max", 1n], "=", 0n], "&&", [["@Next 1 1", "modB", ["@This 1", "absB", "max", 1n], "=", 0n]]], "||", [["@Next 1 0", "modB", ["@This 1", "absB", "max", 1n], "=", 0n], "&&", ["@Next 1 1", "modB", ["@This 0", "absB", "max", 1n], "=", 0n]], "&&", ["@This 0", "typeof", "=", "bigint"], "&&", ["@Next 1 0", "typeof", "=", "bigint"], "&&", ["@This 1", "typeof", "=", "bigint"], "&&", ["@Next 1 1", "typeof", "=", "bigint"]], false, [[[["@This 0", "+B", "@Next 1 0"], "min", ["@This 1", "+B", "@Next 1 1"]], [["@This 0", "+B", "@Next 1 0"], "max", ["@This 1", "+B", "@Next 1 1"]]]], [[["@This 0", "abs"], "+", ["@This 1", "abs"]], "min", [["@Next 1 0", "abs"], "+", ["@Next 1 1", "abs"]]], [false, true]]
+                    ];
+                    startTileSpawns = [[[["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "arr_elem", "@GVar 7", "arr_elem", 0, "min", ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 1]], ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 1, "max", ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 0]]], 1]];
+                }
+                else {
+                    if (modifiers[13] == "Non-Interacting") {
+                        MergeRules = [
+                            [2, [[["@Next 1 0", "modB", ["@This 0", "absB", "max", 1n], "=", 0n], "&&", [["@Next 1 1", "modB", ["@This 1", "absB", "max", 1n], "=", 0n]]], "||", [["@Next 1 0", "modB", ["@This 1", "absB", "max", 1n], "=", 0n], "&&", ["@Next 1 1", "modB", ["@This 0", "absB", "max", 1n], "=", 0n]], "&&", ["@This 0", "typeof", "=", "bigint"], "&&", ["@Next 1 0", "typeof", "=", "bigint"], "&&", ["@This 1", "typeof", "=", "bigint"], "&&", ["@Next 1 1", "typeof", "=", "bigint"], "&&", [["@This 0", "signB"], "=", ["@Next 1 0", "signB"]]], false, [[[["@This 0", "+B", "@Next 1 0"], "min", ["@This 1", "+B", "@Next 1 1"]], [["@This 0", "+B", "@Next 1 0"], "max", ["@This 1", "+B", "@Next 1 1"]]]], [[["@This 0", "abs"], "+", ["@This 1", "abs"]], "min", [["@Next 1 0", "abs"], "+", ["@Next 1 1", "abs"]]], [false, true]]
+                        ];
+                        startTileSpawns = [[[["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "arr_elem", "@GVar 7", "arr_elem", 0, "min", ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 1]], ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 1, "max", ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 0]]], modifiers[22]], [[["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "arr_elem", "@GVar 7", "arr_elem", 0, "*B", -1n], ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 1, "*B", -1n]], modifiers[23]]];
+                    }
+                    else {
+                        MergeRules = [
+                            [2, [["@This 0", "*B", -1n, "=", "@Next 1 0"], "&&", ["@This 1", "*B", -1n, "=", "@Next 1 1"]], true, [], 0],
+                            [2, [[["@Next 1 0", "modB", ["@This 0", "absB", "max", 1n], "=", 0n], "&&", [["@Next 1 1", "modB", ["@This 1", "absB", "max", 1n], "=", 0n]]], "||", [["@Next 1 0", "modB", ["@This 1", "absB", "max", 1n], "=", 0n], "&&", ["@Next 1 1", "modB", ["@This 0", "absB", "max", 1n], "=", 0n]], "&&", ["@This 0", "typeof", "=", "bigint"], "&&", ["@Next 1 0", "typeof", "=", "bigint"], "&&", ["@This 1", "typeof", "=", "bigint"], "&&", ["@Next 1 1", "typeof", "=", "bigint"]], false, [[[["@This 0", "+B", "@Next 1 0"], "min", ["@This 1", "+B", "@Next 1 1"]], [["@This 0", "+B", "@Next 1 0"], "max", ["@This 1", "+B", "@Next 1 1"]]]], [[["@This 0", "abs"], "+", ["@This 1", "abs"]], "min", [["@Next 1 0", "abs"], "+", ["@Next 1 1", "abs"]]], [false, true]]
+                        ];
+                        startTileSpawns = [[["@CalcArray", ["@Literal"], "arr_push", ["@GVar 0", "@edit_gvar", 7, [0, "rand_int", ["@GVar 0", "arr_length", "-", 1]], "arr_elem", "@GVar 7", "arr_elem", 0, "*B", [["@Literal", 1, -1], "weightedRandomArrayEntry", ["@Literal", modifiers[22], modifiers[23]]]], "arr_push", ["@GVar 0", "arr_elem", "@GVar 7", "arr_elem", 1, "*B", [["@Literal", 1, -1], "weightedRandomArrayEntry", ["@Literal", modifiers[22], modifiers[23]]]], "arr_sort", ["@Var -2", "-B", "@Var -1", "Number"]], 1]];
+                    }
+                }
+                scripts = [
+                    [
+                        ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0], "@end_vars", "@Var -1",
+                        "customDIVESeedUnlock", ["@GVar 0", "arr_map", ["@Var -1", "arr_map", ["@Var -1", "absB"]]], "@GVar 6",
+                        ["@global_var_retain", ["@Literal"], "arr_push", [["@Var -2", "arr_elem", 0], "*B", ["@Var -1", "arr_elem", 0]], "arr_push", [["@Var -2", "arr_elem", 1], "*B", ["@Var -1", "arr_elem", 1]], "arr_sort", ["@Var -2", "-B", "@Var -1", "Number"]],
+                        ["@global_var_retain", ["@Literal"], "@if", [[["@Var -2", "arr_elem", 0], "modB", ["@Var -1", "arr_elem", 0, "max", 1n], "=", 0n], "&&", [["@Var -2", "arr_elem", 1], "modB", ["@Var -1", "arr_elem", 1, "max", 1n], "=", 0n]], "arr_push", [["@Var -2", "arr_elem", 0], "/B", ["@Var -1", "arr_elem", 0]], "arr_push", [["@Var -2", "arr_elem", 1], "/B", ["@Var -1", "arr_elem", 1]], "@end-if", "@else", "arr_push", [["@Var -2", "arr_elem", 0], "/B", ["@Var -1", "arr_elem", 1]], "arr_push", [["@Var -2", "arr_elem", 1], "/B", ["@Var -1", "arr_elem", 0]], "@end-else", "arr_sort", ["@Var -2", "-B", "@Var -1", "Number"]],
+                        ["@global_var_retain", [[["@Var -2", "arr_elem", 0], "modB", ["@Var -1", "arr_elem", 0, "max", 1n], "=", 0n], "&&", [["@Var -2", "arr_elem", 1], "modB", ["@Var -1", "arr_elem", 1, "max", 1n], "=", 0n]], "||", [[["@Var -2", "arr_elem", 0], "modB", ["@Var -1", "arr_elem", 1, "max", 1n], "=", 0n], "&&", [["@Var -2", "arr_elem", 1], "modB", ["@Var -1", "arr_elem", 0, "max", 1n], "=", 0n]]],
+                        ["@global_var_retain", [0, "@if", [[["@Var -2", "arr_elem", 0], "*B", ["@Var -2", "arr_elem", 1]], "!=", [["@Var -1", "arr_elem", 0], "*B", ["@Var -1", "arr_elem", 1]]], "2nd", [["@Var -2", "arr_elem", 0], "*B", ["@Var -2", "arr_elem", 1]], "-B", [["@Var -1", "arr_elem", 0], "*B", ["@Var -1", "arr_elem", 1]], "Number", "@end-if", "@else-if", [[["@Var -2", "arr_elem", 0], "+B", ["@Var -2", "arr_elem", 1]], "!=", [["@Var -1", "arr_elem", 0], "+B", ["@Var -1", "arr_elem", 1]]], "2nd", [["@Var -2", "arr_elem", 0], "+B", ["@Var -2", "arr_elem", 1]], "-B", [["@Var -1", "arr_elem", 0], "+B", ["@Var -1", "arr_elem", 1]], "Number", "@end-else-if", "@else", "2nd", [["@Var -2", "arr_elem", 0], "-", ["@Var -1", "arr_elem", 0]], "@end-else"]],
+                        false,
+                        ["@Literal", 1n, 1n],
+                        ["@global_var_retain", ["@Var -1", "arr_elem", 0, ">=", 1n], "&&", ["@Var -1", "arr_elem", 1, ">=", 1n]],
+                        ["@global_var_retain", ["@Var -1", "arr_elem", 0, "=", 1n], "&&", ["@Var -1", "arr_elem", 1, "=", 1n]],
+                        "@if", [[["@Parent -4", "arr_elem", 0, ">", 1n], "||", ["@Parent -4", "arr_elem", 1, ">", 1n]], "&&", ["@GVar 2", "arr_indexOf", "@Parent -3", "=", -1], "&&", ["@GVar 0", "arr_indexOf", "@Parent -3", "=", -1]], "@edit_gvar", 2, ["@GVar 2", "arr_push", "@Parent -2"], "@end-if"], "Merge"
+                    ],
+                    [["@GVar 0", 0, 0n, "@end_vars", true, "@repeat", ["@var_retain", "@Var 0", "arr_length"], "@edit_var", 2, ["@var_retain", "@Var 0", "arr_elem", "@Var 1"], "2nd", ["@var_retain", "@Grid", "arr_flat", 1, "arr_filter", ["@Var -1", "arr_elem", 0, "typeof", "=", "bigint", "&&", ["@var_retain", "@Var 1", "arr_elem", 0, "!=", 0n], "&&", ["@var_retain", "@Var 1", "arr_elem", 1, "!=", 0n]], "arr_reduce", true, ["@global_var_copy", "@if", [[[["@Var -1", "arr_elem", 0, "absB"], "%B", ["@Var 2", "arr_elem", 0, "absB", "max", 1n], "=", 0n], "&&", [["@Var -1", "arr_elem", 1, "absB"], "%B", ["@Var 2", "arr_elem", 1, "absB", "max", 1n], "=", 0n]], "||", [[["@Var -1", "arr_elem", 0, "absB"], "%B", ["@Var 2", "arr_elem", 1, "absB", "max", 1n], "=", 0n], "&&", [["@Var -1", "arr_elem", 1, "absB"], "%B", ["@Var 2", "arr_elem", 0, "absB", "max", 1n], "=", 0n]]], "2nd", false, "@end-if"]], "@if", "@Parent -1", "@edit_gvar", 3, ["@var_retain", "@GVar 3", "arr_push", "@Var 1"], "@end-if", "@edit_var", 1, ["@var_retain", "@Var 1", "+", 1], "@end-repeat"], "EndMovement"],
+                    [[0, 0n, "@end_vars", 0, "@repeat", ["@GVar 2", "arr_length"], "@edit_var", 1, ["@var_retain", "@GVar 2", "arr_elem", "@Var 0"], "@edit_gvar", 0, ["@var_retain", "@GVar 0", "arr_push", "@Var 1"], "@if", ["@var_retain", "@GVar 1", "arr_indexOf", "@Var 1", "=", -1], "@edit_gvar", 1, ["@var_retain", "@GVar 1", "arr_push", "@Var 1", "arr_sort", ["@Var -2", "-B", "@Var -1", "Number"]], "@end-if", "@edit_var", 0, ["@var_retain", "@Var 0", "+", 1], "@end-repeat", "@if", ["@GVar 2", "arr_length", ">", 0], "@if", ["@GVar 2", "arr_length", "=", 1], "announce", [["@GVar 2", "arr_elem", 0, "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", 0, "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " unlocked!"], 2500, "@end-if", "@else-if", ["@GVar 2", "arr_length", "=", 2], "announce", [["@GVar 2", "arr_elem", 0, "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", 0, "arr_elem", 1], "String", "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " and ", "str_concat", [["@GVar 2", "arr_elem", 1, "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", 1, "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", " unlocked!"], 2500, "@end-else-if", "@else", "announce", ["@GVar 2", "arr_pop", "arr_reduce", "", ["str_concat", ["@var_retain", ["@var_retain", "@Var -1", "arr_elem", 0], "str_concat", " ", "str_concat", ["@var_retain", "@Var -1", "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", ", "], "str_concat", "and ", "str_concat", ["@GVar 2", "arr_elem", ["@GVar 2", "arr_length", "-", 1], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 2", "arr_elem", ["@GVar 2", "arr_length", "-", 1], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " unlocked!"], 2500, "@end-else", "@end-if", "@edit_gvar", 2, ["@Literal"]], "EndMovement"],
+                    [[0, 0, "@end_vars", 0, "@if", [["@GVar 3", "arr_length", ">", 0], "&&", [["@GVar 3", "arr_length"], "<", ["@GVar 0", "arr_length"]]], "@if", ["@GVar 3", "arr_length", "=", 1], "announce", [["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " eliminated!"], 2500, "@end-if", "@else-if", ["@GVar 3", "arr_length", "=", 2], "announce", [["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 0], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " and ", "str_concat", [["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 1], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", 1], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", " eliminated!"], 2500, "@end-else-if", "@else", "announce", ["@GVar 3", "arr_pop", "arr_reduce", "", ["str_concat", ["@var_retain", ["@var_retain", "@GVar 0", "arr_elem", "@Var -1", "arr_elem", 0], "str_concat", " ", "str_concat", ["@var_retain", "@GVar 0", "arr_elem", "@Var -1", "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if"], "str_concat", ", "], "str_concat", "and ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", ["@GVar 3", "arr_length", "-", 1]], "arr_elem", 0], "str_concat", " ", "str_concat", ["@GVar 0", "arr_elem", ["@GVar 3", "arr_elem", ["@GVar 3", "arr_length", "-", 1]], "arr_elem", 1], "@if", "@GVar 4", "2nd", "?", "@end-if", "str_concat", " eliminated!"], 2500, "@end-else", "@repeat", ["@GVar 3", "arr_length"], "@edit_var", 1, ["@var_retain", "@GVar 3", "arr_elem", "@Var 0"], "@add_score", ["@var_retain", "@GVar 0", "arr_elem", "@Var 1"], "@edit_gvar", 0, ["@var_retain", "@GVar 0", "arr_splice", ["@var_retain", "@Var 1", "-", "@Var 0"], 1, ["@Literal"]], "@edit_var", 0, ["@var_retain", "@Var 0", "+", 1], "@end-repeat", "@end-if", "@edit_gvar", 3, ["@Literal"]], "EndMovement"]
+                ];
+            }
+            if (gamemode == 89.50118 && mode_vars[3]) { // Aquatic 2496
+                scripts[4][0][17] = true;
+            }
+            if (mode_vars[1]) {
+                if (gamemode == 50.22 || (gamemode == 97.50118 && mode_vars[4] != 0)) {
+                    start_game_vars[0].unshift([1n, 1n]);
+                    start_game_vars[1].unshift([1n, 1n]);
+                }
+                else {
+                    start_game_vars[0] = [1n];
+                    start_game_vars[1] = [1n];
+                    if (gamemode == 73.50118) {
+                        start_game_vars[7] = [1n];
+                        start_game_vars[8] = [1n];
+                    }
+                    if (gamemode == 89.50118) {
+                        start_game_vars[7] = [[1n, 1n]];
+                        start_game_vars[8] = 1n;
+                    }
+                    if (gamemode == 97.50118 && mode_vars[4] == 0) {
+                        start_game_vars[7] = [1n, 1n];
+                        start_game_vars[8] = 1n;
+                    }
+                }
+            }
+            if (mode_vars[0] != 0) {
+                if (gamemode == 73.50118) {
+                    scripts = [scripts[0], scripts[2], scripts[4], scripts[6]];
+                    statBoxes.pop(); statBoxes.pop(); statBoxes.pop(); statBoxes.pop();
+                }
+                else {
+                    scripts.splice(3, 1); scripts.splice(1, 1);
+                    statBoxes.pop(); statBoxes.pop();
+                    if (mode_vars[0] == 1) {
+                        scripts.splice(1, 1); scripts.splice(0, 1);
+                        statBoxes.pop();
+                    }
+                }
+            }
+            start_game_vars[6] = mode_vars[2];
+            if (gamemode == 96.50118 && mode_vars[3] > 0) { // HICEM
+                start_game_vars[10] = mode_vars[4];
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 7"], "@edit_gvar", 9, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@add_var", 0, "@repeat", ["@var_retain", "@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@var_retain", "@Var 0", "arr_elem", "@Var 1", "arr_elem", 0, "=", "@GVar 7"], "@edit_gvar", 9, true, "@end-if", "@edit_var", 1, ["@var_retain", "@Var 1", "+", 1], "@end-repeat"], "PostSpawn"]);
+                if (mode_vars[3] == 1) {
+                    scripts.push([[0, "@if", "@GVar 9", "@edit_gvar", 8, ["@var_retain", "@GVar 8", "+", 1], "@edit_gvar", 9, false, "@edit_gvar", 7, ["@GVar 7", "-B", 1n, "/B", 2n, "rand_bigint", 1n, "*B", 2n, "+B", 1n, "+B", ["@Parent -2", "gcdB", "@GVar 7"], "+B", "@GVar 7"], "@end-if"], "EndTurn"])
+                }
+                else {
+                    scripts.push([[0, "@if", "@GVar 9", "@edit_gvar", 8, ["@var_retain", "@GVar 8", "+", 1], "@edit_gvar", 9, false, "@edit_gvar", 7, [[2n, "^B", ["@GVar 8", "BigInt", "-", 1], "*B", "@GVar 10"], "rand_bigint", [2n, "^B", ["@GVar 8", "BigInt"], "*B", "@GVar 10", "-B", 1n], "*B", 2n, "+B", 1n], "@end-if"], "EndTurn"])
+                }
+                statBoxes.push(["Current Goal", "@GVar 7", false, false, "Tile", "LOCEF"], ["Goals Reached", "@GVar 8"]);
+            }
+            if (gamemode == 34.50118) { // Partial Flow DIVE
+                if (!mode_vars[3]) {
+                    MergeRules[MergeRules.length - 2][1].push("&&", [["@This 0", "absB"], "gcdB", ["@Next 1 0", "absB"], ">", 1n])
+                    MergeRules[MergeRules.length - 1][1].push("&&", [["@This 0", "absB"], "gcdB", ["@Next 1 0", "absB"], ">", 1n])
+                }
+                if (mode_vars[6] == 1) {
+                    start_game_vars[11] = mode_vars[7];
+                    scripts.push([[0, "@edit_gvar", 11, [mode_vars[7], "@if", ["@Grid", "arr_flat", 2, "arr_indexOf", "@Empty", "=", -1], "2nd", "@GVar 11", "-", 1, "@end-if"]], "PreSpawn"]);
+                    loseRequirement = ["@GVar 11", "=", 0];
+                    statBoxes.push(["Moves Remaining", "@GVar 11", ...[,,,,], ["@Grid", "arr_flat", 2, "arr_indexOf", "@Empty", "=", -1]]);
+                }
+                else if (mode_vars[6] == 2) {
+                    start_game_vars[11] = mode_vars[7] + 1;
+                    scripts.push([[0, "@if", ["@Grid", "arr_flat", 2, "arr_indexOf", "@Empty", "=", -1], "@edit_gvar", 11, ["@GVar 11", "-", 1], "@end-if"], "PostSpawn"]);
+                    loseRequirement = ["@GVar 11", "=", 0];
+                    statBoxes.push(["Full Grid Moves Remaining", "@GVar 11"]);
+                }
+                if (mode_vars[4] > 0) {
+                    start_game_vars[10] = mode_vars[5];
+                    scripts.push([["@var_retain", 0, "@add_var", 0, "@repeat", ["@var_retain", "@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@var_retain", "@Var -2", "arr_elem", "@Var -1", "arr_elem", 0, "absB", "=", "@GVar 7"], "@edit_gvar", 9, true, "@end-if", "@edit_var", -1, ["@var_retain", "@Var -1", "+", 1], "@end-repeat"], "Merge"]);
+                    scripts.push([["@var_retain", 0, "@add_var", 0, "@repeat", ["@var_retain", "@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@var_retain", "@Var 0", "arr_elem", "@Var 1", "arr_elem", 0, "absB", "=", "@GVar 7"], "@edit_gvar", 9, true, "@end-if", "@edit_var", 1, ["@var_retain", "@Var 1", "+", 1], "@end-repeat"], "PostSpawn"]);
+                    scripts.push([[0, "@if", "@GVar 9", "@edit_gvar", 8, ["@var_retain", "@GVar 8", "+", 1], "@edit_gvar", 9, false, "@edit_gvar", 7, [[2n, "^B", ["@GVar 8", "BigInt"], "*B", "@GVar 10"], "rand_bigint", [2n, "^B", ["@GVar 8", "+", 1, "BigInt"], "*B", "@GVar 10", "-B", 1n]], "@end-if"], "EndTurn"])
+                    statBoxes.push(["Current Goal", "@GVar 7", false, false, "Tile", "DIVE"], ["Goals Reached", "@GVar 8"]);
+                }
+            }
+            if (gamemode == 91.50118  && mode_vars[3] > 0) { // Aquatic 1845
+                start_game_vars[10] = mode_vars[4];
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 7"], "@edit_gvar", 9, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@add_var", 0, "@repeat", ["@var_retain", "@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@var_retain", "@Var 0", "arr_elem", "@Var 1", "arr_elem", 0, "=", "@GVar 7"], "@edit_gvar", 9, true, "@end-if", "@edit_var", 1, ["@var_retain", "@Var 1", "+", 1], "@end-repeat"], "PostSpawn"]);
+                if (mode_vars[3] == 1) {
+                    scripts.push([[0, "@if", "@GVar 9", "@edit_gvar", 8, ["@var_retain", "@GVar 8", "+", 1], "@edit_gvar", 9, false, "@edit_gvar", 7, ["@GVar 7", "*B", [0, "rand_float", 1, "@if", ["@Parent -2", "=", 0], "2nd", 1, "@end-if", "log", 2, "*", -1, "floor", 1, "+", 1, "BigInt"], "@add_var", ["@GVar 7", "factorListB", "arr_elem", ["@Parent -2", "arr_length", "-", 1, "rand_int", 1]], "+B", ["@var_retain", "@GVar 7", "/B", "@Var 0", "*B", ["@var_retain", "@Var 0", "-B", 1n]]], "@end-if"], "EndTurn"])
+                }
+                else {
+                    scripts.push([[0, "@if", "@GVar 9", "@edit_gvar", 8, ["@var_retain", "@GVar 8", "+", 1], "@edit_gvar", 9, false, "@edit_gvar", 7, [[2n, "^B", ["@GVar 8", "BigInt"], "*B", "@GVar 10"], "rand_bigint", [2n, "^B", ["@GVar 8", "+", 1, "BigInt"], "*B", "@GVar 10", "-B", 1n]], "@end-if"], "EndTurn"])
+                }
+                statBoxes.push(["Current Goal", "@GVar 7", false, false, "Tile", "1845"], ["Goals Reached", "@GVar 8"]);
+            }
+            if (gamemode == 73.50118 && mode_vars[3] > 0) { // Aquatic SQUART
+                start_game_vars[15] = mode_vars[4];
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 12"], "@edit_gvar", 14, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@add_var", 0, "@repeat", ["@var_retain", "@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@var_retain", "@Var 0", "arr_elem", "@Var 1", "arr_elem", 0, "=", "@GVar 12"], "@edit_gvar", 14, true, "@end-if", "@edit_var", 1, ["@var_retain", "@Var 1", "+", 1], "@end-repeat"], "PostSpawn"]);
+                if (mode_vars[3] == 1) {
+                    scripts.push([[0, "@if", "@GVar 14", "@edit_gvar", 13, ["@var_retain", "@GVar 13", "+", 1], "@edit_gvar", 14, false, "@edit_gvar", 12, ["@GVar 12", "^B", 2n, "factorListB", "arr_filter", [["@var_retain", "@GVar 12", "modB", "@Var -1", "!=", 0n], "&&", ["@var_retain", "@Var -1", "<=", "@GVar 12"]], "@if", ["@Parent -2", "arr_length", "=", 0], "2nd", "@GVar 12", "@end-if", "@else", "arr_elem", ["@Parent -2", "arr_length", "-", 1, "rand_int", 0], "@end-else", "+B", "@GVar 12"], "@end-if"], "EndTurn"])
+                }
+                else {
+                    scripts.push([[0, "@if", "@GVar 14", "@edit_gvar", 13, ["@var_retain", "@GVar 13", "+", 1], "@edit_gvar", 14, false, "@edit_gvar", 12, [[2n, "^B", ["@GVar 13", "BigInt"], "*B", "@GVar 15"], "rand_bigint", [2n, "^B", ["@GVar 13", "+", 1, "BigInt"], "*B", "@GVar 15", "-B", 1n]], "@end-if"], "EndTurn"])
+                }
+                statBoxes.push(["Current Goal", "@GVar 12", false, false, "Tile", "SQUART"], ["Goals Reached", "@GVar 13"]);
+            }
+            if (gamemode == 97.50118) { // Div-Add-Tor
+                if (mode_vars[3] != 0) {
+                    let mRule_232240;
+                    if (mode_vars[3] == 1) {
+                        if (modifiers[13] == "None") mRule_232240 = [2, [["@This 0", "=", "@Next 1 0"], "||", ["@This 1", "=", "@Next 1 1"], "&&", ["@This 0", "typeof", "=", "bigint"], "&&", ["@Next 1 0", "typeof", "=", "bigint"]], false, [[["@This 0", "+B", "@Next 1 0"], ["@This 1", "+B", "@Next 1 1"]]], [["@This 0", "*B", "@This 1"], "min", ["@Next 1 0", "*B", "@Next 1 1"]], [false, true]];
+                        else if (modifiers[13] == "Non-Interacting") mRule_232240 = [2, [["@This 0", "=", "@Next 1 0"], "||", ["@This 1", "=", "@Next 1 1"], "&&", ["@This 0", "typeof", "=", "bigint"], "&&", ["@Next 1 0", "typeof", "=", "bigint"], "&&", [["@This 0", "signB"], "=", ["@Next 1 0", "signB"]], "&&", [["@This 1", "signB"], "=", ["@Next 1 1", "signB"]]], false, [[["@This 0", "+B", "@Next 1 0"], ["@This 1", "+B", "@Next 1 1"]]], [["@This 0", "*B", "@This 1", "absB"], "min", ["@Next 1 0", "*B", "@Next 1 1", "absB"]], [false, true]];
+                        else mRule_232240 = [2, [["@This 0", "=", "@Next 1 0"], "||", ["@This 1", "=", "@Next 1 1"], "&&", ["@This 0", "typeof", "=", "bigint"], "&&", ["@Next 1 0", "typeof", "=", "bigint"]], false, [[["@This 0", "+B", "@Next 1 0"], ["@This 1", "+B", "@Next 1 1"]]], [["@This 0", "*B", "@This 1", "absB"], "min", ["@Next 1 0", "*B", "@Next 1 1", "absB"]], [false, true]]
+                    }
+                    else {
+                        if (modifiers[13] == "None") mRule_232240 = [2, [["@This 0", "=", "@Next 1 0"], "||", ["@This 1", "=", "@Next 1 1"], "||", ["@This 0", "=", "@Next 1 1"], "||", ["@This 1", "=", "@Next 1 0"], "&&", ["@This 0", "typeof", "=", "bigint"], "&&", ["@Next 1 0", "typeof", "=", "bigint"]], false, [[["@This 0", "+B", "@Next 1 0"], ["@This 1", "+B", "@Next 1 1"]]], [["@This 0", "*B", "@This 1"], "min", ["@Next 1 0", "*B", "@Next 1 1"]], [false, true]];
+                        else if (modifiers[13] == "Non-Interacting") mRule_232240 = [2, [["@This 0", "=", "@Next 1 0"], "||", ["@This 1", "=", "@Next 1 1"], "||", ["@This 0", "=", "@Next 1 1"], "||", ["@This 1", "=", "@Next 1 0"], "&&", ["@This 0", "typeof", "=", "bigint"], "&&", ["@Next 1 0", "typeof", "=", "bigint"], "&&", [["@This 0", "signB"], "=", ["@Next 1 0", "signB"]], "&&", [["@This 1", "signB"], "=", ["@Next 1 1", "signB"]]], false, [[["@This 0", "+B", "@Next 1 0"], ["@This 1", "+B", "@Next 1 1"]]], [["@This 0", "*B", "@This 1", "absB"], "min", ["@Next 1 0", "*B", "@Next 1 1", "absB"]], [false, true]];
+                        else mRule_232240 = [2, [["@This 0", "=", "@Next 1 0"], "||", ["@This 1", "=", "@Next 1 1"], "||", ["@This 0", "=", "@Next 1 1"], "||", ["@This 1", "=", "@Next 1 0"], "&&", ["@This 0", "typeof", "=", "bigint"], "&&", ["@Next 1 0", "typeof", "=", "bigint"]], false, [[["@This 0", "+B", "@Next 1 0"], ["@This 1", "+B", "@Next 1 1"]]], [["@This 0", "*B", "@This 1", "absB"], "min", ["@Next 1 0", "*B", "@Next 1 1", "absB"]], [false, true]]
+                    }
+                    MergeRules.push(mRule_232240);
+                }
+            }
+            if (gamemode == 50.248) { // Wildcard DIVE
+                start_game_vars[9] = mode_vars[3];
+                if (mode_vars[4] > 0) {
+                    start_game_vars[13] = mode_vars[5];
+                    scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "@if", ["@Parent -2", "@arr_length", "!=", 1], "2nd", false, "@end-if", "@else", "arr_elem", 0, "absB", "=", "@GVar 10", "@end-else"], "@edit_gvar", 12, true, "@end-if"], "Merge"]);
+                    scripts.push([["@var_retain", 0, "@add_var", 0, "@repeat", ["@var_retain", "@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@var_retain", "@Var 0", "arr_elem", "@Var 1", "arr_elem", 0, "@if", ["@Parent -2", "@arr_length", "!=", 1], "2nd", false, "@end-if", "@else", "arr_elem", 0, "absB", "=", "@GVar 10", "@end-else"], "@edit_gvar", 12, true, "@end-if", "@edit_var", 1, ["@var_retain", "@Var 1", "+", 1], "@end-repeat"], "PostSpawn"]);
+                    if (mode_vars[3] == 1) {
+                        scripts.push([[0, "@if", "@GVar 12", "@edit_gvar", 11, ["@var_retain", "@GVar 11", "+", 1], "@edit_gvar", 12, false, "@edit_gvar", 10, ["@GVar 10", "+B", [0, "rand_bigint", ["@GVar 10", "logB", 2n]], "*B", [0, "rand_float", 1, "@if", ["@Parent -2", "=", 0], "2nd", 1, "@end-if", "log", 2, "*", -1, "floor", 1, "+", 2, "BigInt"]], "@end-if"], "EndTurn"])
+                    }
+                    else {
+                        scripts.push([[0, "@if", "@GVar 12", "@edit_gvar", 11, ["@var_retain", "@GVar 11", "+", 1], "@edit_gvar", 12, false, "@edit_gvar", 10, [[2n, "^B", ["@GVar 11", "BigInt"], "*B", "@GVar 13"], "rand_bigint", [2n, "^B", ["@GVar 11", "+", 1, "BigInt"], "*B", "@GVar 13", "-B", 1n]], "@end-if"], "EndTurn"])
+                    }
+                    statBoxes.push(["Current Goal", "@GVar 10", false, false, "Tile", "DIVE"], ["Goals Reached", "@GVar 11"]);
+                }
+            }
+        }
         else if (gamemode == 37.71) { // 839,808
             if (mode_vars[0] > 0) {
                 start_game_vars[3] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 2, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 2, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[["@Literal"], "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, [["@Literal"], "arr_push", ["@GVar 0", "arr_elem", 0, "+", [0, "rand_float", 1, "log", "@GVar 4", "floor", 1]], "arr_push", ["@GVar 0", "arr_elem", 1, "+", 1]], "@end-if"], "EndTurn"])
                 }
@@ -22300,6 +22582,7 @@ function loadModifiers() {
                 let sBox = ["@GVar 0"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
@@ -22384,7 +22667,7 @@ function loadModifiers() {
                 else directions.push([[0, 0, 0, 0, [1, true, true, true]], "&#8226;", 5/33, 5/33, 3/33, 14/33, 14/33, ["Space"], 0]);
             }
         }
-        if (gamemode == 99) { // Four-Sides 625, whose rules depend on the directions
+        if (gamemode == 99) { // Four-Sides 625, whose rules depend on the directionselse if (gamemode == 92.50118) {} // Anti-DIVE
             TileNumAmount = 2;
             let sideDirections = [];
             // Directions of movement
@@ -22449,7 +22732,7 @@ function loadModifiers() {
             startTileSpawns = [[[0, start1falses], 1]];
             tileValueFunction = ["@GVar 0", "^", "@This 0", "*", ["@This 1", "arr_reduce", 1, ["+", "@Var -1"]]];
         }
-        if (modifiers[15] == "Simple" && gamemode != 14 && (gamemode != 37 || mode_vars[0] != 1) && gamemode != 40 && gamemode != 43 && gamemode != 50 && gamemode != 58 && gamemode != 59 && gamemode != 69 && gamemode != 70 && gamemode != 71 && gamemode != 80 && gamemode != 81 && gamemode != 82 && gamemode != 97 && gamemode != 50.1 && gamemode != 37.71 && gamemode != 71.37 && gamemode != -1) { // 2049, Wildcard 2048, 2216.838, 1321, DIVE, 10, 1825, (232, 240), 16+16i, 3,188,646, 1429, 2058, 1716, Pro-Add-Uct, Gaussian DIVE, 839,808, and 145.965 ignore the simple spawns: 2049, 10, 1825, and 1429 need both 1s and -1s, 16+16i needs all four quadrants, 2216.838, 1321, 3,188,646, 839,808, and 145.965 have special tiles that make them work (÷2s, +1s, ×s, ×2s, and ÷s respectively), simple spawns would reduce (232, 240) and Pro-Add-Uct to a single dimension, 2058 and 1716 would never end if they only spawned 1s, the different spawning tiles are a fundamental part of DIVE and Gaussian DIVE, and simple spawns would defeat the whole point of Wildcard 2048. We also can't trust that simple spawns wouldn't break a Custom Mode.
+        if (modifiers[15] == "Simple" && gamemode != 14 && (gamemode != 37 || mode_vars[0] != 1) && gamemode != 40 && gamemode != 43 && gamemode != 50 && gamemode != 58 && gamemode != 59 && gamemode != 69 && gamemode != 70 && gamemode != 71 && gamemode != 80 && gamemode != 81 && gamemode != 82 && gamemode != 97 && gamemode != 101 && gamemode != 102 && gamemode != 50.1 && wavesModeModified.indexOf(gamemode) == -1 && gamemode != 37.71 && gamemode != 71.37 && gamemode != -1) { // 2049, Wildcard 2048, 2216.838, 1321, DIVE, 10, 1825, (232, 240), 16+16i, 3,188,646, 1429, 2058, 1716, Pro-Add-Uct, all of the waves modes, 839,808, and 145.965 ignore the simple spawns: 2049, 10, 1825, and 1429 need both 1s and -1s, 16+16i needs all four quadrants, 2216.838, 1321, 3,188,646, 839,808, and 145.965 have special tiles that make them work (÷2s, +1s, ×s, ×2s, and ÷s respectively), simple spawns would reduce (232, 240) and Pro-Add-Uct to a single dimension, 2058 and 1716 would never end if they only spawned 1s, the different spawning tiles are a fundamental part of DIVE and the waves modes, and simple spawns would defeat the whole point of Wildcard 2048. We also can't trust that simple spawns wouldn't break a Custom Mode.
             if (gamemode == 30) startTileSpawns = [["Box", 20, [-1], 4, [-2], 4]];
             else if (gamemode == 47) startTileSpawns = [["Box", 1, [1, -1], 3, [1, 1], 3]];
             else {
@@ -22477,6 +22760,7 @@ function loadModifiers() {
                 if ((MergeRules[m]).indexOf("@end_vars") > -1) mstart = (MergeRules[m]).indexOf("@end_vars") + 1;
                 MergeRules[m][mstart + 1].push("&&", [["@VDir", "arr_push", "@HDir", "arr_push", "@SlideAmount"], "=", ("@MVar " + mnum)]);
             }
+            mergeResultKnownLevel = 0;
         }
         hiddenTileText = modifiers[21];
         hiddenTileBackground = modifiers[32];
@@ -22523,7 +22807,7 @@ function loadModifiers() {
     }
     if (gamemode != 0) {
         let validMergeModifiers = ["@MergeReverseStart", "@MergeOverflowEmpty", "@MergeOverflowSlot", "@MergeOverflowOverwrite"];
-        if ((modifiers[13] != "None" || (gamemode == 100 && ((mode_vars[0] == 1 && mode_vars[3] == 1) || (mode_vars[0] == 4 && (mode_vars[3] == 1 || mode_vars[3] == 2)) || (mode_vars[0] == 5 && mode_vars[3] == 1) || (mode_vars[0] == 19 && mode_vars[3] == 0)))) && gamemode != 14 && gamemode != 31 && (gamemode != 34 || mode_vars[0] != 2) && (gamemode != 35 || !mode_vars[0] || mode_vars[1]) && (gamemode != 38 || (mode_vars[0] == 0 && !mode_vars[8])) && gamemode != 40 && gamemode != 41 && gamemode != 43 && gamemode != 44 && gamemode != 49 && gamemode != 50 && gamemode != 58 && gamemode != 59 && gamemode != 60 && !(gamemode >= 69 && gamemode <= 75 && gamemode != 72) && gamemode != 80 && gamemode != 86 && gamemode != 88 && gamemode != 89 && gamemode != 92 && gamemode != 93 && gamemode != 96 && gamemode != 97 && gamemode != 50.1 && gamemode != 98.01 && (gamemode != -1 || !mode_vars[0])) { // 2049, Isotopic 256, PA19,683, PA255 with two-tile merges, 180 (with prime merges or all merges), Wildcard 2048, X^Y, 1321, mod 27, 378, DIVE, 10, 1825, 2295, (232, 240), 16+16i, 3,188,646, SQUART, Turatin, 3307, 1429, Bitwise 2048, FACTUP, 2496, SCAPRIM, TRIGAT, LOCEF, Pro-Add-Uct, Gaussian DIVE, PPPA377, and some Alternate 5040 variants all do special things with negative tiles, and some Custom Modes already have negative tiles, but this script is what adds the negative tiles to the rest of the modes
+        if ((modifiers[13] != "None" || (gamemode == 100 && ((mode_vars[0] == 1 && mode_vars[3] == 1) || (mode_vars[0] == 4 && (mode_vars[3] == 1 || mode_vars[3] == 2)) || (mode_vars[0] == 5 && mode_vars[3] == 1) || (mode_vars[0] == 19 && mode_vars[3] == 0)))) && gamemode != 14 && gamemode != 31 && (gamemode != 34 || mode_vars[0] != 2) && (gamemode != 35 || !mode_vars[0] || mode_vars[1]) && (gamemode != 38 || (mode_vars[0] == 0 && !mode_vars[8])) && gamemode != 40 && gamemode != 41 && gamemode != 43 && gamemode != 44 && gamemode != 49 && gamemode != 50 && gamemode != 58 && gamemode != 59 && gamemode != 60 && !(gamemode >= 69 && gamemode <= 75 && gamemode != 72) && gamemode != 80 && gamemode != 86 && gamemode != 88 && gamemode != 89 && gamemode != 92 && gamemode != 93 && gamemode != 96 && gamemode != 97 && gamemode != 101 && gamemode != 102 && gamemode != 50.7101113 && gamemode != 50.1 && wavesModeModified.indexOf(gamemode) == -1 && gamemode != 98.01 && (gamemode != -1 || !mode_vars[0])) { // 2049, Isotopic 256, PA19,683, PA255 with two-tile merges, 180 (with prime merges or all merges), Wildcard 2048, X^Y, 1321, mod 27, 378, DIVE, 10, 1825, 2295, (232, 240), 16+16i, 3,188,646, SQUART, Turatin, 3307, 1429, Bitwise 2048, FACTUP, 2496, SCAPRIM, TRIGAT, LOCEF, Pro-Add-Uct, all the waves modes, and PPPA377, and some Alternate 5040 variants all do special things with negative tiles, and some Custom Modes already have negative tiles, but this script is what adds the negative tiles to the rest of the modes
             TileNumAmount++;
             let neganum = TileNumAmount - 1;
             let positiveTiles = [];
@@ -22607,7 +22891,11 @@ function loadModifiers() {
                         }
                     }
                     else if (Array.isArray(startTileSpawns[i][j])) {
-                        if (startTileSpawns[i][j][0] == "@CalcArray") {
+                        if (indexOfNestedPrimArray("@Signless", startTileSpawns[i][j]) != -1) {
+                            positiveSpawns[i][j].push(0);
+                            negativeSpawns[i][j].push(0);
+                        }
+                        else if (startTileSpawns[i][j][0] == "@CalcArray") {
                             positiveSpawns[i][j].push("arr_push", 1);
                             negativeSpawns[i][j].push("arr_push", -1);
                         }
@@ -22638,7 +22926,7 @@ function loadModifiers() {
                     if (signlessTiles.length == 0) {
                         for (let i = 1; i < addInfo; i++) MergeRules[m][mstart + 1].push("&&", ["@Next " + i + " " + neganum, "=", "@This " + neganum]);
                         if (eqPrimArrays(MergeRules[m][mstart + 1][0], ["@NextNE -1 0", "!=", "@This 0"])) MergeRules[m][mstart + 1].unshift(["@NextNE -1 " + neganum, "!=", "@This " + neganum], "||");
-                        for (let r = 0; r < MergeRules[m][mstart + 3].length; r++) if (validMergeModifiers.indexOf(MergeRules[m][mstart + 3][r]) == -1 && MergeRules[m][mstart + 3][r].length <= neganum) MergeRules[m][mstart + 3][r].push("@This " + neganum);
+                        for (let r = 0; r < MergeRules[m][mstart + 3].length; r++) if (validMergeModifiers.indexOf(MergeRules[m][mstart + 3][r]) == -1/* && MergeRules[m][mstart + 3][r].length <= neganum*/) MergeRules[m][mstart + 3][r].push("@This " + neganum);
                     }
                     else {
                         let negadetector = ["@This " + neganum, "@if", ["@Parent -2", "=", 0], "2nd", "@Next", "arr_reduce", 0, ["@if", ["@var_retain", "@Var -1", "arr_elem", neganum, "!=", 0, "&&", ["@Parent -3", "=", 0]], "2nd", "@Var -1", "arr_elem", neganum, "@end-if"], "@end-if"];
@@ -22685,7 +22973,7 @@ function loadModifiers() {
                     let startindex = 0;
                     if (TileTypes[t][startindex] === "@include_gvars") startindex = 1;
                     if (TileTypes[t].indexOf("@end_vars") > -1) startindex = TileTypes[t].indexOf("@end_vars") + 1;
-                    if (eqPrimArrays(arrayTypes(TileTypes[t][startindex]), ["number"]) || eqPrimArrays(arrayTypes(TileTypes[t][startindex]), ["bigint"]) || eqRearrangeArrays(arrayTypes(TileTypes[t][startindex]), ["number", "bigint"])) {
+                    if (eqPrimArrays(arrayTypes(TileTypes[t][startindex]), ["number"]) || eqPrimArrays(arrayTypes(TileTypes[t][startindex]), ["bigint"]) || eqRearrangeArrays(arrayTypes(TileTypes[t][startindex]), ["number", "bigint"]) || eqPrimArrays(arrayTypes(TileTypes[t][startindex]), ["bigrational"])) {
                         redTiles[t][startindex].push(0);
                         yellowTiles[t][startindex].push(1);
                         if (modifiers[24] > 2) greenTiles[t][startindex].push(2);
@@ -22760,7 +23048,7 @@ function loadModifiers() {
                 }
                 let wlength = winConditions.length;
                 for (let w = 0; w < wlength; w++) {
-                    if (Array.isArray(winConditions[w]) && (eqPrimArrays(arrayTypes(winConditions[w]), ["number"]) || eqPrimArrays(arrayTypes(winConditions[w]), ["bigint"]) || eqPrimArrays(arrayTypes(winConditions[w]), ["number", "bigint"]))) {
+                    if (Array.isArray(winConditions[w]) && (eqPrimArrays(arrayTypes(winConditions[w]), ["number"]) || eqPrimArrays(arrayTypes(winConditions[w]), ["bigint"]) || eqPrimArrays(arrayTypes(winConditions[w]), ["number", "bigint"])) || eqPrimArrays(arrayTypes(TileTypes[t][startindex]), ["bigrational"])) {
                         winConditions.push(compendiumStructuredClone(winConditions[w]));
                         winConditions.push(compendiumStructuredClone(winConditions[w]));
                         if (modifiers[24] > 2) winConditions.push(compendiumStructuredClone(winConditions[w]));
@@ -22907,21 +23195,26 @@ function loadModifiers() {
                 [0, ["@This " + memorynum, ">", 0], true, [tilechange.slice()], 0]
             );
         }
-        if (modifiers[12] && gamemode != 98.01) { // Garbage 0s, which doesn't do its usual thing in PPPA377
+        if (modifiers[12] > -1 && (gamemode != 98.01 || modifiers[12] > 0)) { // Garbage 0s, which doesn't do its usual thing in PPPA377
             let ZArray = ["Zero"];
             for (let i = 1; i < TileNumAmount; i++) ZArray.push(0);
-            if (gamemode == 44) ZArray[0] = 0; // mod 27 already has 0 tiles, so the modifier co-opts those to use as the Garbage 0s
-            else TileTypes.unshift([["@This 0", "=", "Zero"], "0", "#444444", "#888888"]);
+            if (modifiers[12] > 0) ZArray = ["@STCalcArray", "@TemporaryHole " + modifiers[12]];
+            if (modifiers[12] == 0) {
+                if (gamemode == 44) ZArray[0] = 0; // mod 27 already has 0 tiles, so the modifier co-opts those to use as the Garbage 0s
+                else TileTypes.unshift([["@This 0", "=", "Zero"], "0", "#444444", "#888888"]);
+            }
             for (let m = 0; m < MergeRules.length; m++) {
                 let mstart = 0;
                 if (MergeRules[m][0] === "@include_gvars") mstart = 1;
                 if ((MergeRules[m]).indexOf("@end_vars") > -1) mstart = (MergeRules[m]).indexOf("@end_vars") + 1;
-                if (gamemode == 61) { // Hotfix because 3069 was letting 2s merge with 0s as if the 0s were 1s
+                if (modifiers[12] == 0) {
+                    if (gamemode == 61) { // Hotfix because 3069 was letting 2s merge with 0s as if the 0s were 1s
+                        MergeRules[m][mstart + 1].push("&&");
+                        MergeRules[m][mstart + 1].push(["@Next 1 0", "!=", ZArray[0]]);
+                    }
                     MergeRules[m][mstart + 1].push("&&");
-                    MergeRules[m][mstart + 1].push(["@Next 1 0", "!=", ZArray[0]]);
+                    MergeRules[m][mstart + 1].push(["@This 0", "!=", ZArray[0]]);
                 }
-                MergeRules[m][mstart + 1].push("&&");
-                MergeRules[m][mstart + 1].push(["@This 0", "!=", ZArray[0]]);
                 if (MergeRules[m].length - mstart > 5) {
                     MergeRules[m][mstart + 5] = [];
                     for (let e = 0; e < MergeRules[m][mstart]; e++) MergeRules[m][mstart + 5].push(false);
@@ -22933,18 +23226,20 @@ function loadModifiers() {
                     MergeRules[m][mstart + 3].push("fill", ZArray);
                     let mergelength = MergeRules[m][mstart];
                     if (MergeRules[m].length > mstart + 6) mergelength = MergeRules[m][mstart + 6];
-                    for (let n = 1; n < mergelength; n++) {
+                    if (modifiers[12] == 0) for (let n = 1; n < mergelength; n++) {
                         MergeRules[m][mstart + 1].push("&&");
                         MergeRules[m][mstart + 1].push(["@Next " + n + " 0", "!=", ZArray[0]]);
                     }
                 }
             }
-            let ZRid = [];
-            for (let z = 0; z < ZArray.length; z++) {
-                ZRid.push(["@This " + z, "=", ZArray[z]], "&&", ["@Next 1 " + z, "=", ZArray[z]], "&&");
+            if (modifiers[12] == 0) {
+                let ZRid = [];
+                for (let z = 0; z < ZArray.length; z++) {
+                    ZRid.push(["@This " + z, "=", ZArray[z]], "&&", ["@Next 1 " + z, "=", ZArray[z]], "&&");
+                }
+                ZRid.pop();
+                MergeRules.unshift([2, ZRid, true, [ZArray], 0, [true, true]]);
             }
-            ZRid.pop();
-            MergeRules.unshift([2, ZRid, true, [ZArray], 0, [true, true]]);
         }
         let BlackBox = ["BlackBox"];
         for (let i = 1; i < TileNumAmount; i++) BlackBox.push(0);
@@ -22974,10 +23269,102 @@ function loadModifiers() {
                 }
             }
         }
+        if (modifiers[30] > 0) {
+            TileNumAmount++;
+            let stillNum = TileNumAmount - 1;
+            for (let t = 0; t < TileTypes.length; t++) {
+                let startindex = 0;
+                if (TileTypes[t][startindex] === "@include_gvars") startindex = 1;
+                if (TileTypes[t].indexOf("@end_vars") > -1) startindex = TileTypes[t].indexOf("@end_vars") + 1;
+                if (Array.isArray(TileTypes[t][startindex]) && (arrayTypes(TileTypes[t][startindex]).indexOf("string") == -1 || TileTypes[t][startindex].indexOf("@Signless") != -1)) { // I think that's a comprehensive check for what tile types are matches rather than CalcArrays, but I might be wrong
+                    TileTypes[t][startindex] = ["@This", "arr_slice", 0, stillNum, "=", ["@Literal", ...TileTypes[t][startindex]]]
+                }
+                while (TileTypes[t].length < startindex + 7) TileTypes[t].push(undefined);
+                if (hexagonal) TileTypes[t].push(["PrimeImage", ["@multi-gradient", ["@linear-gradient", "#0008", 0, "#acb97388", 8, "#0000", 8, 92, "#acb97388", 92, "#0008", 100], ["@linear-gradient", 60, "#0008", 10, "#acb97388", 18, "#0000", 18, 82, "#acb97388", 82, "#0008", 90], ["@linear-gradient", 120, "#0008", 10, "#acb97388", 18, "#0000", 18, 82, "#acb97388", 82, "#0008", 90]], ["@linear-gradient", ["#0000", "@if", ["@This " + stillNum, "=", 0], "2nd", "#000", "@end-if"], ["#0000", "@if", ["@This " + stillNum, "=", 0], "2nd", "#000", "@end-if"]]])
+                else TileTypes[t].push(["PrimeImage", ["@multi-gradient", ["@linear-gradient", "#0008", 0, "#acb97388", 10, "#0000", 10, 90, "#acb97388", 90, "#0008", 100], ["@linear-gradient", 90, "#0008", 0, "#acb97388", 10, "#0000", 10, 90, "#acb97388", 90, "#0008", 100]], ["@linear-gradient", ["#0000", "@if", ["@This " + stillNum, "=", 0], "2nd", "#000", "@end-if"], ["#0000", "@if", ["@This " + stillNum, "=", 0], "2nd", "#000", "@end-if"]]])
+            }
+            for (let i = 0; i < startTileSpawns.length; i++) {
+                if (startTileSpawns[i][0] == "Box") {
+                    for (let e = 2; e < startTileSpawns[i].length; e++) {
+                        let tile = startTileSpawns[i][e];
+                        if (typeof startTileSpawns[i][e + 1] != "number") {}
+                        else {
+                            startTileSpawns[i][e].push(1);
+                        }
+                    }
+                }
+                else {
+                    startTileSpawns[i][0].push(1);
+                }
+            }
+            for (let m = 0; m < MergeRules.length; m++) {
+                let mstart = 0;
+                if (MergeRules[m][0] === "@include_gvars") mstart = 1;
+                if ((MergeRules[m]).indexOf("@end_vars") > -1) mstart = (MergeRules[m]).indexOf("@end_vars") + 1;
+                for (let r = 0; r < MergeRules[m][mstart + 3].length; r++) if (validMergeModifiers.indexOf(MergeRules[m][mstart + 3][r]) == -1) {
+                    if (Array.isArray(MergeRules[m][mstart + 3][r])) MergeRules[m][mstart + 3][r].push(["@Next", "arr_reduce", 1, ["min", ["@var_retain", "@Var -1", "arr_elem", stillNum]], "min", "@This " + stillNum]);
+                }
+            }
+            movementParameters[2] = [movementParameters[2], "*", "@This " + stillNum, "@if", ["@Parent -2", "!=", "@Parent -2"], "2nd", 0, "@end-if"]; // That reflexive != is an NaN check
+            scripts.unshift(
+                [["@global_var_retain_inner", 0, "@end_vars", 0, "@repeat", ["@TileOrder", "arr_length", ">", "@Var 0"], "@if", ["@Grid", "arr_elem", ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 0], "arr_elem", ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 1], "typeof", "=", "array"], "@replace_tile", ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 0], ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 1], ["@Grid", "arr_elem", ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 0], "arr_elem", ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 1], "arr_edit_elem", stillNum, 1], "@end-if", "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], "EndTurn"],
+                [["@global_var_retain_inner", ["@TileOrder", "arr_filter", ["@global_var_retain_inner", "@Grid", "arr_elem", ["@Var -1", "arr_elem", 0], "arr_elem", ["@Var -1", "arr_elem", 1], "typeof", "=", "array"]], ["@Literal", -1, -1], 0, 0, "@end_vars", 0, "@repeat", [["@Var -2", "<", modifiers[30]], "&&", ["@Var 0", "arr_length", ">", 0]], "@edit_var", 3, ["@Var 0", "arr_length", "-", 1, "rand_int", 0], "@edit_var", 1, ["@Var 0", "arr_elem", "@Var 3"], "@replace_tile", ["@Var 1", "arr_elem", 0], ["@Var 1", "arr_elem", 1], ["@Grid", "arr_elem", ["@Var 1", "arr_elem", 0], "arr_elem", ["@Var 1", "arr_elem", 1], "arr_edit_elem", stillNum, 0], "@edit_var", 0, ["@Var 0", "arr_splice", "@Var 3", 1, ["@Literal"]], "@edit_var", 2, ["@Var 2", "+", 1], "@end-repeat"], "EndTurn"]
+            )
+            discoveredTilesFilter.push("arr_edit_elem", stillNum, 1);
+        }
+        if (modifiers[31] > 0) {
+            TileNumAmount++;
+            let stillNum = TileNumAmount - 1;
+            for (let t = 0; t < TileTypes.length; t++) {
+                let startindex = 0;
+                if (TileTypes[t][startindex] === "@include_gvars") startindex = 1;
+                if (TileTypes[t].indexOf("@end_vars") > -1) startindex = TileTypes[t].indexOf("@end_vars") + 1;
+                if (Array.isArray(TileTypes[t][startindex]) && (arrayTypes(TileTypes[t][startindex]).indexOf("string") == -1 || TileTypes[t][startindex].indexOf("@Signless") != -1)) { // I think that's a comprehensive check for what tile types are matches rather than CalcArrays, but I might be wrong
+                    TileTypes[t][startindex] = ["@This", "arr_slice", 0, stillNum, "=", ["@Literal", ...TileTypes[t][startindex]]]
+                }
+                while (TileTypes[t].length < startindex + 7) TileTypes[t].push(undefined);
+                TileTypes[t].push(["PrimeImage", ["@repeating-conic-gradient", -15, "#0000", 0, 5, "#000", 5, "#acb973", 10, 20, "#000", 25, "#0000", 25, 30], ["@radial-gradient", ["#0000", "@if", ["@This " + stillNum, "=", 0], "2nd", "#000f", "@end-if"], "#0000", 50]])
+            }
+            for (let i = 0; i < startTileSpawns.length; i++) {
+                if (startTileSpawns[i][0] == "Box") {
+                    for (let e = 2; e < startTileSpawns[i].length; e++) {
+                        let tile = startTileSpawns[i][e];
+                        if (typeof startTileSpawns[i][e + 1] != "number") {}
+                        else {
+                            startTileSpawns[i][e].push(1);
+                        }
+                    }
+                }
+                else {
+                    startTileSpawns[i][0].push(1);
+                }
+            }
+            for (let m = 0; m < MergeRules.length; m++) {
+                let mstart = 0;
+                if (MergeRules[m][0] === "@include_gvars") mstart = 1;
+                if ((MergeRules[m]).indexOf("@end_vars") > -1) mstart = (MergeRules[m]).indexOf("@end_vars") + 1;
+                let mergelength = MergeRules[m][mstart];
+                if (MergeRules[m].length > mstart + 6) mergelength = MergeRules[m][mstart + 6];
+                MergeRules[m][mstart + 1].push("&&");
+                MergeRules[m][mstart + 1].push(["@This " + stillNum, "!=", 0]);
+                for (let n = 1; n < mergelength; n++) {
+                    MergeRules[m][mstart + 1].push("&&");
+                    MergeRules[m][mstart + 1].push(["@Next " + n + " " + stillNum, "!=", 0]);
+                }
+                for (let r = 0; r < MergeRules[m][mstart + 3].length; r++) if (validMergeModifiers.indexOf(MergeRules[m][mstart + 3][r]) == -1) {
+                    if (Array.isArray(MergeRules[m][mstart + 3][r])) MergeRules[m][mstart + 3][r].push(1);
+                }
+            }
+            scripts.unshift(
+                [["@global_var_retain_inner", 0, "@end_vars", 0, "@repeat", ["@TileOrder", "arr_length", ">", "@Var 0"], "@if", ["@Grid", "arr_elem", ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 0], "arr_elem", ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 1], "typeof", "=", "array"], "@replace_tile", ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 0], ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 1], ["@Grid", "arr_elem", ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 0], "arr_elem", ["@TileOrder", "arr_elem", "@Var 0", "arr_elem", 1], "arr_edit_elem", stillNum, 1], "@end-if", "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], "EndTurn"],
+                [["@global_var_retain_inner", ["@TileOrder", "arr_filter", ["@global_var_retain_inner", "@Grid", "arr_elem", ["@Var -1", "arr_elem", 0], "arr_elem", ["@Var -1", "arr_elem", 1], "typeof", "=", "array"]], ["@Literal", -1, -1], 0, 0, "@end_vars", 0, "@repeat", [["@Var -2", "<", modifiers[31]], "&&", ["@Var 0", "arr_length", ">", 0]], "@edit_var", 3, ["@Var 0", "arr_length", "-", 1, "rand_int", 0], "@edit_var", 1, ["@Var 0", "arr_elem", "@Var 3"], "@replace_tile", ["@Var 1", "arr_elem", 0], ["@Var 1", "arr_elem", 1], ["@Grid", "arr_elem", ["@Var 1", "arr_elem", 0], "arr_elem", ["@Var 1", "arr_elem", 1], "arr_edit_elem", stillNum, 0], "@edit_var", 0, ["@Var 0", "arr_splice", "@Var 3", 1, ["@Literal"]], "@edit_var", 2, ["@Var 2", "+", 1], "@end-repeat"], "EndTurn"]
+            )
+            discoveredTilesFilter.push("arr_edit_elem", stillNum, 1);
+        }
         if (modifiers[25] > 0) {
             let THSpawn = [["@Moves", "%", modifiers[26], "=", 0], "AfterSpawns", false];
             for (let h = 0; h < modifiers[25]; h++) THSpawn.push("@TemporaryHole " + modifiers[27]);
-            forcedSpawns.push(THSpawn);
+            start_forcedSpawns.push(THSpawn);
         }
     }
 }
@@ -23023,6 +23410,8 @@ function loadResettingModifiers() { //Randomly-Placed Holes and Randomly-Placed 
             }
             availableTiles.splice(chosen, 1);
         }
+        otherSecretStats[6] = false;
+        if (document.getElementById("rules_text").firstElementChild.id == "winNothingMessage") document.getElementById("rules_text").removeChild(document.getElementById("rules_text").firstElementChild);
         // Random goals
         if (gamemode == 38) { // 180
             if (mode_vars[1] > 0 && !(mode_vars[0] == 3 && mode_vars[3].map(x => new BigRational(x)).filter(x => x.gt(1)).length == 0)) {
@@ -23040,7 +23429,7 @@ function loadResettingModifiers() { //Randomly-Placed Holes and Randomly-Placed 
                 }
                 else if (mode_vars[0] == 3 || mode_vars[0] == 4) {
                     start_game_vars[3] = [];
-                    let arrayOfMults = (mode_vars[0] == 4) ? start_game_vars[7].map(a => a.length) : mode_vars[3].map(a => a[0]);
+                    let arrayOfMults = (mode_vars[0] == 4) ? start_game_vars[7].map(a => BigInt(a.length)) : mode_vars[3].map(a => a[0]);
                     for (let n = 0; n < arrayOfMults.length; n++) {
                         start_game_vars[3].push(Math.random())
                     }
@@ -23134,6 +23523,7 @@ function loadResettingModifiers() { //Randomly-Placed Holes and Randomly-Placed 
         if (gamemode == 50) { // DIVE
             if (mode_vars[3] > 0) {
                 start_game_vars[5] = getRndBigInt(start_game_vars[9], start_game_vars[9]*2n-1n);
+                if (mode_vars[5] > 0 && start_game_vars[5] % 2n == 0n) start_game_vars[5] += 1n;
             }
         }
         if (gamemode == 54) { // 3888
@@ -23394,6 +23784,64 @@ function loadResettingModifiers() { //Randomly-Placed Holes and Randomly-Placed 
                 game_vars[2] = false;
                 start_game_vars = compendiumStructuredClone(game_vars);
                 rngIndex = 0;
+            }
+        }
+        if (gamemode == 101) { // DOFFET
+            if (mode_vars[2] > 0) {
+                let start = 1n;
+                if (mode_vars[0] < 0n) start = mode_vars[0] * -2n + 1n;
+                start_game_vars[3] = start;
+                start_game_vars[6] = [start]; 
+                game_vars = compendiumStructuredClone(start_game_vars);
+                while (game_vars[3] < game_vars[7]) {
+                    game_vars[5] = true;
+                    CalcArray(scripts[scripts.length - 1][0]);
+                }
+                game_vars[4] = 0;
+                game_vars[5] = false;
+                start_game_vars = compendiumStructuredClone(game_vars);
+                rngIndex = 0;
+            }
+        }
+        if (gamemode == 50.7101113) { // FRUSEE
+            if (mode_vars[0] > 0) {
+                start_game_vars[0] = [15n, 21n][getRndInteger(0, 1)];
+                start_game_vars[3] = [1n, 2n, 3n, 6n, 7n, 14n, start_game_vars[0]];
+                game_vars = compendiumStructuredClone(start_game_vars);
+                while (game_vars[0] < game_vars[4]) {
+                    game_vars[2] = true;
+                    CalcArray(scripts[scripts.length - 1][0]);
+                }
+                game_vars[1] = 0;
+                game_vars[2] = false;
+                start_game_vars = compendiumStructuredClone(game_vars);
+                rngIndex = 0;
+            }
+        }
+        if (gamemode == 96.50118) { // HICEG
+            if (mode_vars[3] > 0) {
+                start_game_vars[7] = getRndBigInt(start_game_vars[10], start_game_vars[10]*2n-1n);
+                if (start_game_vars[7] % 2n == 0n) start_game_vars[7] += 1n;
+            }
+        }
+        if (gamemode == 34.50118) { // Partial Flow DIVE
+            if (mode_vars[4] > 0) {
+                start_game_vars[7] = getRndBigInt(start_game_vars[10], start_game_vars[10]*2n-1n);
+            }
+        }
+        if (gamemode == 91.50118) { // Aquatic 1845
+            if (mode_vars[3] > 0) {
+                start_game_vars[7] = getRndBigInt(start_game_vars[10], start_game_vars[10]*2n-1n);
+            }
+        }
+        if (gamemode == 73.50118) { // Aquatic SQUART
+            if (mode_vars[3] > 0) {
+                start_game_vars[12] = getRndBigInt(start_game_vars[15], start_game_vars[15]*2n-1n);
+            }
+        }
+        if (gamemode == 50.248) { // Wildcard DIVE
+            if (mode_vars[4] > 0) {
+                start_game_vars[10] = getRndBigInt(start_game_vars[13], start_game_vars[13]*2n-1n);
             }
         }
         if (gamemode == 37.71) { // 839,808
@@ -23690,7 +24138,6 @@ function operation(n1, operator, n2) {
             }
             else {
                 result = getRndInteger(Math.ceil(n1), Math.floor(n2));
-                console.log("rand_int", n1, n2);
                 otherRandomEvents[rngIndex] = result;
                 rngIndex++;
                 if (rngIndex == otherRandomEvents.length) otherRandomEvents.push(0);
@@ -23703,7 +24150,6 @@ function operation(n1, operator, n2) {
             }
             else {
                 result = getRndFloat(n1, n2);
-                console.log("rand_float", n1, n2);
                 otherRandomEvents[rngIndex] = result;
                 rngIndex++;
                 if (rngIndex == otherRandomEvents.length) otherRandomEvents.push(0);
@@ -23883,6 +24329,8 @@ function operation(n1, operator, n2) {
                     while (nn2[vpos] === "@var_retain" || nn2[vpos] === "@var_copy" || nn2[vpos] === "@global_var_retain" || nn2[vpos] === "@global_var_copy" || nn2[vpos] === "@global_var_none" || nn2[vpos] === "@global_var_retain_inner" || nn2[vpos] === "@global_var_copy_inner" || nn2[vpos] === "@global_var_none_inner") vpos++;
                     if (nn2.indexOf("@end_vars") == -1) nn2.splice(vpos, 0, "@end_vars");
                     vpos = nn2.indexOf("@end_vars");
+                    if (Array.isArray(a)) a = ["@Literal"].concat(a);
+                    if (Array.isArray(b)) b = ["@Literal"].concat(b);
                     nn2.splice(vpos, 0, a, b);
                     return CalcArray(nn2, ...additional[0]);
                 }
@@ -23896,6 +24344,7 @@ function operation(n1, operator, n2) {
                     while (nn2[vpos] === "@var_retain" || nn2[vpos] === "@var_copy" || nn2[vpos] === "@global_var_retain" || nn2[vpos] === "@global_var_copy" || nn2[vpos] === "@global_var_none" || nn2[vpos] === "@global_var_retain_inner" || nn2[vpos] === "@global_var_copy_inner" || nn2[vpos] === "@global_var_none_inner") vpos++;
                     if (nn2.indexOf("@end_vars") == -1) nn2.splice(vpos, 0, "@end_vars");
                     vpos = nn2.indexOf("@end_vars");
+                    if (Array.isArray(value)) value = ["@Literal"].concat(value);
                     nn2.splice(vpos, 0, index, value);
                     return CalcArray(nn2, ...additional[0]);
                 }
@@ -23909,6 +24358,7 @@ function operation(n1, operator, n2) {
                     while (nn2[vpos] === "@var_retain" || nn2[vpos] === "@var_copy" || nn2[vpos] === "@global_var_retain" || nn2[vpos] === "@global_var_copy" || nn2[vpos] === "@global_var_none" || nn2[vpos] === "@global_var_retain_inner" || nn2[vpos] === "@global_var_copy_inner" || nn2[vpos] === "@global_var_none_inner") vpos++;
                     if (nn2.indexOf("@end_vars") == -1) nn2.splice(vpos, 0, "@end_vars");
                     vpos = nn2.indexOf("@end_vars");
+                    if (Array.isArray(value)) value = ["@Literal"].concat(value);
                     nn2.splice(vpos, 0, index, value);
                     return CalcArray(nn2, ...additional[0]);
                 }
@@ -23924,6 +24374,7 @@ function operation(n1, operator, n2) {
                     while (nn2[vpos] === "@var_retain" || nn2[vpos] === "@var_copy" || nn2[vpos] === "@global_var_retain" || nn2[vpos] === "@global_var_copy" || nn2[vpos] === "@global_var_none" || nn2[vpos] === "@global_var_retain_inner" || nn2[vpos] === "@global_var_copy_inner" || nn2[vpos] === "@global_var_none_inner") vpos++;
                     if (nn2.indexOf("@end_vars") == -1) nn2.splice(vpos, 0, "@end_vars");
                     vpos = nn2.indexOf("@end_vars");
+                    if (Array.isArray(value)) value = ["@Literal"].concat(value);
                     nn2.splice(vpos + 1, 0, total);
                     nn2.splice(vpos, 0, index, value);
                     return CalcArray(nn2, ...additional[0]);
@@ -23938,6 +24389,7 @@ function operation(n1, operator, n2) {
                     while (nn2[vpos] === "@var_retain" || nn2[vpos] === "@var_copy" || nn2[vpos] === "@global_var_retain" || nn2[vpos] === "@global_var_copy" || nn2[vpos] === "@global_var_none" || nn2[vpos] === "@global_var_retain_inner" || nn2[vpos] === "@global_var_copy_inner" || nn2[vpos] === "@global_var_none_inner") vpos++;
                     if (nn2.indexOf("@end_vars") == -1) nn2.splice(vpos, 0, "@end_vars");
                     vpos = nn2.indexOf("@end_vars");
+                    if (Array.isArray(value)) value = ["@Literal"].concat(value);
                     nn2.splice(vpos + 1, 0, total);
                     nn2.splice(vpos, 0, index, value);
                     return CalcArray(nn2, ...additional[0]);
@@ -23960,7 +24412,6 @@ function operation(n1, operator, n2) {
             }
             else {
                 result = weightedRandomArrayEntry(n1, n2);
-                console.log("weightedRandomArrayEntry", n1, n2);
                 otherRandomEvents[rngIndex] = result;
                 rngIndex++;
                 if (rngIndex == otherRandomEvents.length) otherRandomEvents.push(0);
@@ -24000,7 +24451,6 @@ function operation(n1, operator, n2) {
                rngIndex++;
             }
             else {
-                console.log("rand_bigint", n1, n2);
                 result = getRndBigInt(n1, n2);
                 otherRandomEvents[rngIndex] = result;
                 rngIndex++;
@@ -24014,16 +24464,13 @@ function operation(n1, operator, n2) {
             result = primeFactorize(n1, Infinity, false, n2, false)[0];
         break;
         case "primeDefactorizeB":
-            result = primeDefactorize(n1, n2);
+            result = primeDefactorize([n1], n2);
         break;
         case "factorAmountB":
             result = listFactors(n1, true);
         break;
         case "factorListB":
             result = listFactors(n1, false);
-        break;
-        case "baseConvert":
-            result = baseConvert(n1, n2, false, 10n)
         break;
         case "basebit&B":
             result = baseBitMin(n1, n2, additional[0]);
@@ -24395,7 +24842,7 @@ function CalcArray(arr) {
                 }
                 to_pop = position;
             }
-            else if (operator == "@if") { // The operations between the entry after "@if" and "@end_if" only occur if the entry after "@if" evaluates to true
+            else if (operator == "@if") { // The operations between the entry after "@if" and "@end-if" only occur if the entry after "@if" evaluates to true
                 let nesting = 1;
                 let position = 3;
                 let nestarray = [];
@@ -24645,7 +25092,7 @@ function CalcArray(arr) {
                 n2 = CalcArrayConvert(carr[2], "+", vcoord, hcoord, vdir, hdir, addInfo, gri, parents, vars, globalVarStat);
                 additional_args.push(CalcArrayConvert(carr[3], "=", vcoord, hcoord, vdir, hdir, addInfo, gri, parents, vars, globalVarStat));
             }
-            else if (operator == "arr_push" || operator == "arr_unshift" || operator == "str_indexOf" || operator == "arr_indexOf" || operator == "arr_binarySearch" || operator == "arr_binaryInsert") {
+            else if (operator == "arr_push" || operator == "arr_unshift" || operator == "str_indexOf" || operator == "str_lastIndexOf" || operator == "arr_indexOf" || operator == "arr_lastIndexOf" || operator == "arr_binarySearch" || operator == "arr_binaryInsert") {
                 to_pop = 2;
                 n2 = CalcArrayConvert(carr[2], "=", vcoord, hcoord, vdir, hdir, addInfo, gri, parents, vars, globalVarStat);
             }
@@ -24684,7 +25131,7 @@ function CalcArray(arr) {
                 to_pop = 11;
                 n2 = CalcArrayConvert(carr[2], "=", vcoord, hcoord, vdir, hdir, addInfo, gri, parents, vars, globalVarStat);
                 additional_args.push(CalcArrayConvert(carr[3], "+", vcoord, hcoord, vdir, hdir, addInfo, gri, parents, vars, globalVarStat));
-                additional_args.push(carr[4], carr[5], carr[6], carr[7], carr[8], carr[9], carr[10], carr[11]); // Multiplication, division, modZero, sortFunc, coprime, one, valid, isOne
+                additional_args.push(carr[4], carr[5], carr[6], carr[7], carr[8], CalcArray(carr[9], vcoord, hcoord, vdir, hdir, addInfo, gri, parents, vars, globalVarStat), carr[10], carr[11]); // Multiplication, division, modZero, sortFunc, coprime, one, valid, isOne
                 additional_args.push([vcoord, hcoord, vdir, hdir, addInfo, gri, parents, compendiumStructuredClone(vars), globalVarStat]); //The CalcArrays in operation will need these
             }
             else if (operator == "CalcArray") {
@@ -24929,10 +25376,10 @@ function CalcArrayString(str) {
             }
         }
     }
-    else if (split.length < 3 && split[0] == "@PermThis") { // "@This 0" refers to the 0th entry of the internal array of the tile being examined, "@This 1" is its first entry, and so on. "@This" without the number refers to the whole array of that tile.
+    /*else if (split.length < 3 && split[0] == "@PermThis") {
         return gri[vcoord][hcoord];
     }
-    else if (split.length < 5 && split[0] == "@PermNext") { // "@Next 1 0" is the 0th entry of the first "next" tile: if the movement direction is 1 tile to the left, then "@Next 1 0" is the 0th entry of the tile that's one tile to the left of the tile being examined. Primarily used in merge rules. "@Next 1" returns the entire first next tile, "@Next" returns all of the next tiles within the merge length.
+    else if (split.length < 5 && split[0] == "@PermNext") {
         let traversed = 0;
         let distance = Math.abs(Number(split[1]));
         let sign = Math.sign(Number(split[1]));
@@ -24950,7 +25397,7 @@ function CalcArrayString(str) {
         }
         if (!(!(Number.isNaN(nextv)) && nextv % 1 == 0 && nextv >= 0 && nextv < height) || !(!(Number.isNaN(nexth)) && nexth % 1 == 0 && nexth >= 0 && nexth < width)) return str;
         return gri[nextv][nexth];
-    }
+    }*/
     else if (split.length < 4 && (split[0] == "@NextNE" || split[0] == "@NextFull")) { // "@NextNE 1 0" is like "@Next 1 0", but it skips over empty tiles. @NextFull skips over both empty and void tiles. Most commonly used for the purposes of using "@NextNE -1 0" to refer to the next non-empty tile BEHIND the current tile, such as preventing a two-tile merge if the tile behind the current tile would cause a three-tile merge, allowing the three-tile merge to take priority.
         let nextv = vcoord;
         let nexth = hcoord;
@@ -26095,7 +26542,7 @@ function threeFactorColor(factors, scheme) {
         if (scheme.includes("DIVE")) {
             r = ([0, 4, 8, 10, 12, 13, 14, 15])[Math.min(factors[0], 7)] * 17;
             g = ([0, 6, 10, 13, 15])[Math.min(factors[1], 4)] * 17;
-            if (scheme != "DIVE") g = ([0, 4, 8, 12, 15])[Math.min(factors[1], 4)] * 17;
+            if (scheme != "DIVE" && scheme != "Anti-DIVE") g = ([0, 4, 8, 12, 15])[Math.min(factors[1], 4)] * 17;
             b = ([0, 8, 12, 15])[Math.min(factors[2], 3)] * 17;
         }
         else if (scheme.includes("SQUARTSingle")) {
@@ -26141,7 +26588,7 @@ function threeFactorColor(factors, scheme) {
         else if (factors[0] >= factors[2] && factors[1] >= factors[2]) answer = HSVtoString(((factors[1] - factors[2]) / (factors[0] + factors[1] - factors[2] * 2) * 120), (0.7 ** factors[2] * 100), (lightnessPow ** (gcd((factors[0] - factors[2]), (factors[1] - factors[2])) - 1) * 100));
         else if (factors[1] >= factors[0] && factors[2] >= factors[0]) answer = HSVtoString(((factors[2] - factors[0]) / (factors[1]  + factors[2] - factors[0] * 2) * 120 + 120), (0.7 ** factors[0] * 100), (lightnessPow ** (gcd((factors[2] - factors[0]), (factors[1] - factors[0])) - 1) * 100));
         else if (factors[2] >= factors[1] && factors[0] >= factors[1]) answer = HSVtoString(((factors[0] - factors[1]) / (factors[2] + factors[0] - factors[1] * 2) * 120 + 240), (0.7 ** factors[1] * 100), (lightnessPow ** (gcd((factors[2] - factors[1]), (factors[0] - factors[1])) - 1) * 100));
-        if (invert) {
+        if (invert != scheme.includes("Anti")) {
             answer = answer.split(", ");
             answer[0] = "hsla(" + (Number(answer[0].slice(5)) + 180);
             answer[2] = (100 - Number(answer[2].slice(0, answer[2].length - 1))) + "%";
@@ -26219,7 +26666,7 @@ function threeFactorColor(factors, scheme) {
         if (invert) return evaluateColor(["@rotate", 180, true, ["@HSLA", hue, saturation, lightness, alpha]])
         return evaluateColor(["@HSLA", hue, saturation, lightness, alpha]);
     }
-    if (scheme == "Rational DIVE") {
+    if (scheme == "Rational DIVE" || scheme == "RACUTE") {
         let r = ([127, 165, 190, 215, 235, 255])[Math.min(abs(factors[0]), 5)];
         if (factors[0] < 0) r = 255 - r;
         let g = ([127, 175, 200, 230, 255])[Math.min(abs(factors[1]), 4)]
@@ -26366,14 +26813,14 @@ function ArraytoRGB(rgb) {
 
 function DIVESeedUnlock(tile, seeds, mode) {
     if (tile == 0n) return 1n;
-    mode = mod(mode, 4);
+    mode = mod(mode, 5);
     tile = abs(tile);
     seeds = compendiumStructuredClone(seeds);
     if (seeds.indexOf(1n) != -1) seeds.splice(seeds.indexOf(1n), 1);
     if (seeds.length == 0) return tile;
-    if (mode == 1 || mode == 2) sortedSeeds = seeds.sort((a, b) => Number(a - b));
+    if (mode == 1 || mode == 2 || mode == 4) sortedSeeds = seeds.sort((a, b) => Number(a - b));
     else if (mode == 0) sortedSeeds = seeds.sort((a, b) => Number(b - a));
-    if (mode != 1) { // Runs through each seed. Mode 0 is "largest to smallest", Mode 2 is "smallest to largest", Mode 3 is "in whatever order the seeds happen to be in"
+    if (mode != 1 && mode != 4) { // Runs through each seed. Mode 0 is "largest to smallest", Mode 2 is "smallest to largest", Mode 3 is "in whatever order the seeds happen to be in"
         for (let i = 0; i < seeds.length; i++) {
             while (tile % seeds[i] == 0) tile /= seeds[i];
         }
@@ -26382,6 +26829,7 @@ function DIVESeedUnlock(tile, seeds, mode) {
     else {
         // Mode 1 guarantees the minimum possible result by going through every possible combination.
         // To reduce lag, it speeds this up by finding a decently-sized set of coprime seeds - that one set can be treated as one unit in the subsequent testing, as since they're coprime, they can't affect each other, i.e. they won't "steal possibilities" from each other.
+        // Mode 4 is like Mode 1, except it goes for the *maximum* result instead of the minimum.
         let coprimesAndSeeds = [[], []];
         let potentialCAS = [[], []];
         let coprimeValue = 1n;
@@ -26410,14 +26858,23 @@ function DIVESeedUnlock(tile, seeds, mode) {
         let coprimes = coprimesAndSeeds[0];
         let remainingSeeds = coprimesAndSeeds[1];
         let seedPowers = Array(remainingSeeds.length).fill(0n);
-        let minimum = tile;
+        let minimum = (mode == 4) ? 1n : tile; // In mode 4 this is the maximum instead
         let index = 0;
         let seededTile = tile;
         while (true) {
             for (let c = 0; c < coprimes.length; c++) {
                 while (tile % coprimes[c] == 0n) tile /= coprimes[c];
             }
-            if (tile < minimum) minimum = tile;
+            if (mode == 4) {
+                if (tile > minimum) {
+                    let nondivisible = true;
+                    for (s of seeds) {
+                        if (tile % s == 0n) {nondivisible = false; break;}
+                    }
+                    if (nondivisible) minimum = tile;
+                }
+            }
+            else if (tile < minimum) minimum = tile;
             if (remainingSeeds.length == 0) return minimum;
             tile = seededTile;
             index = 0;
@@ -26436,13 +26893,13 @@ function DIVESeedUnlock(tile, seeds, mode) {
 
 function GaussianDIVESeedUnlock(tile, seeds, mode, firstQuadrant) {
     if (tile.eq(0n, 0n)) return 1n;
-    mode = mod(mode, 4);
+    mode = mod(mode, 5);
     seeds = compendiumStructuredClone(seeds);
     seeds = seeds.filter(value => value.norm() > 1n);
     if (seeds.length == 0) return tile;
-    if (mode == 1 || mode == 2) sortedSeeds = seeds.sort(gaussianSort);
+    if (mode == 1 || mode == 2 || mode == 4) sortedSeeds = seeds.sort(gaussianSort);
     else if (mode == 0) sortedSeeds = seeds.sort((a, b) => gaussianSort(b, a));
-    if (mode != 1) { // Runs through each seed. Mode 0 is "largest to smallest", Mode 2 is "smallest to largest", Mode 3 is "in whatever order the seeds happen to be in"
+    if (mode != 1 && mode != 4) { // Runs through each seed. Mode 0 is "largest to smallest", Mode 2 is "smallest to largest", Mode 3 is "in whatever order the seeds happen to be in"
         for (let i = 0; i < seeds.length; i++) {
             while (tile.mod(seeds[i]).eq(0n, 0n)) tile = tile.div(seeds[i]);
         }
@@ -26452,6 +26909,7 @@ function GaussianDIVESeedUnlock(tile, seeds, mode, firstQuadrant) {
     else {
         // Mode 1 guarantees the minimum possible result by going through every possible combination.
         // To reduce lag, it speeds this up by finding a decently-sized set of coprime seeds - that one set can be treated as one unit in the subsequent testing, as since they're coprime, they can't affect each other, i.e. they won't "steal possibilities" from each other.
+        // Mode 4 is like Mode 1, except it goes for the *maximum* result instead of the minimum.
         let coprimesAndSeeds = [[], []];
         let potentialCAS = [[], []];
         let coprimeValue = new GaussianBigInt(1n, 0n);
@@ -26472,14 +26930,23 @@ function GaussianDIVESeedUnlock(tile, seeds, mode, firstQuadrant) {
         let coprimes = coprimesAndSeeds[0];
         let remainingSeeds = coprimesAndSeeds[1];
         let seedPowers = Array(remainingSeeds.length).fill(0n);
-        let minimum = compendiumStructuredClone(tile);
+        let minimum = (mode == 4) ? new GaussianBigInt(1n, 0n) : compendiumStructuredClone(tile); // In mode 4 this is the maximum instead
         let index = 0;
         let seededTile = compendiumStructuredClone(tile);
         while (true) {
             for (let c = 0; c < coprimes.length; c++) {
                 while (tile.mod(coprimes[c]).eq(0n, 0n)) tile = tile.div(coprimes[c]);
             }
-            if (tile.norm() < minimum.norm()) minimum = compendiumStructuredClone(tile);
+            if (mode == 4) {
+                if (tile.norm() > minimum.norm()) {
+                    let nondivisible = true;
+                    for (s of seeds) {
+                        if (tile.mod(s).eq(0n, 0n)) {nondivisible = false; break;}
+                    }
+                    if (nondivisible) minimum = compendiumStructuredClone(tile);
+                }
+            }
+            else if (tile.norm() < minimum.norm()) minimum = compendiumStructuredClone(tile);
             if (remainingSeeds.length == 0) {
                 if (firstQuadrant) minimum = minimum.toFirstQuadrant();
                 return minimum;
@@ -26504,12 +26971,12 @@ function GaussianDIVESeedUnlock(tile, seeds, mode, firstQuadrant) {
 
 function customDIVESeedUnlock(tile, seeds, mode, multiplication, division, modZero, sortFunc, coprime, one, valid = (value) => true, isOne = ((value) => eqPrimArrays(value, one))) {
     if (!valid(tile)) return one;
-    mode = mod(mode, 4);
+    mode = mod(mode, 5);
     seeds = compendiumStructuredClone(seeds).filter(t => !isOne(t));
     if (seeds.length == 0) return tile;
-    if (mode == 1 || mode == 2) sortedSeeds = seeds.sort((a, b) => sortFunc(a, b));
+    if (mode == 1 || mode == 2 || mode == 4) sortedSeeds = seeds.sort((a, b) => sortFunc(a, b));
     else if (mode == 0) sortedSeeds = seeds.sort((a, b) => sortFunc(b, a));
-    if (mode != 1) { // Runs through each seed. Mode 0 is "largest to smallest", Mode 2 is "smallest to largest", Mode 3 is "in whatever order the seeds happen to be in"
+    if (mode != 1 && mode != 4) { // Runs through each seed. Mode 0 is "largest to smallest", Mode 2 is "smallest to largest", Mode 3 is "in whatever order the seeds happen to be in"
         for (let i = 0; i < seeds.length; i++) {
             while (modZero(tile, seeds[i])) {
                 tile = division(tile, seeds[i]);
@@ -26520,10 +26987,11 @@ function customDIVESeedUnlock(tile, seeds, mode, multiplication, division, modZe
     else {
         // Mode 1 guarantees the minimum possible result by going through every possible combination.
         // To reduce lag, it speeds this up by finding a decently-sized set of coprime seeds - that one set can be treated as one unit in the subsequent testing, as since they're coprime, they can't affect each other, i.e. they won't "steal possibilities" from each other.
+        // Mode 4 is like Mode 1, except it goes for the *maximum* result instead of the minimum.
         let coprimesAndSeeds = [[], []];
         let potentialCAS = [[], []];
         let coprimeValue = one;
-        for (let i = 0; i < seeds.length; i++) {
+        if (coprime(one, one)) for (let i = 0; i < seeds.length; i++) {
             potentialCAS = [[seeds[i]], []];
             coprimeValue = seeds[i];
             for (let j = (i + 1) % seeds.length; j != i; j = (j + 1) % seeds.length) {
@@ -26535,19 +27003,29 @@ function customDIVESeedUnlock(tile, seeds, mode, multiplication, division, modZe
             }
             if (potentialCAS[0].length > coprimesAndSeeds[0].length) coprimesAndSeeds = potentialCAS;
         }
+        else coprimesAndSeeds = [[], seeds]
         coprimesAndSeeds[0] = coprimesAndSeeds[0].sort((a, b) => sortFunc(a, b));
         coprimesAndSeeds[1] = coprimesAndSeeds[1].sort((a, b) => sortFunc(a, b));
         let coprimes = coprimesAndSeeds[0];
         let remainingSeeds = coprimesAndSeeds[1];
         let seedPowers = Array(remainingSeeds.length).fill(0n);
-        let minimum = tile;
+        let minimum = (mode == 4) ? one : compendiumStructuredClone(tile); // In mode 4 this is the maximum instead
         let index = 0;
         let seededTile = tile;
         while (true) {
             for (let c = 0; c < coprimes.length; c++) {
                 while (modZero(tile, coprimes[c])) tile = division(tile, coprimes[c]);
             }
-            if (sortFunc(tile, minimum) < 0) minimum = tile;
+            if (mode == 4) {
+                if (valid(tile) && sortFunc(tile, minimum) > 0) {
+                    let nondivisible = true;
+                    for (s of seeds) {
+                        if (modZero(tile, s)) {nondivisible = false; break;}
+                    }
+                    if (nondivisible) minimum = compendiumStructuredClone(tile);
+                }
+            }
+            else if (valid(tile) && sortFunc(tile, minimum) < 0) minimum = tile;
             if (remainingSeeds.length == 0) return minimum;
             tile = seededTile;
             index = 0;
@@ -26571,6 +27049,9 @@ function refillSpawnConveyor() { // This function ensures that nextTiles is alwa
         if (spawnConveyor[s] == "@Empty") {
             let weighttotal = 0;
             let cSpawns = compendiumStructuredClone(TileSpawns);
+            for (let p = 0; p < cSpawns.length; p++) {
+                if (cSpawns[p][0] == "@CalcArray") cSpawns[p] = CalcArray(cSpawns[p].slice(1));
+            }
             for (let p of cSpawns) {
                 if (Array.isArray(p[1])) p[1] = CalcArray(p[1]);
                 weighttotal += p[1]; // weighttotal is the sum of the spawn chances of each tile
@@ -26595,7 +27076,7 @@ function refillSpawnConveyor() { // This function ensures that nextTiles is alwa
                 SpawnBoxes[entry].splice(itemindex, 1);
                 if (SpawnBoxes[entry].length == 0) refillSpawnBox(entry);
             }
-            if (spawnedtile[0] == "@CalcArray") spawnedtile = CalcArray(spawnedtile.slice(1));
+            if (Array.isArray(spawnedtile) && spawnedtile[0] == "@CalcArray") spawnedtile = CalcArray(spawnedtile.slice(1));
             if (Array.isArray(spawnedtile)) {
                 for (let i = 0; i < spawnedtile.length; i++) {
                     if (Array.isArray(spawnedtile[i])) spawnedtile[i] = CalcArray(spawnedtile[i]); //If a spawned tile's entries are themselves arrays, assume those entries are CalcArray expressions
@@ -26758,8 +27239,22 @@ function forcedSpawnTiles(timing, vdir, hdir) {
     for (let f = 0; f < forcedSpawns.length; f++) {
         if (CalcArray(forcedSpawns[f][0], 0, 0, vdir, hdir, addInfo) === true && forcedSpawns[f][1] == timing) {
             for (let t = 3; t < forcedSpawns[f].length; t++) {
-                tilesToSpawn.push(forcedSpawns[f][t]);
-                gameOverPossible.push(forcedSpawns[f][2]);
+                let spawnedtile = compendiumStructuredClone(forcedSpawns[f][t]);
+                if (Array.isArray(spawnedtile) && spawnedtile[0] == "@CalcArray") spawnedtile = CalcArray(spawnedtile.slice(1));
+                if (Array.isArray(spawnedtile)) {
+                    for (let i = 0; i < spawnedtile.length; i++) {
+                        if (Array.isArray(spawnedtile[i])) spawnedtile[i] = CalcArray(spawnedtile[i]); //If a spawned tile's entries are themselves arrays, assume those entries are CalcArray expressions
+                    }
+                }
+                tilesToSpawn.push(spawnedtile);
+                if (!Array.isArray(forcedSpawns[f][2])) gameOverPossible.push(forcedSpawns[f][2]);
+                else {
+                    gameOverPossible.push(forcedSpawns[f][2][0]);
+                }
+            }
+            if (Array.isArray(forcedSpawns[f][2]) && forcedSpawns[f][2].length > 1 && forcedSpawns[f][2][1]) {
+                forcedSpawns.splice(f, 1);
+                f--;
             }
         }
     }
@@ -26891,7 +27386,7 @@ function spawnKnownTiles(tiles) {
     displayGrid();
 }
 
-function mergeRuleApplies(rule, vcoord, hcoord, vdir, hdir) { // Tests whether a given merge rule can be used. Returns an array with two entries: the first is the permutation of the rule that can be used if there is one, false if there isn't. The second is the variables.
+function mergeRuleApplies(rule, vcoord, hcoord, vdir, hdir) { // Tests whether a given merge rule can be used. Returns an array with five entries: the first is the permutation of the rule that can be used if there is one, false if there isn't. The second is the variables, the third is the merge length, the fourth is the overflow type, the fifth is if the start position is reversed.
     let addInfo = [Infinity, 0]; let gri = Grid; let offset = 0; let overflowSafe = true;
     if (arguments.length > 5) addInfo = arguments[5];
     if (arguments.length > 6) gri = arguments[6]; // If we're looking at a grid that isn't the regular Grid, this specifies what the grid is
@@ -26964,6 +27459,7 @@ function mergeRuleApplies(rule, vcoord, hcoord, vdir, hdir) { // Tests whether a
     let reverseMergePosition = false;
     let overflowType = 0;
     if (result) { // Find the positions of the output tiles. Nowhere where calcArrayMergeOffset is used has outputs, so I'll ignore that here
+        if (checkedrule[3][0] == "@CalcArray") checkedrule[3] = CalcArray(checkedrule[3], vcoord, hcoord, vdir, hdir, [testing[0], addInfo[0], addInfo[1]], gri, [], vars);
         let varcopy = compendiumStructuredClone(vars); // These checks shouldn't influence the variables returned
         while (validMergeModifiers.indexOf(checkedrule[3][0]) != -1) {
             let mergeModifier = checkedrule[3].shift();
@@ -27038,7 +27534,6 @@ async function MoveHandler(direction_num) {
         	rngIndex++;
         } else {
         	occured = Math.random() * 100;
-            console.log("automoveOccured", direction);
         	otherRandomEvents[rngIndex] = occured;
         	rngIndex++;
         	if(rngIndex == otherRandomEvents.length) otherRandomEvents.push(0);
@@ -27155,6 +27650,7 @@ async function MoveHandler(direction_num) {
                         scriptSignals = [];
                         executeScripts("TileMove", position[0], position[1], paramV, paramH, [1, paramSlide, moveType]);
                     }
+                    otherSecretStats[6] = true;
                 }
                 else if ((mergeable[index] || multiMerge) && manualStrength[1]) { // Checking for an applicable merge rule, and applying it if one is found. Earlier entries in MergeRules take priority over later ones.
                     let rule = false;
@@ -27170,15 +27666,13 @@ async function MoveHandler(direction_num) {
                         checkedTiles.push(compendiumStructuredClone(Grid[position[0]][position[1]]));
                         let index = 0;
                         while (checkedTiles.length < knownMergeMaxLength && index < nexttiles.length) {
-                            if (mergeable[nextindices[index]] === false) break;
+                            if (mergeable[nextindices[index]] === false && !multiMerge) break;
                             checkedTiles.push(compendiumStructuredClone(Grid[nextpositions[index][0]][nextpositions[index][1]]));
                             index++;
                         }
-                        if (checkedTiles.length == knownMergeMaxLength) {
-                            while (frontTiles.length < knownMergeLookbackDistance - 1 && index < nexttiles.length) {
-                                frontTiles.push(compendiumStructuredClone(Grid[nextpositions[index][0]][nextpositions[index][1]]));
-                                index++;
-                            }
+                        while (frontTiles.length < knownMergeLookbackDistance - 1 && index < nexttiles.length) {
+                            frontTiles.push(compendiumStructuredClone(Grid[nextpositions[index][0]][nextpositions[index][1]]));
+                            index++;
                         }
                         index = -1;
                         while (backTiles.length < knownMergeLookbackDistance) {
@@ -27190,7 +27684,12 @@ async function MoveHandler(direction_num) {
                         knownMergeIndex = indexOfPrimArray([checkedTiles, backTiles, frontTiles], knownMergeResultInputs);
                         if (knownMergeIndex > -1) {
                             let output = knownMergeResultOutputs[knownMergeIndex];
-                            if (output[0] > -1) rulesToCheck = [[[output[0], [true], true, output[1], output[2], output[3]], [], output[0], 0, 0]];
+                            if (output[0] > -1) {
+                                for (let i = 0; i < output[1].length; i++) {
+                                    if (!Array.isArray(output[1][i])) output[1][i] = ["@STCalcArray", output[1][i]]
+                                }
+                                rulesToCheck = [[[output[0], [true], true, output[1], output[2], output[3]], [], output[0], 0, 0]];
+                            }
                             else rulesToCheck = [[false]];
                         }
                     }
@@ -27227,6 +27726,7 @@ async function MoveHandler(direction_num) {
                             if (mergeResultRules[0] == "@CalcArray") mergeResultRules = CalcArray(mergeResultRules.slice(1), position[0], position[1], paramV, paramH, [rule[0], paramSlide, moveType], Grid, [], vars);
                             for (let i = 0; i < mlength; i++) {
                                 if (i > 0) {
+                                    if (typeof CalcArray(["@Next 1 @Position"], vcoordMM, hcoordMM, paramV, paramH) == "string") console.log(rule, vcoordMM, hcoordMM, paramV, paramH, applies);
                                     [vcoordMM, hcoordMM] = CalcArray(["@Next 1 @Position"], vcoordMM, hcoordMM, paramV, paramH);
                                 }
                                 outputpositions.push([vcoordMM, hcoordMM]);
@@ -27249,7 +27749,8 @@ async function MoveHandler(direction_num) {
                             for (let e = 0; e < mergeResultRules.length; e++) {
                                 if (mergeResultRules[e][0] === "@CalcArray") mergeResultRules[e] = CalcArray(mergeResultRules[e].slice(1), position[0], position[1], paramV, paramH, [rule[0], paramSlide, moveType], Grid, [], vars);
                                 let newarray = [];
-                                for (let tentry of mergeResultRules[e]) {newarray.push((knownMergeIndex > -1) ? tentry : CalcArray(tentry, position[0], position[1], paramV, paramH, [rule[0], paramSlide, moveType], Grid, [], vars));}
+                                if (mergeResultRules[e][0] === "@STCalcArray") newarray = CalcArray(mergeResultRules[e].slice(1), position[0], position[1], paramV, paramH, [rule[0], paramSlide, moveType], Grid, [], vars);
+                                else for (let tentry of mergeResultRules[e]) {newarray.push((knownMergeIndex > -1) ? tentry : CalcArray(tentry, position[0], position[1], paramV, paramH, [rule[0], paramSlide, moveType], Grid, [], vars));}
                                 if (typeof newarray === "boolean") newarray = "@Empty";
                                 mergeResults.push(newarray);
                             }
@@ -27290,11 +27791,12 @@ async function MoveHandler(direction_num) {
                                 knownMergeResultOutputs.push([rule[0], overflowArray.concat((reverseMergePosition ? ["@MergeStartReverse"] : []), mergeResults), scoreAdd, rule[5]])
                             }
                             scriptSignals = [];
-                            executeScripts("Merge", position[0], position[1], paramV, paramH, [rule[0], paramSlide], Grid, [], vars.concat(["@Literal"].concat(mergeResults)));
+                            executeScripts("Merge", position[0], position[1], paramV, paramH, [rule[0], paramSlide], Grid, [], vars.concat([["@Literal"].concat(mergeResults)]));
                             tileDiscoveryCheck();
                             movementOccurred = true;
                             mergeCount++;
                             for (let t = 0; t < stillMoving.length; t++) stillMoving[t] = true;
+                            otherSecretStats[6] = true;
                         }
                     }
                     else {
@@ -27627,8 +28129,17 @@ async function playReplay() {
 function tileDiscoveryCheck() { // Adds newly-discovered tiles into discoveredTiles if there are any
     for (let row = 0; row < height; row++) {
         for (let column = 0; column < width; column++) {
-            if (indexOfPrimArray(Grid[row][column], discoveredTiles) == -1 && !(Grid[row][column] == "@Empty" || Grid[row][column] == "@Void"))
-                discoveredTiles.push(Grid[row][column]);
+            let discovered = compendiumStructuredClone(Grid[row][column]);
+            if (!Array.isArray(discovered)) continue;
+            discovered.unshift("@Literal");
+            let filterCopy = compendiumStructuredClone(discoveredTilesFilter);
+            let vpos = 0;
+            while (filterCopy[vpos] === "@var_retain" || filterCopy[vpos] === "@var_copy" || filterCopy[vpos] === "@global_var_retain" || filterCopy[vpos] === "@global_var_copy" || filterCopy[vpos] === "@global_var_none" || filterCopy[vpos] === "@global_var_retain_inner" || filterCopy[vpos] === "@global_var_copy_inner" || filterCopy[vpos] === "@global_var_none_inner") vpos++;
+            if (filterCopy.indexOf("@end_vars") == -1) filterCopy.splice(vpos, 0, "@end_vars");
+            vpos = filterCopy.indexOf("@end_vars");
+            filterCopy.splice(vpos + 1, 0, discovered);
+            discovered = CalcArray(filterCopy);
+            if (indexOfPrimArray(discovered, discoveredTiles) == -1) discoveredTiles.push(discovered);
         }
     }
 }
@@ -27772,6 +28283,15 @@ async function winScreen() {
         document.getElementById("lone_win_again").style.setProperty("display", "flex");
         document.getElementById("view_win_replay").style.setProperty("display", "flex");
     }
+    if (!otherSecretStats[6] && gamemode > 0 && !secretsFound[9]) { // Unlocking MCSOZ modifiers
+        secretsFound[9] = true;
+        let winNothingMessage = document.createElement("p");
+        winNothingMessage.innerHTML = "You've won without any tiles moving or merging! There's something new on Page 1 of the Modifiers you may wish to see..."
+        winNothingMessage.id = "winNothingMessage";
+        winNothingMessage.style.setProperty("color", "#f3f7e1");
+        winNothingMessage.style.setProperty("text-shadow", "0px 0px 5px #303b00");
+        document.getElementById("rules_text").prepend(winNothingMessage);
+    }
     let frames = 100;
     if (modifiers[16] > 0) {
         frames = 100/modifiers[16];
@@ -27819,6 +28339,12 @@ async function PlayAgain() {
     TileSpawns = compendiumStructuredClone(startTileSpawns);
     game_vars = compendiumStructuredClone(start_game_vars);
     modifier_vars = compendiumStructuredClone(start_modifier_vars);
+    forcedSpawns = compendiumStructuredClone(start_forcedSpawns);
+    SpawnBoxes = [];
+    for (let i = 0; i < TileSpawns.length; i++) {
+        SpawnBoxes.push([]);
+        if (TileSpawns[i][0] == "Box") refillSpawnBox(i);
+    }
     spawnConveyor = [];
     for (let i = 0; i < Math.max(nextTiles, 1); i++) spawnConveyor.push("@Empty");
     refillSpawnConveyor();
@@ -28225,7 +28751,6 @@ async function displayCustomMode(subscreen, vars) {
                 document.getElementById("customColors_gradientSelection_previous").style.setProperty("display", "none");
                 document.getElementById("customColors_gradientSelection_next").style.setProperty("display", "none");
             }
-            console.log("gradient start display", customColors[screenVars[0]][4], customColors[screenVars[0]][4][0] == "@linear-gradient", customColors[screenVars[0]][4][0] == "@conic-gradient");
             if (customColors[screenVars[0]][4][0] == "@linear-gradient") {
                 document.getElementById("customColors_gradientType").style.setProperty("background-image", "linear-gradient(#ff00ff, #00a2ff)");
                 document.getElementById("customColors_gradientType").innerHTML = "Gradient Type: Linear";
@@ -29066,7 +29591,7 @@ function exportSave(midgame) { // A save code where midgame = true saves a game 
         let SaveCode = "";
         if (midgame) SaveCode = "@2048PowCompGame|";
         else SaveCode = "@2048PowCompMode|";
-        SaveCode += "2.2.3|"
+        SaveCode += "2.3.1|"
         SaveCode += window.btoa(String(width));
         SaveCode += "|";
         SaveCode += window.btoa(String(height));
@@ -29087,7 +29612,7 @@ function exportSave(midgame) { // A save code where midgame = true saves a game 
         SaveCode += "|";
         SaveCode += window.btoa(SCstringify(startTileSpawns));
         SaveCode += "|";
-        SaveCode += window.btoa(SCstringify(forcedSpawns));
+        SaveCode += window.btoa(SCstringify(start_forcedSpawns));
         SaveCode += "|";
         SaveCode += window.btoa(SCstringify(winConditions));
         SaveCode += "|";
@@ -29144,6 +29669,8 @@ function exportSave(midgame) { // A save code where midgame = true saves a game 
         SaveCode += window.btoa(String(knownMergeMaxLength));
         SaveCode += "|";
         SaveCode += window.btoa(SCstringify(tileValueFunction));
+        SaveCode += "|";
+        SaveCode += window.btoa(SCstringify(discoveredTilesFilter));
         SaveCode += "|";
         if (midgame) {
             SaveCode += window.btoa(SCstringify(Grid));
@@ -29202,7 +29729,7 @@ function exportSave(midgame) { // A save code where midgame = true saves a game 
 
 function exportReplay(gameWon) {
     try {
-        let SaveCode = "@2048PowCompReplay|2.2.2|"
+        let SaveCode = "@2048PowCompReplay|2.3.1|"
         SaveCode += window.btoa(String(width));
         SaveCode += "|";
         SaveCode += window.btoa(String(height));
@@ -29223,7 +29750,7 @@ function exportReplay(gameWon) {
         SaveCode += "|";
         SaveCode += window.btoa(SCstringify(startTileSpawns));
         SaveCode += "|";
-        SaveCode += window.btoa(SCstringify(forcedSpawns));
+        SaveCode += window.btoa(SCstringify(start_forcedSpawns));
         SaveCode += "|";
         SaveCode += window.btoa(SCstringify(winConditions));
         SaveCode += "|";
@@ -29280,6 +29807,10 @@ function exportReplay(gameWon) {
         SaveCode += window.btoa(String(knownMergeMaxLength));
         SaveCode += "|";
         SaveCode += window.btoa(SCstringify(tileValueFunction));
+        SaveCode += "|";
+        SaveCode += window.btoa(SCstringify(forcedSpawns));
+        SaveCode += "|";
+        SaveCode += window.btoa(SCstringify(discoveredTilesFilter));
         SaveCode += "|";
         SaveCode += window.btoa(SCstringify(movesPlayed));
         SaveCode += "|"
@@ -29348,7 +29879,8 @@ function exportModifiersSave() {
     }
 }
 
-let validSaveCodeVersions = ["1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.5.1", "2.0", "2.1", "2.1.4", "2.1.13", "2.1.14", "2.2", "2.2.2", "2.2.3"];
+let validSaveCodeVersions = ["1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.5.1", "2.0", "2.1", "2.1.4", "2.1.13", "2.1.14", "2.2", "2.2.2", "2.2.3", "2.3"];
+let validReplayCodeVersions = ["2.2", "2.2.3", "2.3.1"];
 
 function importSave(code) {
     try {
@@ -29370,7 +29902,7 @@ function importSave(code) {
                 coderesults.push(SCparse(window.atob(codebits[9]))); //coderesults[7] is TileTypes
                 coderesults.push(SCparse(window.atob(codebits[10]))); //coderesults[8] is MergeRules
                 coderesults.push(SCparse(window.atob(codebits[11]))); //coderesults[9] is startTileSpawns
-                coderesults.push(SCparse(window.atob(codebits[12]))); //coderesults[10] is forcedSpawns
+                coderesults.push(SCparse(window.atob(codebits[12]))); //coderesults[10] is start_forcedSpawns
                 coderesults.push(SCparse(window.atob(codebits[13]))); //coderesults[11] is winConditions
                 coderesults.push(SCparse(window.atob(codebits[14]))); //coderesults[12] is winRequirement
                 coderesults.push(SCparse(window.atob(codebits[15]))); //coderesults[13] is loseConditions
