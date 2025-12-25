@@ -17004,15 +17004,20 @@ function displayModifiers(page) {
         }
     }
     else if (page == 4) {
-        if (modifiers[12]) {
-            document.getElementById("modifiers_garbage0_text").innerHTML = "Garbage 0s: ON";
+        if (modifiers[12] == 0) {
+            document.getElementById("modifiers_garbage0_text").innerHTML = "Garbage Tile: 0s";
             document.getElementById("modifiers_garbage0_text").style.setProperty("color", "#000000");
             document.getElementById("modifiers_garbage0_info").style.setProperty("color", "#000000");
         }
-        else {
-            document.getElementById("modifiers_garbage0_text").innerHTML = "Garbage 0s: OFF";
+        else if (modifiers[12] == -1) {
+            document.getElementById("modifiers_garbage0_text").innerHTML = "Garbage Tile: None";
             document.getElementById("modifiers_garbage0_text").style.setProperty("color", "#808080");
             document.getElementById("modifiers_garbage0_info").style.setProperty("color", "#808080");
+        }
+        else {
+            document.getElementById("modifiers_garbage0_text").innerHTML = "Garbage Tile: Temporary Holes";
+            document.getElementById("modifiers_garbage0_text").style.setProperty("color", "#63553f");
+            document.getElementById("modifiers_garbage0_info").style.setProperty("color", "#63553f");
         }
         document.getElementById("modifiers_multicolorTiles_text").style.setProperty("color", "transparent");
         document.getElementById("modifiers_multicolorTiles_info").style.setProperty("color", "transparent");
@@ -17050,6 +17055,16 @@ function displayModifiers(page) {
             document.getElementById("modifiers_negativetiles_negativeSpawnRatio").style.setProperty("display", "block");
             document.getElementById("modifiers_negativetiles_positiveSpawnRatio_change").value = modifiers[22];
             document.getElementById("modifiers_negativetiles_negativeSpawnRatio_change").value = modifiers[23];
+        }
+        if (modifiers[12] > 0) {
+            document.getElementById("modifiers_garbageTemporaryHoles_lifespan").style.setProperty("display", "block");
+            document.getElementById("modifiers_garbageTemporaryHoles_lifespan_counter").innerHTML = modifiers[12];
+            if (modifiers[12] <= 1) document.getElementById("modifiers_garbageTemporaryHoles_lifespan_minus").style.setProperty("display", "none");
+            else document.getElementById("modifiers_garbageTemporaryHoles_lifespan_minus").style.setProperty("display", "inline-block");
+            document.getElementById("modifiers_garbageTemporaryHoles_lifespan_plus").style.setProperty("display", "inline-block");
+        }
+        else {
+            document.getElementById("modifiers_garbageTemporaryHoles_lifespan").style.setProperty("display", "none");
         }
     }
     else if (page == 5) {
@@ -17218,6 +17233,7 @@ function startGame() {
     TileSpawns = compendiumStructuredClone(startTileSpawns);
     game_vars = compendiumStructuredClone(start_game_vars);
     modifier_vars = compendiumStructuredClone(start_modifier_vars);
+    forcedSpawns = compendiumStructuredClone(start_forcedSpawns);
     SpawnBoxes = [];
     for (let i = 0; i < TileSpawns.length; i++) {
         SpawnBoxes.push([]);
@@ -17344,7 +17360,10 @@ function createGrid() {
             newTilep.classList.add("tile_text");
         }
     }
-    visibleNextTiles = document.getElementById("next_tiles").children;
+    visibleNextTiles = [];
+    for (c of document.getElementById("next_tiles").children) {
+        visibleNextTiles.push(c.id);
+    }
 }
 
 function createArrows() {
@@ -17531,15 +17550,14 @@ function displayGrid() {
         }
         displayTile("Grid", tile, vcoord, hcoord, Grid, Grid[vcoord][hcoord]);
     }
-    for (let t of visibleNextTiles) {  //Displaying the next spawning tiles
+    for (let t of visibleNextTiles) { //Displaying the next spawning tiles
         let char = 9;
         let nextnum = "";
-        while (char < t.id.length) {nextnum += t.id[char]; char++;}
+        while (char < t.length) {nextnum += t[char]; char++;}
         nextnum = Number(nextnum);
-        let tile = t;
-        displayTile("NextTiles", tile, nextnum, "None", spawnConveyor, spawnConveyor[nextnum]);
-        if (nextnum < randomTileAmount) tile.style.setProperty("border-style", "solid");
-        else tile.style.setProperty("border-style", "none");
+        displayTile("NextTiles", document.getElementById(t), nextnum, "None", spawnConveyor, spawnConveyor[nextnum]);
+        if (nextnum < randomTileAmount) document.getElementById(t).style.setProperty("border-style", "solid");
+        else document.getElementById(t).style.setProperty("border-style", "none");
     }
     for (let b = 0; b < statBoxes.length; b++) {
         let box = document.getElementById("stat_container_" + b);
@@ -17879,7 +17897,7 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                 tile.style.setProperty("background-image", (evaluateColor(["@linear-gradient", 90].concat(background), vcoord, hcoord, container, vars)));
                 if (negative) textColor = ["@rotate", 180, true, textColor];
                 tile.style.setProperty("color", (evaluateColor(textColor, vcoord, hcoord, container, vars)));
-                if (params.length > 0 && params[0]) {
+                if (params.length > 0 && params[0] && !hiddenTileText && dType != "Subtile") {
                     tile.firstElementChild.innerHTML = textArray.join(" ");
                     let fontmin = 2;
                     let fontmax = tile.firstElementChild.textContent.length * 0.7;
@@ -17920,8 +17938,14 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                     tile.style.setProperty("background-image", "none");
                 }
                 else if (value == 1) {
-                    if (negative) tile.style.setProperty("background-image", evaluateColor(["@rotate", 180, true, ["@multi-gradient", ["@radial-gradient", "#000000", "#0008"], ["@conic-gradient", "#ff0000", "#ffff00", "#00ff00", "#00ffff", "#0000ff", "#ff00ff", "#ff0000"]]]));
-                    else tile.style.setProperty("background-image", evaluateColor(["@multi-gradient", ["@radial-gradient", "#000000", "#0008"], ["@conic-gradient", "#ff0000", "#ffff00", "#00ff00", "#00ffff", "#0000ff", "#ff00ff", "#ff0000"]]));
+                    if (rainbow) {
+                        if (negative) tile.style.setProperty("background-image", evaluateColor(["@rotate", 180, true, ["@multi-gradient", ["@radial-gradient", "#000000", "#0008"], ["@conic-gradient", "#ff0000", "#ffff00", "#00ff00", "#00ffff", "#0000ff", "#ff00ff", "#ff0000"]]]));
+                        else tile.style.setProperty("background-image", evaluateColor(["@multi-gradient", ["@radial-gradient", "#000000", "#0008"], ["@conic-gradient", "#ff0000", "#ffff00", "#00ff00", "#00ffff", "#0000ff", "#ff00ff", "#ff0000"]]));
+                    }
+                    else {
+                        if (negative) tile.style.setProperty("background-color", "#ffffff");
+                        else tile.style.setProperty("background-color", "#000000");
+                    }
                 }
                 else {
                     let background = ["@linear-gradient", degrees];
@@ -18171,7 +18195,7 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                     displayTile("Subtile", subtile, "None", "None", all_factors.slice(1), display.slice(0, 5));
                 }
             }
-            else if (display[3] == "DIVE" || display[3] == "SQUARTSingle") {
+            else if (display[3] == "DIVE" || display[3] == "SQUARTSingle" || display[3] == "Anti-DIVE") {
                 let scheme = display[3];
                 let prime_amount = 168;
                 if (params.length > 0) prime_amount = params[0];
@@ -18215,18 +18239,37 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                             let pImage = document.createElement("div");
                             pImage.classList.add("primeImage");
                             tile.appendChild(pImage);
-                            if (p == 3) pImage.style.setProperty("background-image", "conic-gradient(#0000 0deg 10deg, #fff 35deg 55deg, #0000 80deg 100deg, #000 125deg 145deg, #0000 170deg 190deg, #fff 215deg 235deg, #0000 260deg 280deg, #000 305deg 325deg, #0000 350deg");
+                            if (p == 3) {
+                                if (scheme == "Anti-DIVE") pImage.style.setProperty("background-image", "conic-gradient(#0000 0deg 10deg, #000 35deg 55deg, #0000 80deg 100deg, #fff 125deg 145deg, #0000 170deg 190deg, #000 215deg 235deg, #0000 260deg 280deg, #fff 305deg 325deg, #0000 350deg");
+                                else pImage.style.setProperty("background-image", "conic-gradient(#0000 0deg 10deg, #fff 35deg 55deg, #0000 80deg 100deg, #000 125deg 145deg, #0000 170deg 190deg, #fff 215deg 235deg, #0000 260deg 280deg, #000 305deg 325deg, #0000 350deg");
+                            }
                             else if (p == 4) {
-                                if (hexagonal) pImage.style.setProperty("background-image", "radial-gradient(#fff 0%, #0000 15% 25%, #000 32% 36%, #0000 43% 52%, #fff 58% 63%, #0000 70%, #000 80%)");
-                                else pImage.style.setProperty("background-image", "radial-gradient(#fff 0%, #0000 19.666% 30.333%, #000 38.888% 44.444%, #0000 53% 63.666%, #fff 72.222% 77.777%, #0000 86.333%, #000 100%)");
+                                if (scheme == "Anti-DIVE") {
+                                    if (hexagonal) pImage.style.setProperty("background-image", "radial-gradient(#000 0%, #0000 15% 25%, #fff 32% 36%, #0000 43% 52%, #000 58% 63%, #0000 70%, #fff 80%)");
+                                    else pImage.style.setProperty("background-image", "radial-gradient(#000 0%, #0000 19.666% 30.333%, #fff 38.888% 44.444%, #0000 53% 63.666%, #000 72.222% 77.777%, #0000 86.333%, #fff 100%)");
+                                }
+                                else {
+                                    if (hexagonal) pImage.style.setProperty("background-image", "radial-gradient(#fff 0%, #0000 15% 25%, #000 32% 36%, #0000 43% 52%, #fff 58% 63%, #0000 70%, #000 80%)");
+                                    else pImage.style.setProperty("background-image", "radial-gradient(#fff 0%, #0000 19.666% 30.333%, #000 38.888% 44.444%, #0000 53% 63.666%, #fff 72.222% 77.777%, #0000 86.333%, #000 100%)");
+                                }
                             } 
                             else if (p == 5) { // 13 in the original DIVE uses the same generation rules as the rest of the primes above 11, but my version looks good for the rest of the primes but not 13, so I'm setting 13 manually to retain its iconic look
                                 if (hexagonal) {
-                                    pImage.style.setProperty("background-image", "repeating-linear-gradient(#0000 6.69%, #fff 19.689%, #0000 32.679%, #000 45.67%, #0000 58.66%)");
+                                    if (scheme == "Anti-DIVE") {
+                                        pImage.style.setProperty("background-image", "repeating-linear-gradient(#0000 6.69%, #000 19.689%, #0000 32.679%, #fff 45.67%, #0000 58.66%)");
+                                    }
+                                    else {
+                                        pImage.style.setProperty("background-image", "repeating-linear-gradient(#0000 6.69%, #fff 19.689%, #0000 32.679%, #000 45.67%, #0000 58.66%)");
+                                    }
                                     pImage.style.setProperty("mask-image", "repeating-linear-gradient(90deg, #000 6.69% 18.823%, #0000 18.823% 43.072%");
                                 }
                                 else {
-                                    pImage.style.setProperty("background-image", "repeating-linear-gradient(#0000 0%, #fff 15%, #0000 30%, #000 45%, #0000 60%)");
+                                    if (scheme == "Anti-DIVE") {
+                                        pImage.style.setProperty("background-image", "repeating-linear-gradient(#0000 0%, #000 15%, #0000 30%, #fff 45%, #0000 60%)");
+                                    }
+                                    else {
+                                        pImage.style.setProperty("background-image", "repeating-linear-gradient(#0000 0%, #fff 15%, #0000 30%, #000 45%, #0000 60%)");
+                                    }
                                     pImage.style.setProperty("mask-image", "repeating-linear-gradient(90deg, #000 0% 14%, #0000 14% 42%");
                                 }
                             }
@@ -18244,12 +18287,18 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                                 let direction = 45 + 291.246118 * (p - 3);
                                 if (residuenum == 1n) {
                                     if (basefactors[3] == 0) { // No sevens
-                                        pImage.style.setProperty("background-image", "linear-gradient(" + (direction + 90) + "deg, #000, " + basecolor + ", #000)");
+                                        if (scheme.includes("Anti")) pImage.style.setProperty("background-image", "linear-gradient(" + (direction + 90) + "deg, #fff, " + basecolor + ", #fff)");
+                                        else pImage.style.setProperty("background-image", "linear-gradient(" + (direction + 90) + "deg, #000, " + basecolor + ", #000)");
                                     }
                                     else { // Sevens
                                         let sevensWidth = 40 / Number(basefactors[3]);
                                         let bottomcolor = "#000";
-                                        pImage.style.setProperty("background-image", "repeating-linear-gradient(" + (direction + 90) + "deg, " + bottomcolor + " 0% " + (sevensWidth / 12) + "%, " + basecolor + " " + (sevensWidth / 4) + "%, #fff " + (5 * sevensWidth / 12) + "% " + (7 * sevensWidth/ 12) + "%, " + basecolor + " " + (sevensWidth * 3/4) + "%, " + bottomcolor + " " + (11 * sevensWidth / 12) + "% " + sevensWidth + "%)");
+                                        let topcolor = "#fff";
+                                        if (scheme.includes("Anti")) {
+                                            bottomcolor = "#fff";
+                                            topcolor = "#000";
+                                        }
+                                        pImage.style.setProperty("background-image", "repeating-linear-gradient(" + (direction + 90) + "deg, " + bottomcolor + " 0% " + (sevensWidth / 12) + "%, " + basecolor + " " + (sevensWidth / 4) + "%, " + topcolor + " " + (5 * sevensWidth / 12) + "% " + (7 * sevensWidth/ 12) + "%, " + basecolor + " " + (sevensWidth * 3/4) + "%, " + bottomcolor + " " + (11 * sevensWidth / 12) + "% " + sevensWidth + "%)");
                                     }
                                 }
                                 else {
@@ -18356,6 +18405,8 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                     tile.appendChild(pImage);
                     pImage.classList.add("primeImage");
                     pImage.style.setProperty("background-image", "radial-gradient(#0000 0% 70%, " + threeFactorColor(factors.slice(0, 3), scheme, true) + ")");
+                }
+                if (negative != scheme.includes("Anti") && value != 0n) {
                     tile.style.setProperty("color", "black");
                     tile.style.setProperty("text-shadow", "0px 0px 5px #fff");
                 }
@@ -18881,30 +18932,32 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                     background = ["@rotate", 180, true, background]
                 }
                 tile.style.setProperty("background-image", evaluateColor(background));
-                let fontmin = 2;
-                let fontmax = tile.firstElementChild.textContent.length * 0.7;
-                //Normally, the font size on a tile is dependent on the size of the text, but if the TileTypes entry has more than four entries, the 4th and 5th entries place restrictions on the font size
-                if (display[5] !== undefined) {
-                    if (Array.isArray(display[5])) fontmin = CalcArray(display[5], vcoord, hcoord, 0, 0, [1, Infinity, 0], container, [], vars);
-                    else fontmin = display[5];
-                    if (fontmin == 0) fontmin = 2.5;
-                    if (fontmin < 0) fontmin = tile.firstElementChild.textContent.length * Math.abs(fontmin);
+                if (!hiddenTileText && dType != "Subtile") {
+                     let fontmin = 2;
+                    let fontmax = tile.firstElementChild.textContent.length * 0.7;
+                    //Normally, the font size on a tile is dependent on the size of the text, but if the TileTypes entry has more than four entries, the 4th and 5th entries place restrictions on the font size
+                    if (display[5] !== undefined) {
+                        if (Array.isArray(display[5])) fontmin = CalcArray(display[5], vcoord, hcoord, 0, 0, [1, Infinity, 0], container, [], vars);
+                        else fontmin = display[5];
+                        if (fontmin == 0) fontmin = 2.5;
+                        if (fontmin < 0) fontmin = tile.firstElementChild.textContent.length * Math.abs(fontmin);
+                    }
+                    if (display[6] !== undefined) {
+                        if (Array.isArray(display[6])) fontmax = CalcArray(display[6], vcoord, hcoord, 0, 0, [1, Infinity, 0], container, [], vars);
+                        else fontmax = display[6];
+                        if (fontmax == 0) fontmax = -0.7;
+                        if (fontmax < 0) fontmax = tile.firstElementChild.textContent.length * Math.abs(fontmax);
+                    }
+                    if (dType == "Viewer") tile.style.setProperty("font-size", "calc(var(--secondary_size) * " + (40 / Math.max(fontmin, fontmax)) * (hexagonal ? Math.sqrt(3)/2 : 1) + ")");
+                    else {
+                        if (dType == "Grid") sizeExpression = (tsize / 100 / Math.max(fontmin, fontmax));
+                        else if (dType == "Score" || dType == "ScoreSelf") sizeExpression = (6/33 / Math.max(fontmin, fontmax));
+                        else sizeExpression = (4/33 / Math.max(fontmin, fontmax));
+                        sizeExpression *= ((hexagonal) ? Math.sqrt(3)/2 : 1)
+                        tile.style.setProperty("font-size", "calc(1vw * var(--grid_vw) * " + sizeExpression + ")");
+                    }
+                    extraentries.push(["Innerscript", baseConvert(value, base, true), "bottom-center", 6, 0]);
                 }
-                if (display[6] !== undefined) {
-                    if (Array.isArray(display[6])) fontmax = CalcArray(display[6], vcoord, hcoord, 0, 0, [1, Infinity, 0], container, [], vars);
-                    else fontmax = display[6];
-                    if (fontmax == 0) fontmax = -0.7;
-                    if (fontmax < 0) fontmax = tile.firstElementChild.textContent.length * Math.abs(fontmax);
-                }
-                if (dType == "Viewer") tile.style.setProperty("font-size", "calc(var(--secondary_size) * " + (40 / Math.max(fontmin, fontmax)) * (hexagonal ? Math.sqrt(3)/2 : 1) + ")");
-                else {
-                    if (dType == "Grid") sizeExpression = (tsize / 100 / Math.max(fontmin, fontmax));
-                    else if (dType == "Score" || dType == "ScoreSelf") sizeExpression = (6/33 / Math.max(fontmin, fontmax));
-                    else sizeExpression = (4/33 / Math.max(fontmin, fontmax));
-                    sizeExpression *= ((hexagonal) ? Math.sqrt(3)/2 : 1)
-                    tile.style.setProperty("font-size", "calc(1vw * var(--grid_vw) * " + sizeExpression + ")");
-                }
-                extraentries.push(["Innerscript", baseConvert(value, base, true), "bottom-center", 6, 0]);
             }
             else if (display[3] == "SCAPRIM" || display[3] == "1845") {
                 let prime_amount = (display[3] == "1845") ? 1229 : Infinity;
@@ -19679,7 +19732,6 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                     } 
                 }
                 if (all_factors[0].eq(-1)) {
-                    console.log(["@HSLA", startColor[0] + 180, startColor[1], 100 - startColor[2], 0.75]);
                     pImage = document.createElement("div");
                     pImage.classList.add("primeImage");
                     tile.appendChild(pImage);
@@ -19701,7 +19753,7 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                     displayTile("Subtile", subtile, "None", "None", [all_factors.slice(2)], display.slice(0, 5));
                 }
             }
-            else if (display[3] == "Rational DIVE") {
+            else if (display[3] == "Rational DIVE" || display[3] == "RACUTE") {
                 let scheme = display[3];
                 let prime_amount = 168;
                 if (params.length > 0) prime_amount = params[0];
@@ -20171,11 +20223,11 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                 let fontmax = innerscript.textContent.length * 0.7;
                 if (innerdisplay.length > 2) {
                     if (innerdisplay[2] > 0) fontmin = innerdisplay[2];
-                    else if (innerdisplay[2] < 0) fontmin = innerscript.textContent.length * innerdisplay[2];
+                    else if (innerdisplay[2] < 0) fontmin = innerscript.textContent.length * abs(innerdisplay[2]);
                 }
                 if (innerdisplay.length > 3) {
                     if (innerdisplay[3] > 0) fontmax = innerdisplay[3];
-                    else if (innerdisplay[3] < 0) fontmax = innerscript.textContent.length * innerdisplay[3];
+                    else if (innerdisplay[3] < 0) fontmax = innerscript.textContent.length * abs(innerdisplay[3]);
                 }
                 if (dType == "Viewer") innerscript.style.setProperty("font-size", "calc(var(--secondary_size) * " + (40 / Math.max(fontmin, fontmax)) * (hexagonal ? Math.sqrt(3)/2 : 1) + ")");
                 else {
@@ -20220,6 +20272,10 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
                     }
                 }
                 if (elem.length > 2) pImage.style.setProperty("mask-image", (evaluateColor(elem[2], vcoord, hcoord, container, vars)));
+                if (elem.length > 3) pImage.style.setProperty("width", CalcArray(elem[3], vcoord, hcoord, 0, 0, [1, Infinity, 0], container, [], vars) + "%");
+                if (elem.length > 4) pImage.style.setProperty("height", CalcArray(elem[4], vcoord, hcoord, 0, 0, [1, Infinity, 0], container, [], vars) + "%");
+                if (elem.length > 5) pImage.style.setProperty("left", CalcArray(elem[5], vcoord, hcoord, 0, 0, [1, Infinity, 0], container, [], vars) + "%");
+                if (elem.length > 6) pImage.style.setProperty("top", CalcArray(elem[6], vcoord, hcoord, 0, 0, [1, Infinity, 0], container, [], vars) + "%");
             }
         }
         if (knownDisplayIndex == -1 && tileDisplayKnownLevel > 0) {
@@ -20264,12 +20320,12 @@ function displayRules(ID, ...elements) { //This basically just clears the elemen
 }
 
 function loadModifiers() {
-    randomTileAmount = modifiers[1];
-    startTileAmount = modifiers[2];
-    multiMerge = modifiers[3];
-    spawnLocation = modifiers[4];
-    start_modifier_vars = [];
     if (gamemode != 0) {
+        randomTileAmount = modifiers[1];
+        startTileAmount = modifiers[2];
+        multiMerge = modifiers[3];
+        spawnLocation = modifiers[4];
+        start_modifier_vars = [];
         if (gamemode == 1) { // 2048
             if (mode_vars[0]) startTileSpawns = [[[1], 90], [[2], 10]];
         }
@@ -20639,7 +20695,7 @@ function loadModifiers() {
                     ],
                     [["@global_var_retain_inner", 0, 0, "@end_vars", 0, "@repeat", ["@Var 0", "<", height], "@edit_var", 1, 0, "@repeat", ["@Var 1", "<", width], "@if", ["@Grid", "arr_elem", "@Var 0", "arr_elem", "@Var 1", "arr_elem", 0, "2nd", [["@Parent -3", "typeof", "=", "bigint"], "||", ["@Parent -3", "typeof", "=", "bigrational"]]], "@replace_tile", "@Var 0", "@Var 1", ["@Grid", "arr_elem", "@Var 0", "arr_elem", "@Var 1", "arr_edit_elem", 1, 0], "@end-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], "EndTurn"] // Makes all tiles mergeable again
                 ];
-                statBoxes = [["Discovered Tiles From Merges", ["@GVar 8", "arr_length"], false, ...[,,,], ["@GVar 6", "=", 0], [0, "@edit_gvar", 6, 1], true], ["Discovered Tiles Larger Than 1", ["@GVar 8", "arr_map", ["@Var -1", "Array", "arr_push", 0]], true, false, "TileArray", "Self", ["@GVar 6", "=", 1], [0, "@edit_gvar", 6, 0], true], ["Score", "@Score"]];
+                statBoxes = [["Discovered Tiles From Merges", ["@GVar 8", "arr_length"], false, ...[,,,], ["@GVar 6", "=", 0], [0, "@edit_gvar", 6, 1], true], ["Discovered Tiles From Merges", ["@GVar 8", "arr_map", ["@Var -1", "Array", "arr_push", 0]], true, false, "TileArray", "Self", ["@GVar 6", "=", 1], [0, "@edit_gvar", 6, 0], true], ["Score", "@Score"]];
                 // start_game_vars[7] = [[true, [1, 0], [-1, 0], [0, 1], [0, -1]], [false, [0, 1], [0, 2], [0, 3]], [true, [1, 1], [1, -1]]];
                 TileNumAmount = 2;
                 if (mode_vars[8]) {
@@ -20652,7 +20708,7 @@ function loadModifiers() {
                     }
                     else {
                         startTileSpawns = [[[new BigRational(1n), 0], 100 * modifiers[22]], [[new BigRational(-1n), 0], 100 * modifiers[23]]];
-                        if (modifiers[13] == "Interacting") MergeRules.push([2, ["@This 0", "*BR", -1n, "=", "@Next 1 0", "&&", ["@This 1", "=", 0], "&&", ["@Next 1 1", "=", 0]], false, [], 0]);
+                        if (modifiers[13] == "Interacting") MergeRules.unshift([2, ["@This 0", "*BR", -1n, "=", "@Next 1 0", "&&", ["@This 1", "=", 0], "&&", ["@Next 1 1", "=", 0]], false, [], 0]);
                     }
                 }
                 else {
@@ -20665,7 +20721,7 @@ function loadModifiers() {
                     }
                     else {
                         startTileSpawns = [[[1n, 0], 100 * modifiers[22]], [[-1n, 0], 100 * modifiers[23]]];
-                        if (modifiers[13] == "Interacting") MergeRules.push([2, ["@This 0", "*B", -1n, "=", "@Next 1 0", "&&", ["@This 1", "=", 0], "&&", ["@Next 1 1", "=", 0]], false, [], 0]);
+                        if (modifiers[13] == "Interacting") MergeRules.unshift([2, ["@This 0", "*B", -1n, "=", "@Next 1 0", "&&", ["@This 1", "=", 0], "&&", ["@Next 1 1", "=", 0]], false, [], 0]);
                     }
                 }
                 if (mode_vars[1] > 0) {
@@ -20692,6 +20748,9 @@ function loadModifiers() {
             }
             else {
                 let listPA = mode_vars[3].filter(m => (m[1] != 1n)).length > 0
+                if (mode_vars[0] == 3 && listPA) {
+                    statBoxes = [["Discovered Tiles From Merges", ["@GVar 8", "arr_length"], false, ...[,,,], ["@GVar 6", "=", 0], [0, "@edit_gvar", 6, 1], true], ["Discovered Tiles From Merges", ["@GVar 8", "arr_map", ["@Var -1", "Array", "arr_push", 0]], true, false, "TileArray", "Self", ["@GVar 6", "=", 1], [0, "@edit_gvar", 6, 0], true], ["Score", "@Score"]];
+                }
                 if ((mode_vars[8] && mode_vars[0] != 3) || (mode_vars[0] == 3 && listPA)) {
                         TileNumAmount = (mode_vars[0] == 3) ? 2 : 1;
                         TileTypes = [
@@ -20708,7 +20767,7 @@ function loadModifiers() {
                             startTileSpawns = (mode_vars[0] == 3) ? [[[new BigRational(1n), 0], 100 * modifiers[22]], [[new BigRational(-1n), 0], 100 * modifiers[23]]] : [[[new BigRational(1n)], 100 * modifiers[22]], [[new BigRational(-1n)], 100 * modifiers[23]]];
                             winConditions = [["@This 0", "=", new BigRational(675n, 8n)], ["@This 0", "=", new BigRational(-675n, 8n)]];
                             winRequirement = 2;
-                            if (modifiers[13] == "Interacting") MergeRules.push([2, ["@This 0", "*BR", -1n, "=", "@Next 1 0"], false, [], 0]);
+                            if (modifiers[13] == "Interacting") MergeRules.unshift([2, ["@This 0", "*BR", -1n, "=", "@Next 1 0"], false, [], 0]);
                         }
                         if (mode_vars[0] == 0) {
                             MergeRules = [
@@ -20727,7 +20786,7 @@ function loadModifiers() {
                             ];
                         }
                         if (mode_vars[1] > 0 && !(mode_vars[0] == 3 && mode_vars[3].map(x => new BigRational(x)).filter(x => x.gt(1)).length == 0)) {
-                            scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "absBR", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                            scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absBR", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                             if (mode_vars[0] == 3) {
                                 if (mode_vars[1] == 1) {
                                     scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, [["@Literal"].concat(mode_vars[3].map(x => new BigRational(x)).filter(x => x.gt(1))), "weightedRandomArrayEntry", "@GVar 3", "*BR", "@GVar 0"], "@end-if"], "EndTurn"])
@@ -20754,7 +20813,7 @@ function loadModifiers() {
                             [true, "@This 0", "@ColorScheme", "180", ["@This 0"]]
                         ];
                         MergeRules = [
-                            [2, [["@NextNE -1 0", "!=", "@This 0"], "&&", [["@NextNE", "arr_elem", ["@MLength", "-", 1], "arr_elem", 0], "!=", "@This 0"], "&&", ["@Next 1 0", "=", "@This 0"]], true, [[["@This 0", "*B", "@MLength"]]], ["@This 0", "*B", "@MLength"], [], 2, [0, 1, 1], 1, Math.max(width, height)]
+                            [2, [["@NextNE -1 0", "!=", "@This 0"], "&&", [["@NextNE", "arr_elem", ["@MLength", "-", 1], "arr_elem", 0], "!=", "@This 0"], "&&", ["@Next 1 0", "=", "@This 0"]], true, [[["@This 0", "*B", "@MLength"]]], ["@This 0", "*B", "@MLength", "abs"], [], 2, [0, 1, 1], 1, Math.max(width, height)]
                         ];
                         knownMergeMaxLength = Infinity;
                         knownMergeLookbackDistance = 2;
@@ -20772,16 +20831,16 @@ function loadModifiers() {
                             startTileSpawns = [[[1n], 100 * modifiers[22]], [[-1n], 100 * modifiers[23]]];
                             winConditions = [[180n], [-180n]];
                             winRequirement = 2;
-                            if (modifiers[13] == "Interacting") MergeRules.push([2, ["@This 0", "*BR", -1n, "=", "@Next 1 0"], false, [], 0]);
+                            if (modifiers[13] == "Interacting") MergeRules.unshift([2, ["@This 0", "*B", -1n, "=", "@Next 1 0"], false, [], 0]);
                         }
                         if (mode_vars[1] > 0) {
-                            scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                            scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                             if (mode_vars[0] == 3) {
                                 if (mode_vars[1] == 1) {
-                                    scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, [["@Literal"].concat(mode_vars[3]), "weightedRandomArrayEntry", "@GVar 3", "*B", "@GVar 0"], "@end-if"], "EndTurn"])
+                                    scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, [["@Literal"].concat(mode_vars[3].map(x => x[0])), "weightedRandomArrayEntry", "@GVar 3", "*B", "@GVar 0"], "@end-if"], "EndTurn"])
                                 }
                                 else {
-                                    scripts.push([[1n, "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@var_retain", 0, "@repeat", ["@var_retain", "@Var 0", "<=", "@GVar 0"], "@edit_var", 0, ["@var_retain", ["@Literal"].concat(mode_vars[3]), "weightedRandomArrayEntry", "@GVar 3", "*B", "@Var 0"], "@end-repeat", "2nd", "@Var 0"], "@end-if"], "EndTurn"])
+                                    scripts.push([[1n, "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@var_retain", 0, "@repeat", ["@var_retain", "@Var 0", "<=", "@GVar 0"], "@edit_var", 0, ["@var_retain", ["@Literal"].concat(mode_vars[3].map(x => x[0])), "weightedRandomArrayEntry", "@GVar 3", "*B", "@Var 0"], "@end-repeat", "2nd", "@Var 0"], "@end-if"], "EndTurn"])
                                 }
                             }
                             else {
@@ -20796,7 +20855,7 @@ function loadModifiers() {
                         }
                     }
                     else if (mode_vars[1] > 0) {
-                        scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 3, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                        scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 3, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                         if (mode_vars[1] == 1) {
                             scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "rand_float", 1, "@if", ["@Parent -2", "<", "@GVar 3"], "@edit_gvar", 0, ["@Literal", ["@CalcArray", "@GVar 0", "arr_elem", 0, "+", 1], ["@CalcArray", "@GVar 0", "arr_elem", 1], ["@CalcArray", "@GVar 0", "arr_elem", 2]], "@end-if", "@else-if", ["@Parent -2", "<", "@GVar 4"], "@edit_gvar", 0, ["@Literal", ["@CalcArray", "@GVar 0", "arr_elem", 0], ["@CalcArray", "@GVar 0", "arr_elem", 1, "+", 1], ["@CalcArray", "@GVar 0", "arr_elem", 2]], "@end-else-if", "@else", "@edit_gvar", 0, ["@Literal", ["@CalcArray", "@GVar 0", "arr_elem", 0], ["@CalcArray", "@GVar 0", "arr_elem", 1], ["@CalcArray", "@GVar 0", "arr_elem", 2, "+", 1]], "@end-else", "@end-if"], "EndTurn"])
                         }
@@ -20813,6 +20872,7 @@ function loadModifiers() {
                 }
                 if (mode_vars[0] == 3) {
                     MergeRules = [];
+                    if (modifiers[13] == "Interacting") MergeRules.push([2, ["@This 0", (listPA ? "*BR" : "*B"), -1n, "=", "@Next 1 0"], false, [], 0]);
                     for (let m = 0; m < mode_vars[3].length; m++) {
                         let mergeLength = Number(mode_vars[3][m][0]);
                         if (mergeLength == 1) mergeLength = 0;
@@ -20828,12 +20888,14 @@ function loadModifiers() {
                             newRule[3].push(tArr);
                         }
                         if (mode_vars[3][m][0] < mode_vars[3][m][1]) newRule[3].unshift((mode_vars[3][m][0] == 1n) ? "@MergeOverflowEmpty" : "@MergeOverflowOverwrite");
-                        newRule[4] = [["@This 0", "*", mode_vars[3][m][0]], "abs"];
+                        newRule[4] = [["@This 0", "*", mode_vars[3][m][0]], "abs", "@if", ["@GVar 8", "arr_indexOf", ["@This 0", (listPA ? "*BR" : "*B"), mode_vars[3][m][0], (listPA ? "/BR" : "/B"), mode_vars[3][m][1]], "=", -1], "@edit_gvar", 8, ["@GVar 8", "arr_push", ["@This 0", (listPA ? "*BR" : "*B"), mode_vars[3][m][0], (listPA ? "/BR" : "/B"), mode_vars[3][m][1]]]];
                         for (let i = 0; i < mode_vars[3][m][0]; i++) newRule[5].push(false);
                         for (let i = mode_vars[3][m][0]; i < mode_vars[3][m][1]; i++) newRule[5].push(true);
                         MergeRules.push(newRule);
                     }
-                    if (listPA) MergeRules.push([0, ["@This 1", "=", 1], true, [["@This 0", 0]], 0]);
+                    if (listPA) {
+                        MergeRules.push([0, ["@This 1", "=", 1], true, [["@This 0", 0]], 0]);
+                    }
                 }
             }
         }
