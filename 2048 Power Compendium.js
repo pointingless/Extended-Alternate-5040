@@ -29719,6 +29719,8 @@ function exportSave(midgame) { // A save code where midgame = true saves a game 
             SaveCode += "|";
             SaveCode += window.btoa(SCstringify(replayOtherSpawns));
             SaveCode += "|";
+            SaveCode += window.btoa(SCstringify(forcedSpawns));
+            SaveCode += "|";
         }
         document.getElementById("save_code_box").value = SaveCode;
     }
@@ -29939,6 +29941,9 @@ function importSave(code) {
                 }
                 if (validSaveCodeVersions.indexOf(codebits[1]) > 11) {
                     coderesults.push(SCparse(window.atob(codebits[40]))); //coderesults[38] is tileValueFunction
+                }
+                if (validSaveCodeVersions.indexOf(codebits[1]) > 14) {
+                    coderesults.push(SCparse(window.atob(codebits[41]))); //coderesults[39] is discoveredTilesFilter
                 }
                 if (codebits[0] == "@2048PowCompGame") {
                     let midgameStart;
@@ -30529,6 +30534,7 @@ function displaySaveCodeMode(screen, mode) {
         displayRules("save_code_heading", ["h2", "Replay Code"], ["p", 'Copy this replay code, then if you want to watch your achievements later, click the "Resume Saved Game" button on the menu and paste the code there.']);
     }
 }
+
 
 function wavesMenuSwitch(wavesActive) {
     for (let wo of waves_order) {
