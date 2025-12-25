@@ -17926,6 +17926,8 @@ function displayTile(dType, tile, vcoord, hcoord, container, location) {
             else if (display[3] == "mod 27") {
                 let degrees = "180deg";
                 if (params.length > 0) degrees = params[0] + "deg";
+                let rainbow = true;
+                if (params.length > 1) rainbow = params[1]
                 tile.style.setProperty("color", "#ffffff");
                 let negative = false;
                 if (value < 0) {
@@ -20928,19 +20930,17 @@ function loadModifiers() {
                 else {
                     scripts.push([[[[2, "^", ["@GVar 0", "arr_elem", 0]], "*", [3, "^", ["@GVar 0", "arr_elem", 1]]], "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@var_retain", 0, 0, "@end_vars", 0, "rand_float", 1, "@repeat", ["@var_retain", ["@var_retain", 2, "^", "@Var 1"], "*", ["@var_retain", 3, "^", "@Var 2"], "<=", "@Var 0"], "@if", ["@Parent -2", "<", "@GVar 3"], "@edit_var", 1, ["@var_retain", "@Var 1", "+", 1], "@end-if", "@else", "@edit_var", 2, ["@var_retain", "@Var 2", "+", 1], "@end-else", "@end-repeat", "2nd", ["@Literal"], "arr_push", "@Var 1", "arr_push", "@Var 2"], "@end-if"], "EndTurn"])
                 }
-                if (mode_vars[13] == "None") {
-                    statBoxes.push(["Current Goal", "@GVar 0", false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
-                }
-                else {
-                    statBoxes.push(["Current Goal", ["@GVar 0", "arr_push", 1], false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
-                }
+                let goalRepresentation = ["@GVar 0"]
+                if (modifiers[13] != "None") goalRepresentation.push("arr_push", 1);
+                if (modifiers[30] > 0) goalRepresentation.push("arr_push", 1);
+                statBoxes.push(["Current Goal", goalRepresentation, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
         else if (gamemode == 40) { // Wildcard 2048
             if (mode_vars[0] == 1) {
-                MergeRules[0][5] = [[["@This 0", "+", "@Next 1 0"]]];
+                MergeRules[0][5] = [[["@This 0", "+B", "@Next 1 0"]]];
                 MergeRules[0][6] = ["@This 0", "+B", "@Next 1 0", "@edit_gvar", 0, ["@Parent -2", "logB", 2n, "max", "@GVar 0"]]
-                if (modifiers[13] != "None") MergeRules[0][5] = [[["@This 0", "+", "@Next 1 0"], "@This 1"]];
+                if (modifiers[13] != "None") MergeRules[0][5] = [[["@This 0", "+B", "@Next 1 0"], "@This 1"]];
                 if (modifiers[13] == "Interacting") {
                     MergeRules[1] = [2, [["@This 0", "=", "@Next 1 0"], "&&", ["@This 1", "!=", "@Next 1 1"]], true, [], 0, [true, true]];
                     MergeRules.push([["@This 0", "bit&B", "@Next 1 0"], "@end_vars", 2, ["@var_retain", "@Var 0", ">", 0, "&&", ["@This 1", "=", 1], "&&", ["@Next 1 1", "=", -1], "&&", ["@This 0", "!=", "@Next 1 0"]], false, [[["@This 0", "-B", "@Next 1 0", "absB", "@edit_gvar", 0, ["@Parent -2", "logB", 2n, "max", "@GVar 0"]], ["@This 0", "-B", "@Next 1 0", "sign"]]], 0, [false, true]]);
@@ -20959,10 +20959,10 @@ function loadModifiers() {
             }
             if (mode_vars[1]) {
                 if (modifiers[13] == "None") {
-                    startTileSpawns = [[[[2, "^", ["@GVar 0", "rand_float", 1], "round", 1, "-", 1, "max", 1]], 1]];
+                    startTileSpawns = [[[[2, "^", ["@GVar 0", "rand_float", 1], "round", 1, "-", 1, "max", 1, "BigInt"]], 1]];
                 }
                 else {
-                    startTileSpawns = [[[[2, "^", ["@GVar 0", "rand_float", 1], "round", 1, "-", 1, "max", 1], 1], modifiers[22]], [[[2, "^", ["@GVar 0", "rand_float", 1], "round", 1, "-", 1, "max", 1], -1], modifiers[23]]]
+                    startTileSpawns = [[[[2, "^", ["@GVar 0", "rand_float", 1], "round", 1, "-", 1, "max", 1, "BigInt"], 1], modifiers[22]], [[[2, "^", ["@GVar 0", "rand_float", 1], "round", 1, "-", 1, "max", 1, "BigInt"], -1], modifiers[23]]]
                 }
             }
         }
@@ -20974,11 +20974,12 @@ function loadModifiers() {
             }
             if (mode_vars[2] > 0) {
                 start_game_vars[5] = mode_vars[3];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 2, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 2, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                 scripts.push([["@global_var_retain_inner", ["@Literal"], ["@Literal"], 2n, [2n, "^B", ["@GVar 2", "+", 1n], "*B", "@GVar 5"], 0n, 0n, ["@Literal"], "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@var_retain", "@GVar 2", "+", 1], "@edit_gvar", 3, false, "@repeat", ["@Var 3", "*B", 2n, "rootB", "@Var 2", ">=", 2n], "@edit_var", 4, ["@Var 3", "rootB", "@Var 2", "@if", ["@Parent -2", "^B", "@Var 2", "<", "@Var 3"], "+B", 1n, "@end-if"], "@edit_var", 5, ["@Var 3", "*B", 2n, "rootB", "@Var 2"], "@edit_var", 0, ["@Var 0", "arr_push", [["@Literal"], "arr_push", "@Var 4", "arr_push", "@Var 5"]], "@edit_var", 1, ["@Var 1", "arr_push", ["@Var 5", "-", "@Var 4", "+", 1]], "@edit_var", 6, ["@Var 6", "arr_push", ["@Var 2", "-B", 2]], "@edit_var", 2, ["@Var 2", "+", 1], "@end-repeat", "@edit_var", 2, ["@Var 6", "weightedRandomArrayEntry", "@Var 1"], "@edit_var", 0, ["@Var 0", "arr_elem", "@Var 2"], "@edit_var", 0, [["@Var 0", "arr_elem", 0], "rand_bigint", ["@Var 0", "arr_elem", 1], "Array", "arr_push", ["@Var 2", "+B", 2n]], "@edit_gvar", 1, [["@Var 0", "arr_elem", 0], "^B", ["@Var 0", "arr_elem", 1], "perfectPowerFormB", mode_vars[0], "arr_slice", 0, 2], "@end-if"], "EndTurn"])
                 let sBox = ["@GVar 1"];
                 if (modifiers[13]) sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
             }
         }
@@ -21012,7 +21013,7 @@ function loadModifiers() {
             }
             if (mode_vars[1] > 0) {
                 start_game_vars[3] = mode_vars[2];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "abs", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "abs", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[1] == 1) {
                     scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@GVar 0", "*", 2, "+", [0, "rand_int", 1]], "@end-if"], "EndTurn"])
                 }
@@ -21021,6 +21022,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"], 0];
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
@@ -21041,7 +21043,7 @@ function loadModifiers() {
         else if (gamemode == 45) { // Directional Merges
             if (mode_vars[1] > 0) {
                 start_game_vars[5] = mode_vars[2];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 6, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 6, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                 if (mode_vars[1] == 2) {
                     if (mode_vars[0] < 2) {
                         scripts.push([["@global_var_retain_inner", ["@Literal", 0, 0, 0, 0, 0, 0], [[2, "^", ["@GVar 1", "arr_elem", 0]], "*", [3, "^", ["@GVar 1", "arr_elem", 1]], "*", [5, "^", ["@GVar 1", "arr_elem", 2]], "*", [7, "^", ["@GVar 1", "arr_elem", 3]], "*", [11, "^", ["@GVar 1", "arr_elem", 4]], "*", [13, "^", ["@GVar 1", "arr_elem", 5]]], 0, "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@GVar 2", "+", 1], "@edit_gvar", 3, false, "@repeat", [[2, "^", ["@Var 0", "arr_elem", 0]], "*", [3, "^", ["@Var 0", "arr_elem", 1]], "*", [5, "^", ["@Var 0", "arr_elem", 2]], "*", [7, "^", ["@Var 0", "arr_elem", 3]], "*", [11, "^", ["@Var 0", "arr_elem", 4]], "*", [13, "^", ["@Var 0", "arr_elem", 5]], "<=", "@Var 1"], "@edit_var", 2, [["@Literal", 0, 1], "weightedRandomArrayEntry", "@GVar 4"], "@edit_var", 0, ["@Var 0", "arr_edit_elem", "@Var 2", ["@Var 0", "arr_elem", "@Var 2", "+", 1]], "@end-repeat", "@edit_gvar", 1, "@Var 0", "@end-if"], "EndTurn"])
@@ -21151,6 +21153,7 @@ function loadModifiers() {
                 let sBox = ["@GVar 1"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
             }
         }
@@ -21165,11 +21168,12 @@ function loadModifiers() {
                 MergeRules.pop();
                 if (mode_vars[2] > 0) {
                     start_game_vars[4] = (-1 + Math.sqrt(mode_vars[3] * 8 + 1))/2;
-                    scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                    scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                     scripts.push([[0, "@if", "@GVar 3", "@edit_gvar", 2, ["@var_retain", "@GVar 2", "+", 1], "@edit_gvar", 3, false, "@edit_gvar", 1, [[1.4, "^", "@GVar 2", "*", "@GVar 4", "ceil", 1], "rand_int", [1.4, "^", ["@GVar 2", "+", 1], "*", "@GVar 4", "floor", 1]], "@end-if"], "EndTurn"])
                     let sBox = ["@Literal", ["@CalcArray", "@GVar 1"]];
                     if (modifiers[13]) sBox.push("arr_push", 1);
                     if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                    if (modifiers[30] > 0) sBox.push("arr_push", 1);
                     statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
                 }
             }
@@ -21192,6 +21196,10 @@ function loadModifiers() {
                     start_game_vars[0] = [1n];
                     start_game_vars[1] = [1n];
                 }
+                else if (mode_vars[5] != 0) {
+                    start_game_vars[0] = [3n];
+                    start_game_vars[1] = [3n];
+                }
                 if (mode_vars[0] == -1) {
                     scripts = [scripts[0], scripts[2]];
                     statBoxes.pop(); statBoxes.pop();
@@ -21200,13 +21208,23 @@ function loadModifiers() {
             start_game_vars[4] = mode_vars[2];
             if (mode_vars[3] > 0) {
                 start_game_vars[9] = mode_vars[4];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "absB", "=", "@GVar 5"], "@edit_gvar", 7, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 5"], "@edit_gvar", 7, true, "@end-if"], "Merge"]);
                 scripts.push([["@var_retain", 0, "@add_var", 0, "@repeat", ["@var_retain", "@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@var_retain", "@Var 0", "arr_elem", "@Var 1", "arr_elem", 0, "=", "@GVar 5"], "@edit_gvar", 7, true, "@end-if", "@edit_var", 1, ["@var_retain", "@Var 1", "+", 1], "@end-repeat"], "PostSpawn"]);
-                if (mode_vars[3] == 1) {
-                    scripts.push([[0, "@if", "@GVar 7", "@edit_gvar", 6, ["@var_retain", "@GVar 6", "+", 1], "@edit_gvar", 7, false, "@edit_gvar", 5, ["@GVar 5", "+B", [0, "rand_bigint", ["@GVar 5", "logB", 2n]], "*B", [0, "rand_float", 1, "@if", ["@Parent -2", "=", 0], "2nd", 1, "@end-if", "log", 2, "*", -1, "floor", 1, "+", 2, "BigInt"]], "@end-if"], "EndTurn"])
+                if (mode_vars[5] == 0) {
+                    if (mode_vars[3] == 1) {
+                        scripts.push([[0, "@if", "@GVar 7", "@edit_gvar", 6, ["@var_retain", "@GVar 6", "+", 1], "@edit_gvar", 7, false, "@edit_gvar", 5, ["@GVar 5", "+B", [0, "rand_bigint", ["@GVar 5", "logB", 2n]], "*B", [0, "rand_float", 1, "@if", ["@Parent -2", "=", 0], "2nd", 1, "@end-if", "log", 2, "*", -1, "floor", 1, "+", 2, "BigInt"]], "@end-if"], "EndTurn"])
+                    }
+                    else {
+                        scripts.push([[0, "@if", "@GVar 7", "@edit_gvar", 6, ["@var_retain", "@GVar 6", "+", 1], "@edit_gvar", 7, false, "@edit_gvar", 5, [[2n, "^B", ["@GVar 6", "BigInt"], "*B", "@GVar 9"], "rand_bigint", [2n, "^B", ["@GVar 6", "+", 1, "BigInt"], "*B", "@GVar 9", "-B", 1n]], "@end-if"], "EndTurn"])
+                    }
                 }
                 else {
-                    scripts.push([[0, "@if", "@GVar 7", "@edit_gvar", 6, ["@var_retain", "@GVar 6", "+", 1], "@edit_gvar", 7, false, "@edit_gvar", 5, [[2n, "^B", ["@GVar 6", "BigInt"], "*B", "@GVar 9"], "rand_bigint", [2n, "^B", ["@GVar 6", "+", 1, "BigInt"], "*B", "@GVar 9", "-B", 1n]], "@end-if"], "EndTurn"])
+                    if (mode_vars[3] == 1) {
+                        scripts.push([[0, "@if", "@GVar 7", "@edit_gvar", 6, ["@var_retain", "@GVar 6", "+", 1], "@edit_gvar", 7, false, "@edit_gvar", 5, ["@GVar 5", "+B", [0, "rand_bigint", ["@GVar 5", "logB", 2n], "*B", 2n], "*B", [0, "rand_float", 1, "@if", ["@Parent -2", "=", 0], "2nd", 1, "@end-if", "log", 2, "*", -1, "floor", 1, "*", 2, "+", 3, "BigInt"]], "@end-if"], "EndTurn"])
+                    }
+                    else {
+                        scripts.push([[0, "@if", "@GVar 7", "@edit_gvar", 6, ["@var_retain", "@GVar 6", "+", 1], "@edit_gvar", 7, false, "@edit_gvar", 5, [[2n, "^B", ["@GVar 6", "BigInt", "-", 1], "*B", "@GVar 9"], "rand_bigint", [2n, "^B", ["@GVar 6", "BigInt"], "*B", "@GVar 9", "-B", 1n], "*B", 2n, "+B", 1n], "@end-if"], "EndTurn"])
+                    }
                 }
                 statBoxes.push(["Current Goal", "@GVar 5", false, false, "Tile", "DIVE"], ["Goals Reached", "@GVar 6"]);
             }
@@ -21215,7 +21233,7 @@ function loadModifiers() {
         else if (gamemode == 54) { // 3888
             if (mode_vars[0] > 0) {
                 start_game_vars[4] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 2, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 2, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[["@Literal"], "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@if", ["@GVar 0", "arr_elem", 0, ">", 0], "@edit_var", 0, ["@var_retain", "@Var 0", "arr_push", 0], "@end-if", "@if", ["@GVar 0", "arr_elem", 1, ">", 0], "@edit_var", 0, ["@var_retain", "@Var 0", "arr_push", 1], "@end-if", "rand_float", 1, "@if", ["@var_retain", "@Var 0", "arr_length", "=", 1], "2nd", ["@var_retain", "@Var 0", "arr_elem", 0], "@end-if", "@else", "2nd", ["@var_retain", "@Var 0", "arr_elem", [0, "@if", ["@Parent -4", "<", "@GVar 3"], "2nd", 1, "@end-if"]], "@end-else", "@if", ["@Parent -2", "=", 0], "@edit_gvar", 0, ["@Literal", ["@CalcArray", "@GVar 0", "arr_elem", 0, "-", 1], ["@CalcArray", "@GVar 0", "arr_elem", 1, "+", 1]], "@end-if", "@if", ["@Parent -2", "=", 1], "@edit_gvar", 0, ["@Literal", ["@CalcArray", "@GVar 0", "arr_elem", 0, "+", 2], ["@CalcArray", "@GVar 0", "arr_elem", 1, "-", 1]], "@end-if", "@end-if"], "EndTurn"])
                 }
@@ -21225,13 +21243,14 @@ function loadModifiers() {
                 let sBox = ["@GVar 0"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
         else if (gamemode == 55) { // 2000
             if (mode_vars[0] > 0) {
                 start_game_vars[4] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 2, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 2, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[["@Literal"], "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@if", ["@GVar 0", "arr_elem", 0, ">", 1], "@edit_var", 0, ["@var_retain", "@Var 0", "arr_push", 0], "@end-if", "@if", ["@GVar 0", "arr_elem", 1, ">", 0], "@edit_var", 0, ["@var_retain", "@Var 0", "arr_push", 1], "@end-if", "rand_float", 1, "@if", ["@var_retain", "@Var 0", "arr_length", "=", 1], "2nd", ["@var_retain", "@Var 0", "arr_elem", 0], "@end-if", "@else", "2nd", ["@var_retain", "@Var 0", "arr_elem", [0, "@if", ["@Parent -4", "<", "@GVar 3"], "2nd", 1, "@end-if"]], "@end-else", "@if", ["@Parent -2", "=", 0], "@edit_gvar", 0, ["@Literal", ["@CalcArray", "@GVar 0", "arr_elem", 0, "-", 2], ["@CalcArray", "@GVar 0", "arr_elem", 1, "+", 1]], "@end-if", "@if", ["@Parent -2", "=", 1], "@edit_gvar", 0, ["@Literal", ["@CalcArray", "@GVar 0", "arr_elem", 0, "+", 3], ["@CalcArray", "@GVar 0", "arr_elem", 1, "-", 1]], "@end-if", "@end-if"], "EndTurn"])
                 }
@@ -21240,13 +21259,14 @@ function loadModifiers() {
                 }
                 let sBox = ["@GVar 0"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
         else if (gamemode == 56) { // 3645
             if (mode_vars[0] > 0) {
                 start_game_vars[4] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 2, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 2, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[["@Literal"], "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@if", ["@GVar 0", "arr_elem", 0, ">", 0], "@edit_var", 0, ["@var_retain", "@Var 0", "arr_push", 0], "@end-if", "@if", ["@GVar 0", "arr_elem", 1, ">", 0], "@edit_var", 0, ["@var_retain", "@Var 0", "arr_push", 1], "@end-if", "rand_float", 1, "@if", ["@var_retain", "@Var 0", "arr_length", "=", 1], "2nd", ["@var_retain", "@Var 0", "arr_elem", 0], "@end-if", "@else", "2nd", ["@var_retain", "@Var 0", "arr_elem", [0, "@if", ["@Parent -4", "<", "@GVar 3"], "2nd", 1, "@end-if"]], "@end-else", "@if", ["@Parent -2", "=", 0], "@edit_gvar", 0, ["@Literal", ["@CalcArray", "@GVar 0", "arr_elem", 0, "-", 1], ["@CalcArray", "@GVar 0", "arr_elem", 1, "+", 1]], "@end-if", "@if", ["@Parent -2", "=", 1], "@edit_gvar", 0, ["@Literal", ["@CalcArray", "@GVar 0", "arr_elem", 0, "+", 2], ["@CalcArray", "@GVar 0", "arr_elem", 1, "-", 1]], "@end-if", "@end-if"], "EndTurn"])
                 }
@@ -21256,13 +21276,14 @@ function loadModifiers() {
                 let sBox = ["@GVar 0"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
         else if (gamemode == 57) { // 2700
             if (mode_vars[2] > 0) {
                 start_game_vars[5] = mode_vars[3];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 3, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 3, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                 if (mode_vars[2] == 2) {
                     scripts.push([["@global_var_retain_inner", ["@Literal", 0, 0, 0], [[2, "^", ["@GVar 1", "arr_elem", 0]], "*", [3, "^", ["@GVar 1", "arr_elem", 1]], "*", [5, "^", ["@GVar 1", "arr_elem", 2]]], 0, "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@GVar 2", "+", 1], "@edit_gvar", 3, false, "@repeat", [[2, "^", ["@Var 0", "arr_elem", 0]], "*", [3, "^", ["@Var 0", "arr_elem", 1]], "*", [5, "^", ["@Var 0", "arr_elem", 2]], "<=", "@Var 1"], "@edit_var", 2, [["@Literal", 0, 1, 2], "weightedRandomArrayEntry", "@GVar 4"], "@edit_var", 0, ["@Var 0", "arr_edit_elem", "@Var 2", ["@Var 0", "arr_elem", "@Var 2", "+", 1]], "@end-repeat", "@edit_gvar", 1, "@Var 0", "@end-if"], "EndTurn"])
                 }
@@ -21302,13 +21323,14 @@ function loadModifiers() {
                 let sBox = ["@GVar 1"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
             }
         }
         else if (gamemode == 59) { // 1825
             if (mode_vars[0] > 0) {
                 start_game_vars[3] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@GVar 0", "*", [2, "^", [2, "-", ["@GVar 0", "expomod", 2]]], "-", [1, "rand_int", ["@GVar 0", "^", 0.5, "floor", 1], "@if", ["@Parent -2", "%", 4, "=", 0], "-", 1, "@end-if"]], "@end-if"], "EndTurn"])
                 }
@@ -21317,6 +21339,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"], 1];
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
@@ -21351,7 +21374,7 @@ function loadModifiers() {
             }
             if (mode_vars[1] > 0) {
                 start_game_vars[4] = mode_vars[2];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "abs", "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "abs", "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                 if (mode_vars[1] == 1) {
                     scripts.push([[0, "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@var_retain", "@GVar 2", "+", 1], "@edit_gvar", 3, false, "@edit_var", 0, [0, "rand_float", 1, "log", "@GVar 5", "floor", 1], "@if", ["@var_retain", "@Var 0", ">", ["@var_retain", "@GVar 1", "expomod", 2]], "@edit_var", 0, 0, "@end-if", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "/", ["@var_retain", 2, "^", "@Var 0"], "*", ["@var_retain", 2, "^", "@Var 0", "+", 1]], "@end-if"], "EndTurn"])
                 }
@@ -21361,6 +21384,7 @@ function loadModifiers() {
                 let sBox = ["@GVar 1", "Array"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
             }
         }
@@ -21375,7 +21399,7 @@ function loadModifiers() {
                 ];
                 if (mode_vars[0] > 0) {
                     start_game_vars[4] = (mode_vars[1] + 1n) / 2n;
-                    scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                    scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                     if (mode_vars[0] == 1) {
                         scripts.push([[0, "@if", "@GVar 3", "@edit_gvar", 2, ["@var_retain", "@GVar 2", "+", 1], "@edit_gvar", 3, false, "@add_var", ["@GVar 1", "arr_reduce", 1n, ["*B", ["@var_retain", "@Var -1", "prime"]]], "@add_var", ["@var_retain", "@Var -1", "arr_copy"], "@if", ["@GVar 2", "%", 4, "=", 1], "@edit_gvar", 1, ["@GVar 1", "arr_unshift", 2n], "@edit_gvar", 1, [[0, "rand_int", ["@GVar 1", "arr_length", "-", 1]], "@end_vars", "@GVar 1", "arr_edit_elem", "@Var 0", ["@var_retain", "@GVar 1", "arr_elem", "@Var 0", "+B", 1n]], "@end-if", "@else", "@repeat", ["@var_retain", "@Var -2", "*B", 3n, "/B", 2n, ">", "@Var -1"], "@edit_gvar", 1, [[0, "rand_int", ["@GVar 1", "arr_length", "-", 1]], "@end_vars", "@GVar 1", "arr_edit_elem", "@Var 0", ["@var_retain", "@GVar 1", "arr_elem", "@Var 0", "+B", 1n]], "@edit_var", -1, ["@GVar 1", "arr_reduce", 1n, ["*B", ["@var_retain", "@Var -1", "prime"]]], "@end-repeat", "@end-else", "@edit_gvar", 1, ["@GVar 1", "arr_sort", ["@Var -2", "-B", "@Var -1", "Number"]], "@end-if"], "EndTurn"])
                     }
@@ -21385,6 +21409,7 @@ function loadModifiers() {
                     let sBox = ["@GVar 1", "arr_reduce", 1n, ["*B", ["@var_retain", "@Var -1", "prime"]]];
                     if (modifiers[13] != "None") sBox.push("arr_push", 1);
                     if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                    if (modifiers[30] > 0) sBox.push("arr_push", 1);
                     statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Odds-Only 3069"], ["Goals Reached", "@GVar 2"]);
                 }
                 knownMergeMaxLength = 3;
@@ -21392,7 +21417,7 @@ function loadModifiers() {
             }  
             else if (mode_vars[0] > 0) {
                 start_game_vars[4] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[0, "@if", "@GVar 3", "@edit_gvar", 2, ["@var_retain", "@GVar 2", "+", 1], "@edit_gvar", 3, false, "@add_var", ["@GVar 1", "arr_reduce", 1n, ["*B", ["@var_retain", "@Var -1", "prime"]]], "@add_var", ["@var_retain", "@Var -1", "arr_copy"], "@if", ["@GVar 2", "%", 3, "=", 1], "@edit_gvar", 1, ["@GVar 1", "arr_unshift", 1n], "@edit_gvar", 1, [[0, "rand_int", ["@GVar 1", "arr_length", "-", 1]], "@end_vars", "@GVar 1", "arr_edit_elem", "@Var 0", ["@var_retain", "@GVar 1", "arr_elem", "@Var 0", "+B", 1n]], "@end-if", "@else", "@repeat", ["@var_retain", "@Var -2", "*B", 3n, "/B", 2n, ">", "@Var -1"], "@edit_gvar", 1, [[0, "rand_int", ["@GVar 1", "arr_length", "-", 1]], "@end_vars", "@GVar 1", "arr_edit_elem", "@Var 0", ["@var_retain", "@GVar 1", "arr_elem", "@Var 0", "+B", 1n]], "@edit_var", -1, ["@GVar 1", "arr_reduce", 1n, ["*B", ["@var_retain", "@Var -1", "prime"]]], "@end-repeat", "@end-else", "@edit_gvar", 1, ["@GVar 1", "arr_sort", ["@Var -2", "-B", "@Var -1", "Number"]], "@end-if"], "EndTurn"])
                 }
@@ -21402,6 +21427,7 @@ function loadModifiers() {
                 let sBox = ["@GVar 1", "arr_reduce", 1n, ["*B", ["@var_retain", "@Var -1", "prime"]]];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "3069"], ["Goals Reached", "@GVar 2"]);
             }
         }
@@ -21430,9 +21456,11 @@ function loadModifiers() {
         else if (gamemode == 67) { // 1762
             if (mode_vars[0] > 0) {
                 start_game_vars[3] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
-                    scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@GVar 0", "*B", 2n, "+B", [(mode_vars[2] ? 0n : -1n), "rand_bigint", 1n]], "@end-if"], "EndTurn"])
+                    scripts.push([
+                        [0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@GVar 0", "*B", 2n, "+B", [(mode_vars[2] ? 0n : -1n), "rand_bigint", 1n]], "@end-if"], 
+                    "EndTurn"])
                 }
                 else {
                     scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, [[2n, "^B", ["@GVar 1", "+B", "@GVar 3", "-B", 1n], "+B", (mode_vars[2] ? 0n : 1n)], "rand_bigint", [2n, "^B", ["@GVar 1", "+B", "@GVar 3"], "-B", (mode_vars[2] ? 1n : 0n)]], "@end-if"], "EndTurn"])
@@ -21440,6 +21468,7 @@ function loadModifiers() {
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[13] != "None") sBox.push(1);
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
             if (mode_vars[2]) {
@@ -21477,7 +21506,7 @@ function loadModifiers() {
         else if (gamemode == 68) { // 2205
             if (mode_vars[1] > 0) {
                 start_game_vars[5] = mode_vars[2];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 3, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 3, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                 if (mode_vars[1] == 2) {
                     scripts.push([["@global_var_retain_inner", ["@Literal", 0, 0, 0], [[3, "^", ["@GVar 1", "arr_elem", 0]], "*", [5, "^", ["@GVar 1", "arr_elem", 1]], "*", [7, "^", ["@GVar 1", "arr_elem", 2]]], 0, "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@GVar 2", "+", 1], "@edit_gvar", 3, false, "@repeat", [[3, "^", ["@Var 0", "arr_elem", 0]], "*", [5, "^", ["@Var 0", "arr_elem", 1]], "*", [7, "^", ["@Var 0", "arr_elem", 2]], "<=", "@Var 1"], "@edit_var", 2, [["@Literal", 0, 1, 2], "weightedRandomArrayEntry", "@GVar 4"], "@edit_var", 0, ["@Var 0", "arr_edit_elem", "@Var 2", ["@Var 0", "arr_elem", "@Var 2", "+", 1]], "@end-repeat", "@edit_gvar", 1, "@Var 0", "@end-if"], "EndTurn"])
                 }
@@ -21517,6 +21546,7 @@ function loadModifiers() {
                 let sBox = ["@GVar 1"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
             }
         }
@@ -21603,7 +21633,7 @@ function loadModifiers() {
             }
             if (mode_vars[1] > 0) {
                 start_game_vars[8] = mode_vars[2];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 2, "=", "@GVar 4"], "@edit_gvar", 6, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 2, "=", "@GVar 4"], "@edit_gvar", 6, true, "@end-if"], "Merge"]);
                 if (mode_vars[1] == 1) {
                     scripts.push([[0, "@if", "@GVar 6", "@edit_gvar", 5, ["@var_retain", "@GVar 5", "+", 1], "@edit_gvar", 6, false, "@edit_gvar", 4, [["@Literal", 2, 2], "@if", [[["@GVar 4", "arr_elem", 0], "=", ["@GVar 4", "arr_elem", 1]], "||", [0, "rand_float", 1, "<", "@GVar 7"]], "2nd", ["@Literal", ["@CalcArray", "@GVar 4", "arr_elem", 0], ["@CalcArray", "@GVar 4", "arr_elem", 1, "+", 1]], "@end-if", "@else", "2nd", ["@Literal", ["@CalcArray", "@GVar 4", "arr_elem", 0, "+", 1], ["@CalcArray", "@GVar 4", "arr_elem", 1]]], "@end-if"], "EndTurn"])
                 }
@@ -21613,6 +21643,7 @@ function loadModifiers() {
                 let sBox = ["@GVar 4"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 5"]);
             }
         }
@@ -21644,7 +21675,7 @@ function loadModifiers() {
                 knownMergeMaxLength = 3;
             }
             if (mode_vars[0] > 0) {
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@GVar 1", "+", 1], "@edit_gvar", 2, false, "@repeat", ["@GVar 3", "arr_length", ">", "@Var 1"], "@if", ["@GVar 3", "arr_elem", "@Var 1", ">", "@GVar 0"], "@edit_var", 1, 1e300, "@end-if", "@else-if", ["@GVar 3", "arr_elem", "@Var 1", "^B", 2, "%B", "@GVar 0", "=", 0n], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 3", "arr_elem", "@Var 1"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "2nd", ["@GVar 0", "+B", ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]]], "@edit_gvar", 0, "@Parent -1", "@edit_gvar", 3, ["@GVar 3", "arr_push", "@Parent -2"], "@end-if"], "EndTurn"])
                 }
@@ -21656,6 +21687,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
                 start_game_vars[4] = mode_vars[1];
             }
@@ -21704,7 +21736,7 @@ function loadModifiers() {
         }
         else if (gamemode == 75) { // 3307
             if (mode_vars[1] > 0) {
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "absB", "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                 if (mode_vars[1] == 1) {
                     scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@GVar 2", "+", 1], "@edit_gvar", 3, false, "@repeat", ["@GVar 4", "arr_length", ">", "@Var 1"], "@if", ["@GVar 4", "arr_elem", "@Var 1", ">=", "@GVar 1"], "@edit_var", 1, 1e300, "@end-if", "@else-if", [["@GVar 4", "arr_elem", "@Var 1", "^B", 2, "%B", "@GVar 1", "=", 0n], "&&", ["@GVar 4", "arr_indexOf", ["@GVar 4", "arr_elem", "@Var 1", "^B", 2, "/B", "@GVar 1"], "!=", -1]], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 4", "arr_elem", "@Var 1", "+B", ["@GVar 4", "arr_elem", "@Var 1", "^B", 2, "/B", "@GVar 1"]]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@if", [mode_vars[0], "!=", 1], "@edit_var", 0, ["@Var 0", "arr_push", "@GVar 1"], "@end-if", "@if", [mode_vars[0], "!=", 0], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 1", "*B", 2n]], "@end-if", "2nd", ["@GVar 1", "+B", ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]]], "@edit_gvar", 1, "@Parent -1", "@edit_gvar", 4, ["@GVar 4", "arr_push", "@Parent -2"], "@end-if"], "EndTurn"])
                 }
@@ -21716,6 +21748,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 1"]];
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
                 start_game_vars[5] = mode_vars[2];
             }
@@ -21723,7 +21756,7 @@ function loadModifiers() {
         else if (gamemode == 77) { // 1668
             if (mode_vars[0] > 0) {
                 start_game_vars[3] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@GVar 0", "*B", 3n, "+B", [-1n, "rand_bigint", 1n]], "@end-if"], "EndTurn"])
                 }
@@ -21733,6 +21766,7 @@ function loadModifiers() {
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[13] != "None") sBox.push(1);
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
@@ -21748,7 +21782,7 @@ function loadModifiers() {
             }
             if (mode_vars[0] > 0) {
                 start_game_vars[3] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@GVar 0", "*BR", mode_vars[2].recip().plus(1), "@if", [0n, "rand_bigint", 1n], "floorBR", 1, "@end-if", "@else", "ceilBR", 1, "@end-else", "BigInt", "max", 2n], "@end-if"], "EndTurn"])
                 }
@@ -21758,6 +21792,7 @@ function loadModifiers() {
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[13] != "None") sBox.push(1);
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
@@ -21816,7 +21851,7 @@ function loadModifiers() {
             if (mode_vars[1] > 0) {
                 start_game_vars[5] = mode_vars[2];
                 if (mode_vars[0]) {
-                    scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                    scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                     if (mode_vars[1] == 2) {
                         scripts.push([["@global_var_retain_inner", 1n, "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@GVar 2", "+", 1], "@edit_gvar", 3, false, "@repeat", ["@Var 0", "<=", "@GVar 1"], "@edit_var", 0, [["@Literal", 4n, 6n, 9n, 10n, 14n, 15n], "weightedRandomArrayEntry", "@GVar 4", "*B", "@Var 0"], "@end-repeat", "@edit_gvar", 1, "@Var 0", "@end-if"], "EndTurn"])
                     }
@@ -21840,7 +21875,7 @@ function loadModifiers() {
                     statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
                 }
                 else {
-                    scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 6, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                    scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 6, "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                     if (mode_vars[1] == 2) {
                         scripts.push([["@global_var_retain_inner", ["@Literal", 0, 0, 0, 0, 0, 0], [[4, "^", ["@GVar 1", "arr_elem", 0]], "*", [6, "^", ["@GVar 1", "arr_elem", 1]], "*", [9, "^", ["@GVar 1", "arr_elem", 2]], "*", [10, "^", ["@GVar 1", "arr_elem", 3]], "*", [14, "^", ["@GVar 1", "arr_elem", 4]], "*", [15, "^", ["@GVar 1", "arr_elem", 5]]], 0, "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@GVar 2", "+", 1], "@edit_gvar", 3, false, "@repeat", [[4, "^", ["@Var 0", "arr_elem", 0]], "*", [6, "^", ["@Var 0", "arr_elem", 1]], "*", [9, "^", ["@Var 0", "arr_elem", 2]], "*", [10, "^", ["@Var 0", "arr_elem", 3]], "*", [14, "^", ["@Var 0", "arr_elem", 4]], "*", [15, "^", ["@Var 0", "arr_elem", 5]], "<=", "@Var 1"], "@edit_var", 2, [["@Literal", 0, 1, 2, 3, 4, 5], "weightedRandomArrayEntry", "@GVar 4"], "@edit_var", 0, ["@Var 0", "arr_edit_elem", "@Var 2", ["@Var 0", "arr_elem", "@Var 2", "+", 1]], "@end-repeat", "@edit_gvar", 1, "@Var 0", "@end-if"], "EndTurn"])
                     }
@@ -21861,6 +21896,7 @@ function loadModifiers() {
                     let sBox = ["@GVar 1"];
                     if (modifiers[13] != "None") sBox.push("arr_push", 1);
                     if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                    if (modifiers[30] > 0) sBox.push(1);
                     statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
                 }
             }
@@ -21868,7 +21904,7 @@ function loadModifiers() {
         else if (gamemode == 80) { // 1429
             if (mode_vars[0] > 0) {
                 start_game_vars[3] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@GVar 0", "*B", 2n, "+B", [0n, "rand_bigint", 1n, "*B", 2n, "-B", 1n]], "@end-if"], "EndTurn"])
                 }
@@ -21877,6 +21913,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"], 1n];
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
@@ -21909,6 +21946,7 @@ function loadModifiers() {
                 let sBox = ["@GVar 0", "arr_concat", "@GVar 3"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
             TileTypes[1][3][1][4] = mode_vars[2] - 1;
@@ -21951,7 +21989,7 @@ function loadModifiers() {
                 knownMergeMaxLength = mode_vars[4];
             }
             if (mode_vars[1] > 0 && mode_vars[4] == 2) {
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[1] == 1) {
                     scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@GVar 1", "+", 1], "@edit_gvar", 2, false, "@repeat", ["@GVar 3", "arr_length", ">", "@Var 1"], "@if", ["@GVar 3", "arr_elem", "@Var 1", ">", "@GVar 0"], "@edit_var", 1, 1e300, "@end-if", "@else-if", [["@GVar 3", "arr_elem", "@Var 1", "+B", "@GVar 0", "factorAmountB"], factorInequality, [["@GVar 3", "arr_elem", "@Var 1", "factorAmountB"], "max", ["@GVar 0", "factorAmountB"]]], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 3", "arr_elem", "@Var 1"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "2nd", ["@GVar 0", "+B", ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]]], "@edit_gvar", 0, "@Parent -1", "@edit_gvar", 3, ["@GVar 3", "arr_push", "@Parent -2"], "@end-if"], "EndTurn"])
                 }
@@ -21963,6 +22001,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push(1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
                 start_game_vars[4] = mode_vars[2];
             }
@@ -21980,13 +22019,13 @@ function loadModifiers() {
                 else {
                     if (modifiers[13] == "Non-Interacting") {
                         MergeRules = [
-                            [mode_vars[2], [[["@This 0", "signB"], "=", ["@Next 1 0", "signB"]], "&&", ["@This 1", "=", "@Next 1 1"]], true, [[["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "absB", "min", "@This 1", "*B", ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "signB"]], ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "absB", "max", "@This 1"]]], ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "*", "@This 1", "abs"], [], 2, [0, 1], 1, Math.min(mode_vars[3], width, height)]
+                            [mode_vars[2], [[["@This 0", "signB"], "=", ["@Next 1 0", "signB"]], "&&", ["@This 1", "=", "@Next 1 1"], "&&", [["@NextNE -1 1", "!=", "@This 1"], "||", ["@MLength", "=", mode_vars[3]]]], true, [[["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "absB", "min", "@This 1", "*B", ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "signB"]], ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "absB", "max", "@This 1"]]], ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "*", "@This 1", "abs"], [], 2, [0, 1], 1, Math.min(mode_vars[3], width, height)]
                         ];
                     }
                     else {
                         MergeRules = [
                             [2, [["@This 0", "*B", -1n, "=", "@Next 1 0"], "&&", ["@This 1", "=", "@Next 1 1"]], true, [], 0, [true, true]],
-                            [mode_vars[2], [["@This 1", "=", "@Next 1 1"]], true, [[["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "absB", "min", "@This 1", "*B", ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "signB"]], ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "absB", "max", "@This 1"]]], ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "*", "@This 1", "abs"], [], 2, [0, 1], 1, Math.min(mode_vars[3], Math.max(width, height))]
+                            [mode_vars[2], [["@This 1", "=", "@Next 1 1"], "&&", [["@NextNE -1 1", "!=", "@This 1"], "||", ["@MLength", "=", mode_vars[3]]]], true, [[["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "absB", "min", "@This 1", "*B", ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "signB"]], ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "absB", "max", "@This 1"]]], ["@Next", "arr_reduce", "@This 0", ["+B", ["@var_retain", "@Var -1", "arr_elem", 0]], "*", "@This 1", "abs"], [], 2, [0, 1], 1, Math.min(mode_vars[3], Math.max(width, height))]
                         ];
                     }
                     startTileSpawns = [[[1n, 1n], modifiers[22]], [[-1n, 1n], modifiers[23]]];
@@ -21996,7 +22035,7 @@ function loadModifiers() {
             }
             if (mode_vars[0] > 0) {
                 start_game_vars[3] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_slice", 0, 2, "arr_map", ["@Var -1", "absB"], "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_slice", 0, 2, "arr_map", ["@Var -1", "absB"], "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, [["@Literal"], "arr_push", ["@GVar 0", "arr_elem", 1], "@if", ["@GVar 0", "arr_elem", 1, "/B", [mode_vars[2], "^B", ["@GVar 0", "arr_elem", 1, "expomodB", mode_vars[2]]], "=", 1n], "arr_push", ["@GVar 0", "arr_elem", 0, "+B", [["@GVar 0", "arr_elem", 1, "/B", mode_vars[2]], "rand_bigint", ["@GVar 0", "arr_elem", 1]], "@if", ["@Parent -2", "%B", mode_vars[2] - 1, "!=", 1n, "&&", mode_vars[2] > 2n], "/B", mode_vars[2] - 1, "*B", mode_vars[2] - 1, "+B", 1n, "@end-if"], "@end-if", "@else", "arr_push", ["@GVar 0", "arr_elem", 0, "*B", mode_vars[2]]], "@end-if"], "EndTurn"])
                 }
@@ -22006,13 +22045,24 @@ function loadModifiers() {
                 let sBox = ["@GVar 0"];
                 if (modifiers[13] != "None") sBox.push("arr_push", 1);
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
+            }
+        }
+        else if (gamemode == 90) { // Ratio-Fill 3375
+            if (!mode_vars[0]) {
+                MergeRules = [
+                    [3, [["@This 2", "typeof", "=", "bigint"], "&&", ["@Next 1 2", "typeof", "=", "bigint"], "&&", ["@Next 2 2", "typeof", "=", "bigint"], "&&", ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2", "<", 15n], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "%B", "@Next 2 2", "=", 0n]], false, [[0, "@This 1", ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
+                    [3, [["@This 2", "typeof", "=", "bigint"], "&&", ["@Next 1 2", "typeof", "=", "bigint"], "&&", ["@Next 2 2", "typeof", "=", "bigint"], "&&", ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2", "=", 15n], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "%B", "@Next 2 2", "=", 0n]], false, [[1, ["@Literal", false, false, false, false, false, false, false], 15n]], 6, [false, true, true]],
+                    [3, [["@This 2", "typeof", "=", "bigint"], "&&", ["@Next 1 2", "typeof", "=", "bigint"], "&&", ["@Next 2 2", "typeof", "=", "bigint"], "&&", ["@Next 2 1", "arr_reduce", 0, ["+", "@Var -1"], "=", 6], "&&", ["@This 2", "+B", "@Next 1 2", "%B", 2n, "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "*B", ["@Next 2 1", "arr_indexOf", false, "*B", 2n, "+B", 1n], "/B", 2n, "=", "@Next 2 2"]], false, [[["@Next 2 0", "+", 1], [["@Literal"], "@repeat", 7, "arr_push", false, "@end-repeat"], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
+                    [3, [false, "@edit_gvar", 0, ["@Next 2 2", "/BR", ["@This 2", "+B", "@Next 1 2"], "*BR", 2n], "@if", [["@This 2", "typeof", "!=", "bigint"], "||", ["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@Next 2 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 2n, "!=", new BigRational(1)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", 1n, "/B", 2n], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", 7n], "&&", ["@Next 2 1", "arr_elem", "@GVar 0", "!"]], "@end-else"], false, [["@Next 2 0", ["@Next 2 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]]
+                ]
             }
         }
         else if (gamemode == 91) { // 1845
             if (mode_vars[0] > 0) {
                 start_game_vars[3] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, ["@GVar 0", "@add_var", ["@GVar 0", "factorListB", "arr_elem", [0, "rand_int", ["@Parent -3", "arr_length", "-", 1]]], "/B", "@Var 0", "*B", ["@var_retain", "@Var 0", "*B", 2n, "+B", [0n, "rand_bigint", 1n, "*B", 2n, "-B", 1n], "@if", ["@var_retain", "@Var 0", "=", 1n], "2nd", 2n, "@end-if"]], "@end-if"], "EndTurn"])
                 }
@@ -22022,16 +22072,18 @@ function loadModifiers() {
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[13] != "None") sBox.push(1);
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
         }
         else if (gamemode == 92) { // SCAPRIM
             if (mode_vars[0] > 0) {
                 start_game_vars[3] = mode_vars[1];
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 scripts.push([[0, "@if", "@GVar 2", "@edit_gvar", 1, ["@var_retain", "@GVar 1", "+", 1], "@edit_gvar", 2, false, "@edit_gvar", 0, [[2n, "^B", ["@GVar 1", "BigInt"], "*B", "@GVar 3"], "rand_bigint", [2n, "^B", ["@GVar 1", "+B", 1n], "*B", "@GVar 3", "-B", 1n]], "@end-if"], "EndTurn"])
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[24] > 1) sBox.push("arr_push", 1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
             }
             if (mode_vars[2]) {
@@ -22059,7 +22111,7 @@ function loadModifiers() {
         }
         else if (gamemode == 93) { // TRIGAT
             if (mode_vars[0] > 0) {
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[0] == 1) {
                     scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@GVar 1", "+", 1], "@edit_gvar", 2, false, "@repeat", ["@GVar 3", "arr_length", ">", "@Var 1"], "@if", ["@GVar 3", "arr_elem", "@Var 1", ">", "@GVar 0"], "@edit_var", 1, 1e300, "@end-if", "@else-if", ["@GVar 3", "arr_elem", "@Var 1", "^B", 2, "%B", ["@GVar 0", "*B", 2n, "-B", ["@GVar 3", "arr_elem", "@Var 1"]], "=", 0n], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 3", "arr_elem", "@Var 1"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "2nd", ["@GVar 0", "+B", ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]]], "@edit_gvar", 0, "@Parent -1", "@edit_gvar", 3, ["@GVar 3", "arr_push", "@Parent -2"], "@end-if"], "EndTurn"])
                 }
@@ -22071,6 +22123,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
                 start_game_vars[4] = mode_vars[1];
             }
@@ -22081,6 +22134,16 @@ function loadModifiers() {
                 else {
                     startTileSpawns = [[[3n], modifiers[22]], [[-3n], modifiers[23]], [[2n], modifiers[22]], [[-2n], modifiers[23]]];
                 }
+            }
+        }
+        else if (gamemode == 94) { // Ratio-Fill 9261
+            if (!mode_vars[0]) {
+                MergeRules = [
+                    [3, [["@This 2", "typeof", "=", "bigint"], "&&", ["@Next 1 2", "typeof", "=", "bigint"], "&&", ["@Next 2 2", "typeof", "=", "bigint"], "&&", ["@Next 2 1", "arr_reduce", 0, ["+", "@Var -1"], "=", 4], "&&", [["@This 2", "+B", "@Next 1 2", "%B", 2n, "=", 0n], "||", ["@Next 2 1", "arr_indexOf", false, "%", 2, "=", 1]], "&&", ["@This 2", "+B", "@Next 1 2", "*B", ["@Next 2 1", "arr_indexOf", false, "+B", 1n], "/B", 2n, "=", "@Next 2 2"]], false, [[["@Next 2 0", "+", 1], [["@Literal"], "@repeat", 5, "arr_push", false, "@end-repeat"], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
+                    [3, [false, "@edit_gvar", 0, ["@Next 2 2", "/BR", ["@This 2", "+B", "@Next 1 2"], "*BR", 2n], "@if", [["@This 2", "typeof", "!=", "bigint"], "||", ["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@Next 2 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 1n, "!=", new BigRational(0)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", 1n], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", 5n], "&&", ["@Next 2 1", "arr_elem", "@GVar 0", "!"]], "@end-else"], false, [["@Next 2 0", ["@Next 2 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
+                    [2, [["@This 2", "typeof", "=", "bigint"], "&&", ["@Next 1 2", "typeof", "=", "bigint"], "&&", ["@Next 1 1", "arr_reduce", 0, ["+", "@Var -1"], "=", 4], "&&", [["@This 2", "%B", 2n, "=", 0n], "||", ["@Next 1 1", "arr_indexOf", false, "%", 2, "=", 1]], "&&", ["@This 2", "*B", ["@Next 1 1", "arr_indexOf", false, "+B", 1n], "/B", 2n, "=", "@Next 1 2"], "&&", [[0, "mergeRuleApplies", -1, "!"], "&&", [1, "mergeRuleApplies", -1, "!"]]], false, [[["@Next 1 0", "+", 1], [["@Literal"], "@repeat", 5, "arr_push", false, "@end-repeat"], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
+                    [2, [[false, "@edit_gvar", 0, ["@Next 1 2", "/BR", "@This 2", "*BR", 2n], "@if", [["@This 2", "typeof", "!=", "bigint"], "||", ["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 1n, "!=", new BigRational(0)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", 1n], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", 5n], "&&", ["@Next 1 1", "arr_elem", "@GVar 0", "!"]], "@end-else"], "@add_var", "@GVar 0", "&&", [[0, "mergeRuleApplies", -1, "!"], "&&", [1, "mergeRuleApplies", -1, "!"]], "@edit_gvar", 0, "@Var 0"], false, [["@Next 1 0", ["@Next 1 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]]
+                ]
             }
         }
         else if (gamemode == 95) { // 3385
@@ -22127,9 +22190,9 @@ function loadModifiers() {
                 else {
                     mergeableExpression = [(mode_vars[2] == 3 ? "@Var 2" : "@GVar 1"), "/BR", ["@GVar 4", "arr_elem", "@Var 1"], "perfectPowerFormBR", mode_vars[0], "arr_elem", 1, "%B", mode_vars[0], "=", 0n]
                 }
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "absB", "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 1"], "@edit_gvar", 3, true, "@end-if"], "Merge"]);
                 if (mode_vars[2] == 1) {
-                    scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@GVar 2", "+", 1], "@edit_gvar", 3, false, "@repeat", ["@GVar 4", "arr_length", ">", "@Var 1"], "@if", ["@GVar 4", "arr_elem", "@Var 1", ">", "@GVar 1"], "@edit_var", 1, 1e300, "@end-if", "@else-if", mergeableExpression, "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 4", "arr_elem", "@Var 1"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "console.log", "@Var 0", "console.log", "@GVar 1", "2nd", ["@GVar 1", "+B", ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0, "console.log", "@Parent -1"]]], "console.log", "@Parent -1", "@edit_gvar", 1, "@Parent -1", "@edit_gvar", 4, ["@GVar 4", "arr_push", "@Parent -2"], "@end-if"], "EndTurn"])
+                    scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@GVar 2", "+", 1], "@edit_gvar", 3, false, "@repeat", ["@GVar 4", "arr_length", ">", "@Var 1"], "@if", ["@GVar 4", "arr_elem", "@Var 1", ">", "@GVar 1"], "@edit_var", 1, 1e300, "@end-if", "@else-if", mergeableExpression, "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 4", "arr_elem", "@Var 1"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "2nd", ["@GVar 1", "+B", ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]]], "@edit_gvar", 1, "@Parent -1", "@edit_gvar", 4, ["@GVar 4", "arr_push", "@Parent -2"], "@end-if"], "EndTurn"])
                 }
                 else if (mode_vars[2] == 2) {
                     scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 3", "@edit_gvar", 2, ["@GVar 2", "+", 1], "@edit_gvar", 3, false, "@repeat", ["@GVar 4", "arr_length", ">", "@Var 1"], "@if", ["@GVar 4", "arr_elem", "@Var 1", ">", "@GVar 1"], "@edit_var", 1, 1e300, "@end-if", "@else-if", mergeableExpression, "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 4", "arr_elem", "@Var 1", "+B", "@GVar 1"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@edit_gvar", 1, ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]], "@edit_var", 1, 0, "@repeat", ["@Var 0", "arr_length", ">", "@Var 1"], "@if", ["@GVar 4", "arr_indexOf", ["@Var 0", "arr_elem", "@Var 1"], "=", -1], "@edit_gvar", 4, ["@GVar 4", "arr_binaryInsert", ["@Var 0", "arr_elem", "@Var 1"]], "@end-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "@end-if"], "EndTurn"])
@@ -22140,13 +22203,14 @@ function loadModifiers() {
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 1"]];
                 if (modifiers[13] != "None") sBox.push(1);
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 2"]);
                 start_game_vars[5] = mode_vars[3];
             }
         }
         else if (gamemode == 96) { // LOCEF
             if (mode_vars[1] > 0) {
-                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
+                scripts.push([["@var_retain", 0, "@if", ["@var_retain", "@Var -1", "arr_elem", 0, "arr_elem", 0, "absB", "=", "@GVar 0"], "@edit_gvar", 2, true, "@end-if"], "Merge"]);
                 if (mode_vars[1] == 1) {
                     scripts.push([["@global_var_retain_inner", ["@Literal"], 0, "@end_vars", 0, "@if", "@GVar 2", "@edit_gvar", 1, ["@GVar 1", "+", 1], "@edit_gvar", 2, false, "@repeat", ["@GVar 3", "arr_length", ">", "@Var 1"], "@if", ["@GVar 3", "arr_elem", "@Var 1", ">", "@GVar 0"], "@edit_var", 1, 1e300, "@end-if", "@else-if", ["@GVar 0", "%B", ["@GVar 3", "arr_elem", "@Var 1"], "=", 0n], "@edit_var", 0, ["@Var 0", "arr_push", ["@GVar 3", "arr_elem", "@Var 1"]], "@end-else-if", "@edit_var", 1, ["@Var 1", "+", 1], "@end-repeat", "2nd", ["@GVar 0", "*B", 2n, "+B", ["@Var 0", "arr_elem", ["@Var 0", "arr_length", "-", 1, "rand_int", 0]]], "@edit_gvar", 0, "@Parent -1", "@edit_gvar", 3, ["@GVar 3", "arr_push", "@Parent -2"], "@end-if"], "EndTurn"])
                 }
@@ -22158,6 +22222,7 @@ function loadModifiers() {
                 }
                 let sBox = ["@Literal", ["@CalcArray", "@GVar 0"]];
                 if (modifiers[24] > 1) sBox.push(1);
+                if (modifiers[30] > 0) sBox.push("arr_push", 1);
                 statBoxes.push(["Current Goal", sBox, false, false, "Tile", "Self"], ["Goals Reached", "@GVar 1"]);
                 start_game_vars[4] = mode_vars[2];
             }
