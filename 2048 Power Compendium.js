@@ -14490,7 +14490,8 @@ function gmDisplayVars() {
                 rulesTitle[1] = "Partial Absorb 257";
             } else if(mode_vars[3] == 1) {
                 //if(mode_vars[2] == 0) {
-                    let conditional = [["@This 1", "!=", 0n], "&&", ["@This 2", "=", 1]];
+                    let conditional = [["@This 1", "!=", 0n], "&&", [["@This 2", "=", 1], "&&", ["@Next 1 2", "=", 1]]];
+                    if(modifiers[13] != "None") conditional = [["@This 1", "!=", 0n]];
                     let lastArray = [false];
                     let specialArray = [[CAM1Entry, "/", [mode_vars[4], "^", [[CAM1Entry, "/", "@This 1", "log", mode_vars[4]], "floor", 1, "-", 1]]], "floor", 1, "+B", 0n];
                     for(let i = 1; i < mode_vars[4]; i++) {
@@ -14504,16 +14505,18 @@ function gmDisplayVars() {
                     let results = [[]];
                     for(let i = 0; i < mode_vars[4]; i++) {
                         lastArray[i] = false;
-                        results[0] = ["@This 0", ["@This 1", "*B", mode_vars[4], "+B", BigInt(i)]];
+                        results[0] = ["@This 0", ["@This 1", "*B", mode_vars[4], "+B", BigInt(i)], "@This 2"];
                         MergeRules.push(
                             [mode_vars[4], [conditional.slice(), "&&", ["@This 1", "*B", mode_vars[4], "+B", BigInt(i), "<", CAM1Entry], "&&", ["@This 1", "*B", mode_vars[4], "+B", BigInt(i), "=", specialArray]], true, results.slice(), [], lastArray.slice()]
                         )
-                        results[0] = [["@This 0", "+B", 1n], baseTile];
+                        results[0] = [["@This 0", "+B", 1n], baseTile, "@This 2"];
                         MergeRules.push(
                             [mode_vars[4], [conditional.slice(), "&&", ["@This 1", "*B", mode_vars[4], "+B", BigInt(i), "=", CAM1Entry], "&&", ["@This 1", "*B", mode_vars[4], "+B", BigInt(i), "=", specialArray]], true, results.slice(), [], lastArray.slice()]
                         )
-                        results.push(["@This 0", baseTile, -1]);
+                        let negativetile = ["@This 0", baseTile, [-1, "*", "@This 2"]];
+                        results.push(negativetile.slice());
                     }
+                    console.log(MergeRules.slice())
                     rulesDescription += "Merges occur between " + mode_vars[4] + " equal tiles that are multiples of " + nfact + " but smaller than " + nonefact + ", and their merge may leave behind up to " + (mode_vars[4] - 1) + " instances of negative " + nfact + " as output tiles. Whether or not those extra tiles are outputted depends on the base-" + mode_vars[4] + " digits of " + none + ". Get to the " + goalText + " tile to win!";
                     knownMergeMaxLength = mode_vars[4];
                 //}
@@ -15965,6 +15968,11 @@ function gmDisplayVars() {
                     rulesDescription += "Two tiles less than the smallest goal tile that is greater than the smallest denominator can merge if one tile is a multiple of the other tile and their sum is not greater than the smallest goal tile that is greater than the smallest denominator. To get from " + nfact + " to " + nonefact + ", a tile must merge with a tile that's 1/(the smallest denominator) of itself, merge with a tile that's 1/(the smallest denominator + 1) of itself, and so on for each bar on the tile, once each in any order. Get to the " + goalText + " tile to win!";
                     knownMergeMaxLength = 2;
                 }
+                rulesTitle[1] = "Ratio-Fill 1296";
+                if(Array.isArray(mode_vars[1])) {
+                if(mode_vars[2] == 0) rulesDescription = "Follow the paths to get from 1 to n in Harderer 1762, for the following n's in a cycle: " + arrayListString + ". Get to the " + arrayWinCondition + " tile to win!";
+                else if(mode_vars[2] == 1) rulesDescription = "Follow the paths to get from 1 to n in Harderer 1762, for the following n's in a cycle: " + arrayListString + ". For the first time getting to the first number only, you merge like in the normal tile values version and get to n - 1 instead. Get to the " + (arrayWinCondition - 1n) + " tile to win!";
+            }
             }
             /*else if(mode_vars[3] == 1) { // Ratio-Fill 3375 variant
                 let startratio = 1;
@@ -22893,6 +22901,7 @@ function loadModifiers() {
             }
             tileValueFunction.push("*", "@This " + neganum);
             let signlessSpawns = [];
+            let temp23 = modifiers[23];
             if(modifiers[13] == "None" && gamemode == 100 && ((mode_vars[0] == 4 && (mode_vars[3] == 1 || mode_vars[3] == 2)) || (mode_vars[0] == 5 && mode_vars[3] == 1))) modifiers[23] = 0;
             for (let s = 0; s < startTileSpawns.length; s++) {
                 if (Array.isArray(startTileSpawns[s][0]) && indexOfNestedPrimArray("@Signless", startTileSpawns[s][0]) != -1) {
@@ -22935,6 +22944,7 @@ function loadModifiers() {
                 }
             }
             startTileSpawns = signlessSpawns.concat(positiveSpawns, negativeSpawns);
+            modifiers[23] = temp23;
             if (typeof winRequirement == "number" && !(modifiers[13] == "None" && gamemode == 100 && ((mode_vars[0] == 1 && mode_vars[3] == 1) || (mode_vars[0] == 4 && (mode_vars[3] == 1 || mode_vars[3] == 2)) || (mode_vars[0] == 5 && mode_vars[3] == 1) || (mode_vars[0] == 19 && mode_vars[3] == 0)))) winRequirement *= 2;
             let wlength = winConditions.length;
             for (let w = 0; w < wlength; w++) {
@@ -22944,25 +22954,26 @@ function loadModifiers() {
                     winConditions[w].push(1);
                 }
             }
-            if (!(gamemode == 72 && mode_vars[0] && modifiers[13] == "Interacting") && ((gamemode != 57 && gamemode != 68) || (mode_vars[0] != -1 && (mode_vars[0] != 0 || modifiers[13] != "Interacting"))) && !(gamemode == 100 && ((mode_vars[0] == 1 && mode_vars[3] == 1)/* || (mode_vars[0] == 4 && mode_vars[3] == 1) || (mode_vars[0] == 5 && mode_vars[3] == 1)*/ || (mode_vars[0] == 19 && mode_vars[3] == 0)))) { // 3026 with all merges and 2700 and 2205's Level -1's and Level 0's have special negatives behavior, but only the merge behavior is special, not the display behavior
-                for (let m = 0; m < MergeRules.length; m++) {
-                    let mstart = 0;
-                    while (calcArray_startModifiersPlus.indexOf(MergeRules[m][mstart]) != -1) mstart++;
-                    if ((MergeRules[m]).indexOf("@end_vars") > -1) mstart = (MergeRules[m]).indexOf("@end_vars") + 1;
-                    let addInfo = MergeRules[m][mstart];
-                    if (MergeRules[m].length - mstart > 6) addInfo = MergeRules[m][mstart + 6];
-                    if (signlessTiles.length == 0) {
-                        for (let i = 1; i < addInfo; i++) MergeRules[m][mstart + 1].push("&&", ["@Next " + i + " " + neganum, "=", "@This " + neganum]);
-                        if (eqPrimArrays(MergeRules[m][mstart + 1][0], ["@NextNE -1 0", "!=", "@This 0"])) MergeRules[m][mstart + 1].unshift(["@NextNE -1 " + neganum, "!=", "@This " + neganum], "||");
-                        for (let r = 0; r < MergeRules[m][mstart + 3].length; r++) if (validMergeModifiers.indexOf(MergeRules[m][mstart + 3][r]) == -1/* && MergeRules[m][mstart + 3][r].length <= neganum*/) MergeRules[m][mstart + 3][r].push("@This " + neganum);
+            if (!(gamemode == 72 && mode_vars[0] && modifiers[13] == "Interacting") && ((gamemode != 57 && gamemode != 68) || (mode_vars[0] != -1 && (mode_vars[0] != 0 || modifiers[13] != "Interacting"))) && !(gamemode == 100 && ((mode_vars[0] == 1 && mode_vars[3] == 1)/* || (mode_vars[0] == 4 && mode_vars[3] == 1) || (mode_vars[0] == 5 && mode_vars[3] == 1) */|| (mode_vars[0] == 19 && mode_vars[3] == 0)))) { // 3026 with all merges and 2700 and 2205's Level -1's and Level 0's have special negatives behavior, but only the merge behavior is special, not the display behavior
+                if(!(modifiers[13] == "None" && gamemode == 100 && mode_vars[0] == 5 && mode_vars[3] == 1))
+                    for (let m = 0; m < MergeRules.length; m++) {
+                        let mstart = 0;
+                        while (calcArray_startModifiersPlus.indexOf(MergeRules[m][mstart]) != -1) mstart++;
+                        if ((MergeRules[m]).indexOf("@end_vars") > -1) mstart = (MergeRules[m]).indexOf("@end_vars") + 1;
+                        let addInfo = MergeRules[m][mstart];
+                        if (MergeRules[m].length - mstart > 6) addInfo = MergeRules[m][mstart + 6];
+                        if (signlessTiles.length == 0) {
+                            for (let i = 1; i < addInfo; i++) MergeRules[m][mstart + 1].push("&&", ["@Next " + i + " " + neganum, "=", "@This " + neganum]);
+                            if (eqPrimArrays(MergeRules[m][mstart + 1][0], ["@NextNE -1 0", "!=", "@This 0"])) MergeRules[m][mstart + 1].unshift(["@NextNE -1 " + neganum, "!=", "@This " + neganum], "||");
+                            for (let r = 0; r < MergeRules[m][mstart + 3].length; r++) if (validMergeModifiers.indexOf(MergeRules[m][mstart + 3][r]) == -1/* && MergeRules[m][mstart + 3][r].length <= neganum*/) MergeRules[m][mstart + 3][r].push("@This " + neganum);
+                        }
+                        else {
+                            let negadetector = ["@This " + neganum, "@if", ["@Parent -2", "=", 0], "2nd", "@Next", "arr_reduce", 0, ["@if", ["@var_retain", "@Var -1", "arr_elem", neganum, "!=", 0, "&&", ["@Parent -3", "=", 0]], "2nd", "@Var -1", "arr_elem", neganum, "@end-if"], "@end-if"];
+                            for (let i = 1; i < addInfo; i++) MergeRules[m][mstart + 1].push("&&", [["@Next " + i + " " + neganum, "=", negadetector, "||", ["@Next " + i + " " + neganum, "=", 0]]]);
+                            if (eqPrimArrays(MergeRules[m][mstart + 1][0], ["@NextNE -1 0", "!=", "@This 0"])) MergeRules[m][mstart + 1].unshift(["@NextNE -1 " + neganum, "!=", negadetector, "&&", ["@Next " + i + " " + neganum, "!=", 0]], "||");
+                            for (let r = 0; r < MergeRules[m][mstart + 3].length; r++) if (validMergeModifiers.indexOf(MergeRules[m][mstart + 3][r]) == -1) MergeRules[m][mstart + 3][r].push(negadetector);
+                        }
                     }
-                    else {
-                        let negadetector = ["@This " + neganum, "@if", ["@Parent -2", "=", 0], "2nd", "@Next", "arr_reduce", 0, ["@if", ["@var_retain", "@Var -1", "arr_elem", neganum, "!=", 0, "&&", ["@Parent -3", "=", 0]], "2nd", "@Var -1", "arr_elem", neganum, "@end-if"], "@end-if"];
-                        for (let i = 1; i < addInfo; i++) MergeRules[m][mstart + 1].push("&&", [["@Next " + i + " " + neganum, "=", negadetector, "||", ["@Next " + i + " " + neganum, "=", 0]]]);
-                        if (eqPrimArrays(MergeRules[m][mstart + 1][0], ["@NextNE -1 0", "!=", "@This 0"])) MergeRules[m][mstart + 1].unshift(["@NextNE -1 " + neganum, "!=", negadetector, "&&", ["@Next " + i + " " + neganum, "!=", 0]], "||");
-                        for (let r = 0; r < MergeRules[m][mstart + 3].length; r++) if (validMergeModifiers.indexOf(MergeRules[m][mstart + 3][r]) == -1) MergeRules[m][mstart + 3][r].push(negadetector);
-                    }
-                }
                 if (modifiers[13] == "Interacting" || (modifiers[13] == "None" && gamemode == 100 && ((mode_vars[0] == 4 && (mode_vars[3] == 1 || mode_vars[3] == 2)) || (mode_vars[0] == 5 && mode_vars[3] == 1)))) {
                     let annihilate_reqs = [["@Next 1 0", "=", "@This 0"]];
                     for (let i = 1; i < neganum; i++) {
@@ -23166,6 +23177,19 @@ function loadModifiers() {
         if (modifiers[33] > 0) {
             TileNumAmount++;
             let memorynum = TileNumAmount - 1;
+            for(let i = 0; i < TileTypes.length; i++) {
+                let newtiletype = [];
+                for(let j = 0; j <= TileTypes[i][0].length; j++) {
+                    if(j == TileTypes[i][0].length) {
+                        TileTypes[i][0] = newtiletype.slice(1);
+                        break;
+                    }
+                    newtiletype.push("&&", ["@This " + j, "=", TileTypes[i][0][j]]);
+                    if(typeof TileTypes[i][0][j] == "string" || Array.isArray(TileTypes[i][0][j])) {
+                        break;
+                    }
+                }
+            }
             if(modifiers[33] == 1) TileTypes.unshift([["@This " + memorynum, "=", 0], "", "#ffffff", "#ffffff"]);
             else if(modifiers[33] == 2) {
                 let blankColor = evaluateColor(getComputedStyle(document.documentElement).getPropertyValue("--tile-color"), 0, 0);
