@@ -15626,9 +15626,9 @@ function gmDisplayVars() {
                 tierTiles.push(n);
                 if(n % 2n == 0n) splitMode15(n / 2n);
                 else {
-                    let small = BigInt(Math.round(Number(n) / (mode_vars[4] * 2 + 4)));
-                    splitMode15(small);
+                    let small = BigInt(Math.ceil(Number(n) / (mode_vars[4] * 2 + 4)));
                     splitMode15(n - small);
+                    splitMode15(small);
                 }
             }
             for(let i = 0; i < validIndex.length; i++) {
