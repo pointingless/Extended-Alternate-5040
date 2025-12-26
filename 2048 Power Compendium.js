@@ -8502,7 +8502,7 @@ function loadMode(mode) {
     else if (mode == 100) { // Alternate 5040
         TileNumAmount = 2;
         // width = 4; height = 4;
-        mode_vars = [0, true, 0, 0, 0, 0]; // mode_vars[0] is which variant is chosen: 0 is the 1762 variant, 1 is the 2047 variant, 2 is the 1668 variant, 3 is the Partial Absorb variant 
+        mode_vars = [19, true, 0, 0, 0, 0]; // mode_vars[0] is which variant is chosen: 0 is the 1762 variant, 1 is the 2047 variant, 2 is the 1668 variant, 3 is the Partial Absorb variant 
         // mode_vars[2] is 0 for powers, 1 for powers-1, 2 for powers+1
         // mode_vars[3] is the extra modifier: for pa243 its 0 for pa243 and 1 for pa19683
         // mode_vars[4] is for an extra number selection (plus minus buttons), can be various things but is usually any natural number
@@ -9443,7 +9443,10 @@ function loadGridSize(mode, mvars = []) {
         } else if(mvars[0] == 20) {
             defaultSize = 10;
         } else if(mvars[0] == 21) {
-            defaultSize = min(mvars[4] + 3, 4);
+            if(mvars[3] == 0) {
+                defaultSize = min(mvars[4] + 3, 4);
+                if(mvars[2] == 1) defaultSize++;
+            }
         }
     }
     else if (mode == 34.50118) { // Partial Flow DiVE
@@ -12873,7 +12876,24 @@ function gmDisplayVars() {
                 }
             }
             for(let i = 2n; i < 35n; i++) validIndex.push(i);
-            if(mode_vars[2] == 1) {
+            if(mode_vars[0] == 21) {
+                rulesTitle = ["Alternate 5040 (", ""];
+                oneTile = [1n, ["@Literal", -1], 1n]
+                if(mode_vars[2] == 1) {
+                    oneTile[0] = 2n;
+                    if(mode_vars[4] == 1) oneTile[1] = ["@Literal", false, false];
+                }
+                //if(mode_vars[3] == 0) {
+                    TileTypes = [
+                        [[["@This 2", "=", 1n], "&&", ["@This 0", "=", 1n]], 1, "#ffffff", "#393900"],
+                        [["@This 0", "<", nontier], "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", 77], 100, [0.86, "^", ["@This 0", "-", 1], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", [["@This 2", "/", ["@This 0", "factorial"]], "log", ["@This 0", "+", 1], "*", 360], 100, [40, "@if", ["@This 0", ">", 6], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", ["@This 0", ">", 6], "2nd", "#ffffd3", "@end-if"]],
+                        [true, "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", 77], 100, [0.86, "^", ["@This 0", "-", 1], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", [["@This 2", "/", ["@This 0", "factorial"]], "log", ["@This 0", "+", 1], "*", 360], 100, [40, "@if", ["@This 0", ">", 6], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", ["@This 0", ">", 6], "2nd", "#ffffd3", "@end-if"], "none", 2, 0, 
+                            ["ExtraEntriesList", "@global_var_retain_inner", 0, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<", [ratiopush, "-", ratiodiff]], "arr_push", ["@Literal", "PrimeImage", ["@linear-gradient", ["@HSLA", [360, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", [360, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], "#000", ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", [["@CalcArray", "@Var 0"], "+", 1]], "#0000", ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", [["@CalcArray", "@Var 0"], "+", 1]]]], "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"]
+                        ]
+                    ]
+                //}
+            }
+            else if(mode_vars[2] == 1) {
                 rulesTitle = ["Alternate 5039 (", ""];
                 oneTile[0] = 2n;
                 TileTypes = [
@@ -12891,18 +12911,6 @@ function gmDisplayVars() {
                         [[1n, 2n], 1, "#ffffff", "#393900"],
                         [true, [["@This 0", "+", 1], "factorial", "/", "@This 1"], ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", 77], 100, [0.86, "^", ["@This 0", "-", 1], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", ["@This 1", "log", ["@This 0", "+", 1], "*", 360], 100, [40, "@if", ["@This 0", ">", 6], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", ["@This 0", ">", 6], "2nd", "#ffffd3", "@end-if"]]
                     ];
-                }
-                else if(mode_vars[0] == 21) {
-                    oneTile = [1n, ["@Literal", -1], 1n]
-                    //if(mode_vars[3] == 0) {
-                        TileTypes = [
-                            [["@This 2", "=", 1n], 1, "#ffffff", "#393900"],
-                            [["@This 0", "<", nontier], "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", 77], 100, [0.86, "^", ["@This 0", "-", 1], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", [["@This 2", "/", ["@This 0", "factorial"]], "log", ["@This 0", "+", 1], "*", 360], 100, [40, "@if", ["@This 0", ">", 6], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", ["@This 0", ">", 6], "2nd", "#ffffd3", "@end-if"]],
-                            [true, "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", 77], 100, [0.86, "^", ["@This 0", "-", 1], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", [["@This 2", "/", ["@This 0", "factorial"]], "log", ["@This 0", "+", 1], "*", 360], 100, [40, "@if", ["@This 0", ">", 6], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", ["@This 0", ">", 6], "2nd", "#ffffd3", "@end-if"], "none", 2, 0, 
-                                ["ExtraEntriesList", "@global_var_retain_inner", 0, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<", [ratiopush, "-", ratiodiff]], "arr_push", ["@Literal", "PrimeImage", ["@linear-gradient", ["@HSLA", [360, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", [360, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], "#000", ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", [["@CalcArray", "@Var 0"], "+", 1]], "#0000", ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", [["@CalcArray", "@Var 0"], "+", 1]]]], "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"]
-                            ]
-                        ]
-                    //}
                 }
                 else TileTypes = [
                     [[1n, 1n], 1, "#ffffff", "#393900"],
@@ -12938,7 +12946,31 @@ function gmDisplayVars() {
                 }
             }
             validPos = ["arr_elem", "@This 0"]
-            if(mode_vars[2] == 1) {
+            if(mode_vars[0] == 21) {
+                rulesTitle = ["Alternate 2310 (", ""];
+                oneTile = [0n, ["@Literal", -1], 1n];
+                if(mode_vars[3] == 0) {
+                    ratiopush = ["@This 0", "+", 1, "prime", "-", 1, "*", mode_vars[4]];
+                    if(mode_vars[2] == 1) {
+                        oneTile[0] = 1n;
+                        if(mode_vars[4] == 1) oneTile[1] = ["@Literal", false, false];
+                    }
+                }
+                else if(mode_vars[3] == 1) {
+                    nontier = 1n;
+                    ratiopush = ["@This 0", "+B", 1n, "primeB", "/B", 2n, "Number"];
+                }
+                //if(mode_vars[3] == 0) {
+                    TileTypes = [
+                        [[["@This 2", "=", 1n], "&&", ["@This 0", "=", 0n]], 1, "#ffffff", "#393900"],
+                        [["@This 0", "<", nontier], "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 67, "+", 205], 100, [0.85, "^", "@This 0", "*", 90, "+", 10], 1], 0, 60, ["@HSLA", ["@This 2", "log", ["@This 0", "+", 1, "prime"], "*", 360], 100, [40, "@if", ["@This 0", ">", 4], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", ["@This 0", ">", 4], "2nd", "#ffffd3", "@end-if"]],
+                        [true, "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 67, "+", 205], 100, [0.85, "^", "@This 0", "*", 90, "+", 10], 1], 0, 60, ["@HSLA", ["@This 2", "log", ["@This 0", "+", 1, "prime"], "*", 360], 100, [40, "@if", ["@This 0", ">", 4], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", ["@This 0", ">", 4], "2nd", "#ffffd3", "@end-if"], "none", 2, 0, 
+                            ["ExtraEntriesList", "@global_var_retain_inner", 0, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<", ratiopush], "arr_push", ["@Literal", "PrimeImage", ["@linear-gradient", ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 85, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], "#000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]], "#0000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]]]], "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"]
+                        ]
+                    ]
+                //}
+            }
+            else if(mode_vars[2] == 1) {
                 rulesTitle = ["Alternate 2309 (", ""];
                 twoTile[0] = 1n;
                 TileTypes = [
@@ -12957,23 +12989,6 @@ function gmDisplayVars() {
                         [[0n, 2n], 1, "#ffffff", "#393900"],
                         [true, [[0, "@end_vars", 1, "@repeat", ["@This 0", "+", 1], "@edit_var", 0, ["@var_retain", "@Var 0", "+", 1], "*", ["@var_retain", "@Var 0", "prime"], "@end-repeat"], "/", "@This 1"], ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", 77], 100, [0.86, "^", ["@This 0", "-", 1], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", ["@This 1", "log", ["@This 0", "+", 1], "*", 360], 100, [40, "@if", ["@This 0", ">", 6], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", ["@This 0", ">", 6], "2nd", "#ffffd3", "@end-if"]]
                     ];
-                }
-                else if(mode_vars[0] == 21) {
-                    oneTile = [0n, ["@Literal", -1], 1n];
-                    if(mode_vars[3] == 0) ratiopush = ["@This 0", "+", 1, "prime", "-", 1, "*", mode_vars[4]];
-                    else if(mode_vars[3] == 1) {
-                        nontier = 1n;
-                        ratiopush = ["@This 0", "+B", 1n, "primeB", "/B", 2n, "Number"];
-                    }
-                    //if(mode_vars[3] == 0) {
-                        TileTypes = [
-                            [["@This 2", "=", 1n], 1, "#ffffff", "#393900"],
-                            [["@This 0", "<", nontier], "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 67, "+", 205], 100, [0.85, "^", "@This 0", "*", 90, "+", 10], 1], 0, 60, ["@HSLA", ["@This 2", "log", ["@This 0", "+", 1, "prime"], "*", 360], 100, [40, "@if", ["@This 0", ">", 4], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", ["@This 0", ">", 4], "2nd", "#ffffd3", "@end-if"]],
-                            [true, "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 67, "+", 205], 100, [0.85, "^", "@This 0", "*", 90, "+", 10], 1], 0, 60, ["@HSLA", ["@This 2", "log", ["@This 0", "+", 1, "prime"], "*", 360], 100, [40, "@if", ["@This 0", ">", 4], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", ["@This 0", ">", 4], "2nd", "#ffffd3", "@end-if"], "none", 2, 0, 
-                                ["ExtraEntriesList", "@global_var_retain_inner", 0, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<", ratiopush], "arr_push", ["@Literal", "PrimeImage", ["@linear-gradient", ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 85, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], "#000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]], "#0000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]]]], "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"]
-                            ]
-                        ]
-                    //}
                 }
                 else {
                     TileTypes = [
@@ -13104,7 +13119,31 @@ function gmDisplayVars() {
                 }
             }
             else {
-                if(mode_vars[2] == 1) {
+                if(mode_vars[0] == 21) {
+                    oneTile = [0n, ["@Literal", -1], 1n];
+                    let mvarscopy = mode_vars[1].slice();
+                    mvarscopy.unshift("@Literal")
+                    ratiopush = [mvarscopy, "arr_elem", ["@This 0", "+", 1, "mod", mode_vars[1].length], "-", 1, "*", mode_vars[4]];
+                    CAM2Entry = [[arrayProduct, "^B", ["@This 0", "+B", 1n, "/B", mode_vars[1].length, "Number"]], "*B", [arraySubproducts, "arr_elem", ["@This 0", "+B", 1n, "mod", mode_vars[1].length]]];
+                    if(mode_vars[3] == 0) {
+                        if(mode_vars[2] == 1 && mode_vars[1][0] == 2n) {
+                            oneTile[0] = 1n;
+                            if(mode_vars[4] == 1) {
+                                oneTile[1] = ["@Literal"];
+                                for(let i = 0; i < (mode_vars[1][1 % mode_vars[1].length] - 1) * mode_vars[4]; i++) {
+                                    oneTile[1].push(false);
+                                }
+                            }
+                        }
+                        TileTypes = [
+                            [["@This 0", "<", nontier], "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", [[CAM2Entry, "/", "@This 2"], "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"]],
+                            [true, "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", [[CAM2Entry, "/", "@This 2"], "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"], "none", 2, 0, 
+                                ["ExtraEntriesList", "@global_var_retain_inner", 0, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<", ratiopush], "arr_push", ["@Literal", "PrimeImage", ["@linear-gradient", ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 85, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], "#000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]], "#0000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]]]], "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"]
+                            ]
+                        ]
+                    }
+                }
+                else if(mode_vars[2] == 1) {
                     validIndex.unshift(mode_vars[1][0] - 1n);
                     validPos[1].push("+", 1);
                     if(mode_vars[1][0] == 2n) {
@@ -13127,21 +13166,6 @@ function gmDisplayVars() {
                         TileTypes = [
                             [true, [[arrayProduct, "^", ["@This 0", "+B", 1n, "/B", mode_vars[1].length, "Number"]], "*", [arraySubproducts, "arr_elem", ["@This 0", "+", 1, "mod", mode_vars[1].length]], "/", "@This 1"], ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", "@This 1", ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", ["@This 1", "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", "@This 1", ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"]]
                         ];
-                    }
-                    else if(mode_vars[0] == 21) {
-                        oneTile = [0n, ["@Literal", -1], 1n];
-                        let mvarscopy = mode_vars[1].slice();
-                        mvarscopy.unshift("@Literal")
-                        ratiopush = [mvarscopy, "arr_elem", ["@This 0", "+", 1, "mod", mode_vars[1].length], "-", 1, "*", mode_vars[4]];
-                        CAM2Entry = [[arrayProduct, "^B", ["@This 0", "+B", 1n, "/B", mode_vars[1].length, "Number"]], "*B", [arraySubproducts, "arr_elem", ["@This 0", "+B", 1n, "mod", mode_vars[1].length]]];
-                        if(mode_vars[3] == 0) {
-                            TileTypes = [
-                                [["@This 0", "<", nontier], "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", [[CAM2Entry, "/", "@This 2"], "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"]],
-                                [true, "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", [[CAM2Entry, "/", "@This 2"], "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"], "none", 2, 0, 
-                                    ["ExtraEntriesList", "@global_var_retain_inner", 0, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<", ratiopush], "arr_push", ["@Literal", "PrimeImage", ["@linear-gradient", ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 85, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], "#000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]], "#0000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]]]], "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"]
-                                ]
-                            ]
-                        }
                     }
                     else TileTypes = [
                         [true, [[arrayProduct, "^", ["@This 0", "/B", mode_vars[1].length, "Number"]], "*", [arraySubproducts, "arr_elem", ["@This 0", "mod", mode_vars[1].length]], "*", "@This 1"], ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", "@This 1", ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", ["@This 1", "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", "@This 1", ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"]]
@@ -13290,7 +13314,25 @@ function gmDisplayVars() {
             validIndex.push(mode_vars[1]);
             validPos = ["arr_elem", 0]
             CAM2Entry = [mode_vars[1], "^B", ["@This 0", "+B", 1n]];
-            if(mode_vars[2] == 1) {
+            if(mode_vars[0] == 21) {
+                rulesTitle = [mode_vars[1]**goalPow + " (Alternate 5040, ", ""];
+                nontier = BigInt(Math.max(Math.ceil(Math.log(mode_vars[4]) / Math.log(Number(mode_vars[1])), 1), 1));
+                ratiopush = [Number(mode_vars[1] - 1n) * (mode_vars[4])]
+                oneTile = [0n, ["@Literal", -1], 1n]
+                if(mode_vars[2] == 1 && mode_vars[1] == 2n) {
+                    oneTile[0] = 1n;
+                    if(mode_vars[4] == 1) oneTile[1] = ["@Literal", false];
+                }
+                if(mode_vars[3] == 0) {
+                    TileTypes = [
+                        [["@This 0", "<", nontier], "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", (Number(mode_vars[1]) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(mode_vars[1]))], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", [["@This 2", "/", [mode_vars[1], "^", "@This 0"]], "log", mode_vars[1], "*", 360], 100, [40, "@if", [mode_vars[1], "^B", "@This 0", "*B", ["@This 2", "/", [mode_vars[1], "^", "@This 0"]], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [mode_vars[1], "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"], "none", 2, 0],
+                        [true, "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", (Number(mode_vars[1]) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(mode_vars[1]))], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", [["@This 2", "/", [mode_vars[1], "^", "@This 0"]], "log", mode_vars[1], "*", 360], 100, [40, "@if", [mode_vars[1], "^B", "@This 0", "*B", ["@This 2", "/", [mode_vars[1], "^", "@This 0"]], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [mode_vars[1], "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"], "none", 2, 0]
+                    ]
+                    for(let i = 0; i < ratiopush; i++) {
+                        TileTypes[1].push(["PrimeImage", ["@linear-gradient", ["@HSLA", 360 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * i, 100, [15, "@if", ["@This 1", "arr_elem", i], "2nd", 75, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", 360 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * i, 100, [15, "@if", ["@This 1", "arr_elem", i], "2nd", 85, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, 100 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * i, "#000", 100 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * i, 100 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * (i + 1), "#0000", 100 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * (i + 1)]])
+                    }
+                }
+            } else if(mode_vars[2] == 1) {
                 validIndex.unshift(mode_vars[1] - 1n);
                 validPos[1] = 1;
                 if(mode_vars[1] == 2n) oneTile[0] = 1n;
@@ -13310,22 +13352,7 @@ function gmDisplayVars() {
                     TileTypes = [
                         [true, [mode_vars[1], "^", ["@This 0", "+B", 1n], "/", "@This 1"], ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", (Number(mode_vars[1]) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(mode_vars[1]))], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", ["@This 1", "log", mode_vars[1], "*", 360], 100, [40, "@if", [mode_vars[1], "^B", "@This 0", "*B", "@This 1", ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [mode_vars[1], "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"]]
                     ];
-                }
-                else if(mode_vars[0] == 21) {
-                    nontier = BigInt(Math.max(Math.ceil(Math.log(mode_vars[4]) / Math.log(Number(mode_vars[1])), 1), 1));
-                    ratiopush = [Number(mode_vars[1] - 1n) * (mode_vars[4])]
-                    oneTile = [0n, ["@Literal", -1], 1n]
-                    if(mode_vars[3] == 0) {
-                        TileTypes = [
-                            [["@This 0", "<", nontier], "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", (Number(mode_vars[1]) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(mode_vars[1]))], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", [["@This 2", "/", [mode_vars[1], "^", "@This 0"]], "log", mode_vars[1], "*", 360], 100, [40, "@if", [mode_vars[1], "^B", "@This 0", "*B", ["@This 2", "/", [mode_vars[1], "^", "@This 0"]], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [mode_vars[1], "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"], "none", 2, 0],
-                            [true, "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", (Number(mode_vars[1]) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(mode_vars[1]))], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", [["@This 2", "/", [mode_vars[1], "^", "@This 0"]], "log", mode_vars[1], "*", 360], 100, [40, "@if", [mode_vars[1], "^B", "@This 0", "*B", ["@This 2", "/", [mode_vars[1], "^", "@This 0"]], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [mode_vars[1], "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"], "none", 2, 0]
-                        ]
-                        for(let i = 0; i < ratiopush; i++) {
-                            TileTypes[1].push(["PrimeImage", ["@linear-gradient", ["@HSLA", 360 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * i, 100, [15, "@if", ["@This 1", "arr_elem", i], "2nd", 75, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", 360 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * i, 100, [15, "@if", ["@This 1", "arr_elem", i], "2nd", 85, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, 100 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * i, "#000", 100 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * i, 100 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * (i + 1), "#0000", 100 / (mode_vars[4] * Number(mode_vars[1] - 1n)) * (i + 1)]])
-                        }
-                    }
-                }
-                else {
+                } else {
                     //startTileSpawns = [[[0n, 1n], 1]];
                     TileTypes = [
                         [true, [mode_vars[1], "^", "@This 0", "*", "@This 1"], ["@radial-gradient", ["@HSLA", ["@This 0", "*", 49, "+", (Number(mode_vars[1]) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(mode_vars[1]))], "*", 90, "+", 10], 1], 0, 60, ["@HSLA", ["@This 1", "log", mode_vars[1], "*", 360], 100, [40, "@if", [mode_vars[1], "^B", "@This 0", "*B", "@This 1", ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [mode_vars[1], "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"]]
@@ -15950,6 +15977,7 @@ function gmDisplayVars() {
             document.getElementById("Alternate5040_num").style.setProperty("display", "none");
             start_game_vars = [0];
             if(mode_vars[3] == 0) {
+                document.getElementById("Alternate5040_diff").style.setProperty("display", "block");
                 document.getElementById("Alternate5040_num").style.setProperty("display", "block");
                 if(mode_vars[4] < 2) document.getElementById("Alternate5040_num_minus").style.setProperty("display", "none");
                 document.getElementById("Alternate5040_num_title").innerHTML = "Smallest Denominator:";
@@ -15962,24 +15990,40 @@ function gmDisplayVars() {
                     MergeRules = [
                         [2, [["@Next 1 0", "<", nontier], "&&", ["@This 0", "<", nontier], "&&", ["@This 0", ">=", "@Next 1 0"], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "<", CAM2Entry]], false, [["@This 0", ["@Literal", -1], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
                         [2, [["@Next 1 0", "<", nontier], "&&", ["@This 0", "<", nontier], "&&", ["@This 0", ">=", "@Next 1 0"], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "=", CAM2Entry]], false, [[["@This 0", "+B", 1n], ["@global_var_retain_inner", startratio, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<=", ratiopush], "arr_push", false, "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
-                        [2, [["@This 0", ">=", nontier], "&&", ["@This 1", "arr_reduce", 1, ["+", "@Var -1"], "=", [CAM1Entry, "-B", 1n, "*", mode_vars[4]]], "&&", ["@Next 1 2", "*B", ["@This 1", "arr_indexOf", false, "+B", BigInt(mode_vars[4])], "=", "@This 2"]], false, [[["@This 0", "+B", 1n], ["@global_var_retain_inner", startratio, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<=", ratiopush], "arr_push", false, "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], ["@Next 1 2", "+B", "@This 2"]]], [], [false, true]],
+                        [2, [["@This 0", ">=", nontier], "&&", ["@This 1", "arr_reduce", 1, ["+", "@Var -1"], "=", [CAM1Entry, "-B", 1n, "*", mode_vars[4]]], "&&", ["@Next 1 2", "*B", ["@This 1", "arr_indexOf", false, "+B", BigInt(mode_vars[4])], "=", "@This 2"]], false, [[["@This 0", "+B", 1n], ["@global_var_retain_inner", startratio, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<=", ratiopush], "arr_push", false, "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], ["@Next 1 2", "+B", "@This 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
                         [2, [false, "@edit_gvar", 0, ["@This 2", "/BR", "@Next 1 2"], "@if", [["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@This 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 1n, "!=", new BigRational(0)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", BigInt(mode_vars[4])], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", [CAM1Entry, "-B", 1n, "*B", mode_vars[4]]], "&&", ["@This 1", "arr_elem", "@GVar 0", "!"]], "@end-else", "&&", ["@This 0", ">=", nontier]], false, [["@This 0", ["@This 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]]
                     ];
                     rulesDescription += "Two tiles less than the smallest goal tile that is greater than the smallest denominator can merge if one tile is a multiple of the other tile and their sum is not greater than the smallest goal tile that is greater than the smallest denominator. To get from " + nfact + " to " + nonefact + ", a tile must merge with a tile that's 1/(the smallest denominator) of itself, merge with a tile that's 1/(the smallest denominator + 1) of itself, and so on for each bar on the tile, once each in any order. Get to the " + goalText + " tile to win!";
                     knownMergeMaxLength = 2;
                 }
+                else if(mode_vars[2] == 1) {
+                    if(mode_vars[1] === false) {
+                        startratio = 0;
+                        CAM2Entry = [0, "@end_vars", 1, "@repeat", ["@This 0", "+", 1], "@edit_var", 0, ["@var_retain", "@Var 0", "+", 1], "*", ["@var_retain", "@Var 0", "prime"], "@end-repeat", "+B", 0n];
+                    }
+                    MergeRules = [
+                        [3, [["@Next 2 2", "=", 1n], "&&", ["@This 0", ">=", nontier], "&&", ["@This 1", "arr_reduce", 1, ["+", "@Var -1"], "=", [CAM1Entry, "-B", 1n, "*", mode_vars[4]]], "&&", [["@Next 1 2", "+B", 1n], "*B", ["@This 1", "arr_indexOf", false, "+B", BigInt(mode_vars[4])], "=", ["@This 2", "+B", 1n]]], false, [[["@This 0", "+B", 1n], ["@global_var_retain_inner", startratio, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<=", ratiopush], "arr_push", false, "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], ["@Next 1 2", "+B", "@This 2", "+B", 1n]]], ["@This 2", "+", "@Next 1 2", "+", 1], [false, true, true]],
+                        [3, [false, "@edit_gvar", 0, [["@This 2", "+B", 1n], "/BR", ["@Next 1 2", "+B", 1n]], "@if", [["@Next 1 2", "typeof", "!=", "bigint"], "||", ["@This 2", "typeof", "!=", "bigint"], "||", ["@GVar 0", "modBR", 1n, "!=", new BigRational(0)]], "2nd", false, "@end-if", "@else", "@edit_gvar", 0, ["@GVar 0", "BigInt", "-B", BigInt(mode_vars[4])], "2nd", [["@GVar 0", ">", -1n], "&&", ["@GVar 0", "<", [CAM1Entry, "-B", 1n, "*B", mode_vars[4]]], "&&", ["@This 1", "arr_elem", "@GVar 0", "!"]], "@end-else", "&&", ["@This 0", ">=", nontier], "&&", ["@Next 2 2", "=", 1n]], false, [["@This 0", ["@This 1", "arr_edit_elem", "@GVar 0", true], ["@This 2", "+B", "@Next 1 2", "+B", 1n]]], ["@This 2", "+", "@Next 1 2", "+", 1], [false, true, true]],
+                        [2, [["@Next 1 0", "<", nontier], "&&", ["@This 0", "<", nontier], "&&", ["@This 0", ">=", "@Next 1 0"], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "<", [CAM2Entry, "-B", 1n]], "&&", [[0, "mergeRuleApplies", -1, "!"], "&&", [1, "mergeRuleApplies", -1, "!"]]], false, [["@This 0", ["@Literal", -1], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
+                        [2, [["@Next 1 0", "<", nontier], "&&", ["@This 0", "<", nontier], "&&", ["@This 0", ">=", "@Next 1 0"], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "=", [CAM2Entry, "-B", 1n]], "&&", [[0, "mergeRuleApplies", -1, "!"], "&&", [1, "mergeRuleApplies", -1, "!"]]], false, [[["@This 0", "+B", 1n], ["@global_var_retain_inner", startratio, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<=", ratiopush], "arr_push", false, "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]]
+                    ];
+                    rulesDescription += "Two tiles less than the smallest goal tile that is greater than the smallest denominator can merge if one tile is a multiple of the other tile and their sum is less than the smallest goal tile that is greater than the smallest denominator. To get from " + nfact + " - 1 to " + nonefact + " - 1, a tile must merge with a tile that's one less than 1/(the smallest denominator) of itself plus 1, merge with a tile that's one less than 1/(the smallest denominator + 1) of itself plus 1, and so on for each bar on the tile, once each in any order. Get to the " + (goalText - 1n) + " tile to win!";
+                    knownMergeMaxLength = 3;
+                }
                 rulesTitle[1] = "Ratio-Fill 1296";
+                if(mode_vars[4] > 1) rulesTitle[1] += " 1/ " + mode_vars[4];
                 if(Array.isArray(mode_vars[1])) {
-                if(mode_vars[2] == 0) rulesDescription = "Follow the paths to get from 1 to n in Harderer 1762, for the following n's in a cycle: " + arrayListString + ". Get to the " + arrayWinCondition + " tile to win!";
-                else if(mode_vars[2] == 1) rulesDescription = "Follow the paths to get from 1 to n in Harderer 1762, for the following n's in a cycle: " + arrayListString + ". For the first time getting to the first number only, you merge like in the normal tile values version and get to n - 1 instead. Get to the " + (arrayWinCondition - 1n) + " tile to win!";
+                    if(mode_vars[2] == 0) rulesDescription = "Follow the paths to get from 1 to n in " + rulesTitle[1] + ", for the following n's in a cycle: " + arrayListString + ". Get to the " + arrayWinCondition + " tile to win!";
+                    else if(mode_vars[2] == 1) rulesDescription = "Follow the paths to get from 1 to n in " + rulesTitle[1] + ", for the following n's in a cycle: " + arrayListString + ". For the first time getting to the first number only, you merge like in the normal tile values version and get to n - 1 instead. Get to the " + (arrayWinCondition - 1n) + " tile to win!";
+                }
             }
-            }
-            /*else if(mode_vars[3] == 1) { // Ratio-Fill 3375 variant
+            else if(mode_vars[3] == 1) { // Ratio-Fill 3375 variant
                 let startratio = 1;
                 if(mode_vars[2] == 0) {
                     MergeRules = [
-                        [2, [["@This 0", "<", nontier], "&&", ["@Next 1 0", "=", "@This 0"], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "<", CAM2Entry]], false, [["@This 0", ["@Literal", -1], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
-                        [2, [["@This 0", "<", nontier], "&&", ["@Next 1 0", "=", "@This 0"], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "=", CAM2Entry]], false, [[["@This 0", "+B", 1n], ["@global_var_retain_inner", startratio, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<=", ratiopush], "arr_push", false, "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
+                        [2, [["@This 0", "<", nontier], "&&", ["@Next 1 0", "=", "@This 0"], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "=", CAM2Entry], "&&", [CAM2Entry, "=", 2n]], false, [[["@This 0", "+B", 1n], ["@global_var_retain_inner", startratio, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<=", ratiopush], "arr_push", false, "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
+                        [3, [["@This 0", "<", nontier], "&&", ["@Next 1 0", "=", "@This 0"], "&&", ["@Next 2 0", "=", "@This 0"], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "%B", "@Next 2 2", "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2", "<", CAM2Entry]], false, [["@This 0", ["@Literal", -1], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
+                        [3, [["@This 0", "<", nontier], "&&", ["@Next 1 0", "=", "@This 0"], "&&", ["@Next 2 0", "=", "@This 0"], "&&", ["@This 2", "%B", "@Next 1 2", "=", 0n], "&&", ["@This 2", "%B", "@Next 2 2", "=", 0n], "&&", ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2", "=", CAM2Entry]], false, [[["@This 0", "+B", 1n], ["@global_var_retain_inner", startratio, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<=", ratiopush], "arr_push", false, "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], ["@This 2", "+B", "@Next 1 2", "+B", "@Next 2 2"]]], ["@This 2", "+", "@Next 1 2", "+", "@Next 2 2"], [false, true, true]],
                         [2, [["@This 0", ">=", nontier], "&&", ["@This 1", "arr_reduce", 1, ["+", "@Var -1"], "<", [CAM1Entry, "/B", 2n, "Number"]], "&&", ["@This 2", "/BR", "@Next 1 2", "/BR", [CAM1Entry, "%B", 2n, "+B", 1n], "=", [CAM1Entry, "-B", 1n]], "&&", ["@This 1", "arr_elem", ["@This 1", "arr_length", "-", 1], "=", false]], false, [["@This 0", ["@This 1", "arr_edit_elem", 0, true], ["@This 2", "+B", "@Next 1 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
                         [2, [["@This 0", ">=", nontier], "&&", ["@This 1", "arr_reduce", 1, ["+", "@Var -1"], "=", [CAM1Entry, "/B", 2n, "Number"]], "&&", ["@This 2", "/BR", "@Next 1 2", "/BR", [CAM1Entry, "%B", 2n, "+B", 1n], "=", [CAM1Entry, "-B", 1n]], "&&", ["@This 1", "arr_elem", ["@This 1", "arr_length", "-", 1], "=", false]], false, [[["@This 0", "+B", 1n], ["@global_var_retain_inner", startratio, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<=", ratiopush], "arr_push", false, "@edit_var", ["@This 1", "arr_length", "-", 1], ["@Var 0", "+", 1], "@end-repeat"], ["@Next 1 2", "+B", "@This 2"]]], ["@This 2", "+", "@Next 1 2"], [false, true]],
                         [2, [["@This 0", ">=", nontier], "&&", ["@This 1", "arr_reduce", 1, ["+", "@Var -1"], "=", [CAM1Entry, "/B", 2n, "Number"]], "&&", ["@Next 1 2", "*B", ["@This 1", "arr_indexOf", false, "*B", 2n, "+B", 1n], "=", ["@This 2", "*B", 2n]]], false, [[["@This 0", "+B", 1n], ["@global_var_retain_inner", startratio, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<=", ratiopush], "arr_push", false, "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"], ["@Next 1 2", "+B", "@This 2"]]], [], [false, true]],
@@ -15988,7 +16032,7 @@ function gmDisplayVars() {
                     rulesDescription += "Two tiles less than the smallest goal tile that is greater than the smallest denominator can merge if one tile is a multiple of the other tile and their sum is not greater than the smallest goal tile that is greater than the smallest denominator. To get from " + nfact + " to " + nonefact + ", a tile must merge with a tile that's 1/(the smallest denominator) of itself, merge with a tile that's 1/(the smallest denominator + 1) of itself, and so on for each bar on the tile, once each in any order. Get to the " + goalText + " tile to win!";
                     knownMergeMaxLength = 2;
                 }
-            }*/
+            }
             /*else if(mode_vars[3] == 2) { // Ratio-Fill 9261 variant
                 
             }*/
@@ -23172,6 +23216,11 @@ function loadModifiers() {
                         for (let r = rstart; r < MergeRules[m][mstart + 3].length; r++) MergeRules[m][mstart + 3][r].push([[colorArray.slice(), "multicolor", modifiers[24]], "+", r, "%", modifiers[24]]);
                     }
                 }
+            }
+        }
+        if(modifiers[32]) {
+            if(gamemode == 83 || gamemode == 84 || gamemode == 90 || gamemode == 94 || (gamemode == 100 && mode_vars[0] == 21)) { // Fix for Ratio-Fill modes
+                TileTypes.unshift([true, ["@This 2", "Number"], "#000000", "#ffffff"]);
             }
         }
         if (modifiers[33] > 0) {
