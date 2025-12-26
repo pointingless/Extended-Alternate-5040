@@ -22955,7 +22955,7 @@ function loadModifiers() {
                 }
             }
             if (!(gamemode == 72 && mode_vars[0] && modifiers[13] == "Interacting") && ((gamemode != 57 && gamemode != 68) || (mode_vars[0] != -1 && (mode_vars[0] != 0 || modifiers[13] != "Interacting"))) && !(gamemode == 100 && ((mode_vars[0] == 1 && mode_vars[3] == 1)/* || (mode_vars[0] == 4 && mode_vars[3] == 1) || (mode_vars[0] == 5 && mode_vars[3] == 1) */|| (mode_vars[0] == 19 && mode_vars[3] == 0)))) { // 3026 with all merges and 2700 and 2205's Level -1's and Level 0's have special negatives behavior, but only the merge behavior is special, not the display behavior
-                if(!(modifiers[13] == "None" && gamemode == 100 && mode_vars[0] == 5 && mode_vars[3] == 1))
+                if(!(/*modifiers[13] == "None" && */gamemode == 100 && mode_vars[0] == 5 && mode_vars[3] == 1))
                     for (let m = 0; m < MergeRules.length; m++) {
                         let mstart = 0;
                         while (calcArray_startModifiersPlus.indexOf(MergeRules[m][mstart]) != -1) mstart++;
