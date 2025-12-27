@@ -14332,6 +14332,7 @@ function gmDisplayVars() {
                     }
                     MergeRules.pop();
                 }
+                rulesDescription += mode_vars[4] + " equal multiples of " + nfact + " that are less than " + nonefact + " can merge, and they result in " + nonefact + " and the negative tile that is leftover. Get to the " + goalText + " tile to win!";
                 rulesTitle[1] = "Partial Absorb 19,683";
             }
             else if(mode_vars[3] == 2) {
@@ -14438,6 +14439,7 @@ function gmDisplayVars() {
                     }
                     MergeRules.pop();
                 }
+                rulesDescription += mode_vars[4] + " equal multiples of " + nfact + " that are less than " + nonefact + " can merge, and if their sum is greater than half of " + nonefact + " they result in " + nonefact + " and the negative tile that is leftover. Get to the " + goalText + " tile to win!";
                 rulesTitle[1] = "Balanced Partial Absorb 19,683";
             }
             if(mode_vars[4] != 2) {
@@ -14544,7 +14546,6 @@ function gmDisplayVars() {
                         let negativetile = ["@This 0", baseTile, [-1, "*", "@This 2"]];
                         results.push(negativetile.slice());
                     }
-                    console.log(MergeRules.slice())
                     rulesDescription += "Merges occur between " + mode_vars[4] + " equal tiles that are multiples of " + nfact + " but smaller than " + nonefact + ", and their merge may leave behind up to " + (mode_vars[4] - 1) + " instances of negative " + nfact + " as output tiles. Whether or not those extra tiles are outputted depends on the base-" + mode_vars[4] + " digits of " + none + ". Get to the " + goalText + " tile to win!";
                     knownMergeMaxLength = mode_vars[4];
                 //}
@@ -15654,13 +15655,20 @@ function gmDisplayVars() {
             document.getElementById("Alternate5040_num_title").innerHTML = "Multiplier:";
             let tierTiles = [];
             function splitMode15(n) {
-                if(n == 1n || tierTiles.includes(n)) return;
+                if(n <= 1n || tierTiles.includes(n)) return;
                 tierTiles.push(n);
                 if(n % 2n == 0n) splitMode15(n / 2n);
                 else {
-                    let small = BigInt(Math.ceil(Number(n) / (mode_vars[4] * 2 + 4) - 0.25));
-                    splitMode15(n - small);
-                    splitMode15(small);
+                    let small = BigInt(Math.ceil(Number(n) / (mode_vars[4] * 2 + 4)));
+                    let test = small * BigInt(mode_vars[4] * 2 + 4) - n;
+                    if(abs(test) % 2n == 1n && abs(test) < BigInt(mode_vars[4] * 2 + 3))  {
+                        splitMode15(n - small);
+                        splitMode15(small);
+                    }
+                    else {
+                        splitMode15(n - small + 1n);
+                        splitMode15(small - 1n);
+                    }
                 }
             }
             for(let i = 0; i < validIndex.length; i++) {
