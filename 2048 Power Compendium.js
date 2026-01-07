@@ -8502,7 +8502,7 @@ function loadMode(mode) {
     else if (mode == 100) { // Alternate 5040
         TileNumAmount = 2;
         // width = 4; height = 4;
-        mode_vars = [0, true, 0, 0, 0, 0]; // mode_vars[0] is which variant is chosen: 0 is the 1762 variant, 1 is the 2047 variant, 2 is the 1668 variant, 3 is the Partial Absorb variant 
+        mode_vars = [9, true, 0, 0, 0, 0]; // mode_vars[0] is which variant is chosen: 0 is the 1762 variant, 1 is the 2047 variant, 2 is the 1668 variant, 3 is the Partial Absorb variant 
         // mode_vars[2] is 0 for powers, 1 for powers-1, 2 for powers+1
         // mode_vars[3] is the extra modifier: for pa243 its 0 for pa243 and 1 for pa19683
         // mode_vars[4] is for an extra number selection (plus minus buttons), can be various things but is usually any natural number
@@ -9416,7 +9416,7 @@ function loadGridSize(mode, mvars = []) {
             else if(mvars[1] == 0n) defaultSize = 1;
             else defaultSize = prime(primeFactorize(mvars[1])[0].length) + 2;
         } else if(mvars[0] == 10) {
-            if(mvars[3] == 0) {
+            if(mvars[3] == 1) {
                 if(mvars[1] === true || mvars[1] === 0n) defaultSize = 8;
                 else if(mvars[1] === false) defaultSize = 12;
                 else if(Array.isArray(mvars[1])) {
@@ -9424,15 +9424,28 @@ function loadGridSize(mode, mvars = []) {
                     mvars[1].forEach(a=>{if (primeFactorize(a, Infinity, false, 1)[0][0][0] > m) {m = primeFactorize(a, Infinity, false, 1)[0][0][0]}});
                     defaultSize = Number(m) + 2;
                 }
-                else defaultSize = Number(primeFactorize(mvars[1], Infinity, false, 1)[0][0][0]) + 2;
-            } else if(mvars[3] == 1) {
-                if(mvars[1] === true || mvars[1] === false) defaultSize = 4;
-                else if(mvars[1] === 0n) defaultSize = 1; // FIX
-                else if(Array.isArray(mvars[1])) {
-                    // FIX
-                    defaultSize = 6;
+                else {
+                    let check = primeFactorize(mvars[1], Infinity, false, 2)[0];
+                    defaultSize = Number(check[0]) + 2 + Math.floor(Number(check[check.length - 1]) / (Number(check[0] * check[0])));
                 }
-                else defaultSize = Number(primeFactorize(mvars[1], Infinity, false, 1)[0][0][0]) + 2;
+            } else if(mvars[3] == 0) {
+                if(mvars[1] === true || mvars[1] === false) defaultSize = 4;
+                else if(mvars[1] === 0n) defaultSize = 8;
+                else if(Array.isArray(mvars[1])) {
+                    let low = primeFactorize(mvars[1][0], Infinity, false, 2)[0];
+                    let high = Number(low[low.length - 1]);
+                    low = Number(low[0]);
+                    for(let i = 1; i < mvars[1].length; i++) {
+                        let check = primeFactorize(mvars[1][i], Infinity, false, 2)[0];
+                        if(Number(check[0]) < low) low = Number(check[0]);
+                        if(Number(check[check.length - 1]) > high) high = Number(check[check.length - 1]);
+                    }
+                    defaultSize = low + 2 + Math.floor(high / (low * low));
+                }
+                else {
+                    let check = primeFactorize(mvars[1], Infinity, false, 2)[0];
+                    defaultSize = Number(check[0]) + 2 + Math.floor(Number(check[check.length - 1]) / (Number(check[0] * check[0])));
+                }
             }
         } else if(mvars[0] == 12) {
             if(mvars[4] == Infinity) defaultSize = 4
@@ -13081,7 +13094,7 @@ function gmDisplayVars() {
                             if (MV1Index > 0) mode_vars[1] = mode_vars[1].slice(0, MV1Index);
                         }
                     }
-                    if(mode_vars[0] == 8 || mode_vars[0] == 9) loadGridSize(100, mode_vars);
+                    if(mode_vars[0] == 8 || mode_vars[0] == 9 || mode_vars[0] == 10) loadGridSize(100, mode_vars);
                     gmDisplayVars();
                 });
                 document.getElementById("Alternate5040_baseList").appendChild(newBaseForm);
@@ -13122,9 +13135,7 @@ function gmDisplayVars() {
             else {
                 if(mode_vars[0] == 21) {
                     oneTile = [0n, ["@Literal", -1], 1n];
-                    let mvarscopy = mode_vars[1].slice();
-                    mvarscopy.unshift("@Literal")
-                    ratiopush = [mvarscopy, "arr_elem", ["@This 0", "+", 1, "mod", mode_vars[1].length], "-", 1, "*", mode_vars[4]];
+                    ratiopush = [CAM1, "arr_elem", ["@This 0", "+", 1, "mod", mode_vars[1].length], "-B", 1n, "*B", BigInt(mode_vars[4]), "Number"];
                     CAM2Entry = [[arrayProduct, "^B", ["@This 0", "+B", 1n, "/B", mode_vars[1].length, "Number"]], "*B", [arraySubproducts, "arr_elem", ["@This 0", "+B", 1n, "mod", mode_vars[1].length]]];
                     if(mode_vars[3] == 0) {
                         if(mode_vars[2] == 1 && mode_vars[1][0] == 2n) {
@@ -13136,10 +13147,12 @@ function gmDisplayVars() {
                                 }
                             }
                         }
+                        console.log(ratiopush);
+                        let ratiodiff = 0;
                         TileTypes = [
                             [["@This 0", "<", nontier], "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", [[CAM2Entry, "/", "@This 2"], "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"]],
                             [true, "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", [[CAM2Entry, "/", "@This 2"], "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"], "none", 2, 0, 
-                                ["ExtraEntriesList", "@global_var_retain_inner", 0, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<", ratiopush], "arr_push", ["@Literal", "PrimeImage", ["@linear-gradient", ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 85, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], "#000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]], "#0000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]]]], "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"]
+                                ["ExtraEntriesList", "@global_var_retain_inner", 0, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<", [ratiopush, "-", ratiodiff]], "arr_push", ["@Literal", "PrimeImage", ["@linear-gradient", ["@HSLA", [360, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", [360, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], "#000", ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", ["@CalcArray", "@Var 0"]], ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", [["@CalcArray", "@Var 0"], "+", 1]], "#0000", ["@CalcArrayNumber", 100, "/", [ratiopush, "-", ratiodiff], "*", [["@CalcArray", "@Var 0"], "+", 1]]]], "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"]
                             ]
                         ]
                     }
@@ -15138,7 +15151,7 @@ function gmDisplayVars() {
                     MergeRules = [
                         [2, [["@This 0", "=", 2n], "&&", ["@This 1", "=", 2n], "&&", ["@Next 1 0", "=", 2n], "&&", ["@Next 1 1", "=", 1n]], false, [[3n, 3n]], 3, [false, true]],
                         [2, [["@This 0", "=", 2n], "&&", ["@This 1", "=", 2n], "&&", ["@Next 1 0", "=", 2n], "&&", ["@Next 1 1", "=", 2n]], false, [[2n, 1n]], 2, [false, true]],
-                        [2, [["@This 1", "=", 1n], "&&", ["@Next 1 1", "=", 1n], "&&", ["@This 0", "-B", "@Next 1 0", "=", 1n]], false, [[["@This 0", "+B", 1n], "@This 0"]], ["@This 0", "subfactorial", "+B", ["@Next 1 0", "subfactorial"]], [false, true]]
+                        [2, [["@This 1", "=", 1n], "&&", ["@Next 1 1", "=", 1n], "&&", ["@This 0", "-B", "@Next 1 0", "=", 1n]], false, [[["@This 0", "+B", 1n], ["@This 0", "+B", 1n]]], [["@This 0", "subfactorial"], "+B", ["@This 0", "+", 1, "subfactorial"]], [false, true]]
                     ];
                     let lastArray = [false];
                     let inputs = ["@Literal", ["@CalcArray", "@This 0"]];
@@ -15147,8 +15160,10 @@ function gmDisplayVars() {
                         lastArray.push(true);
                         inputs.push(["@CalcArray", "@Next " + (f - 1) + " 0"]);
                         tileSums.push("+B", [[["@Next " + (f - 1) + " 0", "+B", 1n, "subfactorialB"], "/B", "@Next " + (f - 1) + " 1"]]);
-                        MergeRules.push([f, [[inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0, "+B", 1n], "subfactorialB", "=", tileSums.slice()], true, [[[[inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0], "+B", 1n], [inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0, "+B", 1n]]], tileSums.slice(), lastArray.slice()]);
-                        MergeRules.push([f, [[inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0, "+B", 1n], "subfactorialB", "%B", tileSums.slice(), "=", 0n], true, [[[inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0], [[[inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0], "+B", 1n], "subfactorialB", "/B", tileSums.slice()]]], tileSums.slice(), lastArray.slice()]);
+                        MergeRules.push(
+                            [f, [[[inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0, "+B", 1n], "subfactorialB"], "=", tileSums.slice()], true, [[[inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0], 1n]], tileSums.slice(), lastArray.slice()],
+                            [f, [[[inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0, "+B", 1n], "subfactorialB"], "%B", tileSums.slice(), "=", 0n], true, [[[inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0], [[[[inputs.slice(), "arr_sort", ["@Var -1", "-B", "@Var -2", "Number"], "arr_elem", 0], "+B", 1n], "subfactorialB"], "/B", tileSums.slice()]]], tileSums.slice(), lastArray.slice()]
+                        );
                     }
                 }
                 else {
@@ -23048,7 +23063,7 @@ function loadModifiers() {
             }
         }
         if (modifiers[24] > 1) {
-            if(gamemode == 94 || gamemode == 25 || (gamemode == 38 && mode_vars[0] == 4) || gamemode == 44 || (gamemode == 89 && mode_vars[3] - mode_vars[2] > 1) || (gamemode == 97 && mode_vars[1] - mode_vars[0] > 1)) {}
+            if(gamemode == 25 || (gamemode == 38 && mode_vars[0] == 4) || gamemode == 44 || (gamemode == 89 && mode_vars[3] - mode_vars[2] > 1) || (gamemode == 97 && mode_vars[1] - mode_vars[0] > 1)) {}
             else {
                 TileNumAmount++;
                 let colornum = TileNumAmount - 1;
@@ -23141,7 +23156,7 @@ function loadModifiers() {
                 }
                 let wlength = winConditions.length;
                 for (let w = 0; w < wlength; w++) {
-                    if (Array.isArray(winConditions[w]) && (eqPrimArrays(arrayTypes(winConditions[w]), ["number"]) || eqPrimArrays(arrayTypes(winConditions[w]), ["bigint"]) || eqPrimArrays(arrayTypes(winConditions[w]), ["number", "bigint"])) || eqPrimArrays(arrayTypes(TileTypes[t][startindex]), ["bigrational"])) {
+                    if (Array.isArray(winConditions[w]) && (eqPrimArrays(arrayTypes(winConditions[w]), ["number"]) || eqPrimArrays(arrayTypes(winConditions[w]), ["bigint"]) || eqPrimArrays(arrayTypes(winConditions[w]), ["number", "bigint"])) || eqPrimArrays(arrayTypes(winConditions[w]), ["bigrational"])) {
                         winConditions.push(compendiumStructuredClone(winConditions[w]));
                         winConditions.push(compendiumStructuredClone(winConditions[w]));
                         if (modifiers[24] > 2) winConditions.push(compendiumStructuredClone(winConditions[w]));
