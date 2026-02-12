@@ -8502,7 +8502,7 @@ function loadMode(mode) {
     else if (mode == 100) { // Alternate 5040
         TileNumAmount = 2;
         // width = 4; height = 4;
-        mode_vars = [19, true, 0, 0, 0, 0]; // mode_vars[0] is which variant is chosen: 0 is the 1762 variant, 1 is the 2047 variant, 2 is the 1668 variant, 3 is the Partial Absorb variant 
+        mode_vars = [11, true, 0, 0, 0, 0]; // mode_vars[0] is which variant is chosen: 0 is the 1762 variant, 1 is the 2047 variant, 2 is the 1668 variant, 3 is the Partial Absorb variant 
         // mode_vars[2] is 0 for powers, 1 for powers-1, 2 for powers+1
         // mode_vars[3] is the extra modifier: for pa243 its 0 for pa243 and 1 for pa19683
         // mode_vars[4] is for an extra number selection (plus minus buttons), can be various things but is usually any natural number
@@ -13155,7 +13155,7 @@ function gmDisplayVars() {
                         TileTypes = [
                             [["@This 0", "<", nontier], "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", [[CAM2Entry, "/", "@This 2"], "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"]],
                             [true, "@This 2", ["@radial-gradient", ["@HSLA", ["@This 0", "/", mode_vars[1].length, "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 0, ["@HSLA", ["@This 0", "*", 49, "+", (Number(arrayProduct)**(1/(mode_vars[1].length)) - 2) * 222.49223595], 100, [0.925, "^", ["@This 0", "*", Math.log2(Number(arrayProduct)**(1/(mode_vars[1].length)))], "*", 90, "+", 10], 1], 30, 60, ["@HSLA", [[CAM2Entry, "/", "@This 2"], "log", [CAM1, "arr_elem", ["@This 0", "%B", mode_vars[1].length, "Number"]], "*", 360], 100, [40, "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", "*B", [CAM2Entry, "/", "@This 2"], ">=", 512n], "2nd", 60, "@end-if"], 1], 100], ["#393900", "@if", [Number(arrayProduct)**(1/(mode_vars[1].length)), "^B", "@This 0", ">=", 512n], "2nd", "#ffffd3", "@end-if"], "none", 2, 0, 
-                                ["ExtraEntriesList", "@global_var_none", 0, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<", ratiopush], "arr_push", ["@Literal", "PrimeImage", ["@linear-gradient", ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 85, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], "#000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]], "#0000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]]]], "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"]
+                                ["ExtraEntriesList", "@global_var_none", "@global_var_retain_inner", 0, "@end_vars", ["@Literal"], "@repeat", ["@Var 0", "<", ratiopush], "arr_push", ["@Literal", "PrimeImage", ["@linear-gradient", ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 75, "@end-if"], 1], 0, "#0000", 25, 75, ["@HSLA", [360, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], 100, [15, "@if", ["@This 1", "arr_elem", ["@CalcArray", "@Var 0"]], "2nd", 85, "@end-if"], 1], 100], ["@linear-gradient", 90, "#0000", 0, ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], "#000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", ["@CalcArray", "@Var 0"]], ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]], "#0000", ["@CalcArrayNumber", 100, "/", ratiopush, "*", [["@CalcArray", "@Var 0"], "+", 1]]]], "@edit_var", 0, ["@Var 0", "+", 1], "@end-repeat"]
                             ]
                         ]
                     }
@@ -23168,10 +23168,12 @@ function loadModifiers() {
                         if (modifiers[24] > 2) winConditions.push(compendiumStructuredClone(winConditions[w]));
                         if (modifiers[24] > 3) winConditions.push(compendiumStructuredClone(winConditions[w]));
                         if (modifiers[24] > 4) winConditions.push(compendiumStructuredClone(winConditions[w]));
-                        winConditions[winConditions.length - 1].push(2);
-                        winConditions[winConditions.length - 2].push(1);
-                        //if (yellowIncluded) winConditions[winConditions.length - 3].push(3); // change this
-                        winConditions[w].push(0);
+                        winConditions[winConditions.length - modifiers[24]].push(0);
+                        winConditions[winConditions.length - modifiers[24] + 1].push(1);
+                        if (modifiers[24] > 2) winConditions[winConditions.length - modifiers[24] + 2].push(2);
+                        if (modifiers[24] > 3) winConditions[winConditions.length - modifiers[24] + 3].push(3);
+                        if (modifiers[24] > 4) winConditions[winConditions.length - modifiers[24] + 4].push(4);
+                        //winConditions[w].push(0);
                     }
                 }
                 // special exceptions would go here (maybe ones with x and / signs so that they can cancel?)
