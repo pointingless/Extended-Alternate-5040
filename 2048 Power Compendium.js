@@ -1235,7 +1235,7 @@ document.getElementById("Alternate5040_variant_button").addEventListener("click"
             if (mode_vars[1][e] instanceof BigRational) mode_vars[1][e] = BigInt(mode_vars[1][e].ceil());
         }
     }
-    if(mode_vars[0] == 16) mode_vars[0]++;
+    if(mode_vars[0] == 13 || mode_vars[0] == 16) mode_vars[0]++;
     mode_vars[3] = 0;
     if(mode_vars[0] == 0) mode_vars[4] = 0;
     else if(mode_vars[0] == 6 || mode_vars[0] == 21) mode_vars[4] = 1;
@@ -8502,7 +8502,7 @@ function loadMode(mode) {
     else if (mode == 100) { // Alternate 5040
         TileNumAmount = 2;
         // width = 4; height = 4;
-        mode_vars = [11, true, 0, 0, 0, 0]; // mode_vars[0] is which variant is chosen: 0 is the 1762 variant, 1 is the 2047 variant, 2 is the 1668 variant, 3 is the Partial Absorb variant 
+        mode_vars = [0, true, 0, 0, 0, 0]; // mode_vars[0] is which variant is chosen: 0 is the 1762 variant, 1 is the 2047 variant, 2 is the 1668 variant, 3 is the Partial Absorb variant 
         // mode_vars[2] is 0 for powers, 1 for powers-1, 2 for powers+1
         // mode_vars[3] is the extra modifier: for pa243 its 0 for pa243 and 1 for pa19683
         // mode_vars[4] is for an extra number selection (plus minus buttons), can be various things but is usually any natural number
@@ -12840,8 +12840,8 @@ function gmDisplayVars() {
         }
         if(mode_vars[0] == 21) {
             TileNumAmount++;
-            if(mode_vars[1] === 0n) {
-                mode_vars[1] = [2n, 3n, 6n];
+            if(mode_vars[1] === 0n || Array.isArray(mode_vars[1])) {
+                mode_vars[1] = true;
                 loadGridSize(100)
                 gmDisplayVars();
             }
@@ -13551,9 +13551,9 @@ function gmDisplayVars() {
             if (mode_vars[3] == 0) {
                 document.getElementById("Alternate5040_extra_text").innerHTML = "Tiles progress through Ratio-Fill 1296's ratios.";
             }
-            else if (mode_vars[3] == 1) {
+            /*else if (mode_vars[3] == 1) {
                 document.getElementById("Alternate5040_extra_text").innerHTML = "Tiles progress through Ratio-Fill 3375's ratios.";
-            }
+            }*/
             /*else if (mode_vars[3] == 2) {
                 document.getElementById("Alternate5040_extra_text").innerHTML = "Tiles progress through Ratio-Fill 9261's ratios.";
             }*/
@@ -14777,8 +14777,8 @@ function gmDisplayVars() {
             document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#666666");
             document.getElementById("Alternate5040_extra").style.setProperty("display", "none");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "none");
-            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #881111, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
-            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #881111, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #adadad, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #adadad, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             knownMergeMaxLength = max(width, height);
             knownMergeLookbackDistance = 0;
             rulesDescription += "A " + none + " amount of " + nfact + " tiles can merge. Get to the " + goalText + " tile to win!";
@@ -15196,10 +15196,10 @@ function gmDisplayVars() {
         }
         else if(mode_vars[0] == 11) { // 2401 variant
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on paths to tiles in 2401.";
-            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
+            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#b39a00");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "none");
-            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #afe726, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
-            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #afe726, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #fcba13, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #fcba13, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             function split2401(n) {
                 if(n < 5n) {
                     if(n == 2n) return [2, [1n, 1n], 0, 0n, 0n];
@@ -15400,11 +15400,13 @@ function gmDisplayVars() {
         }
         else if(mode_vars[0] == 12) { // 3375 Variant
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on paths to tiles in 3375.";
-            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
+            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#d47500");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "none");
             document.getElementById("Alternate5040_extra").style.setProperty("display", "block");
             document.getElementById("Alternate5040_num").style.setProperty("display", "block");
             document.getElementById("Alternate5040_num_title").innerHTML = "Base:";
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #f58505, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #f58505, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             if(mode_vars[3] == 0) {
                 if(mode_vars[4] == Infinity) {
                     document.getElementById("Alternate5040_diff").style.setProperty("display", "block");
@@ -15554,13 +15556,13 @@ function gmDisplayVars() {
                 }
             }
         }
-        else if(mode_vars[0] == 13) { // 2669 variant
+        /*else if(mode_vars[0] == 13) { // 2669 variant
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on paths to tiles in 2669.";
             document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "block");
             document.getElementById("Alternate5040_extra").style.setProperty("display", "none");
             document.getElementById("Alternate5040_num").style.setProperty("display", "none");
-            /*let record = [];
+            let record = [];
             function split2669(goal, ar) {
                 let curTile = ar[0][0] + ar[0][1];
                 if(curTile > goal) return;
@@ -15596,27 +15598,29 @@ function gmDisplayVars() {
                 if(mode_vars[3] == 0) validTiles.push(record[record.length - 1].slice());
                 else validTiles.push(record.slice());
             }
-            validPos.unshift(validTiles);*/
+            validPos.unshift(validTiles);
             //if(mode_vars[3] == 0) {
                 MergeRules.push(
                     [2, [["@This 0", "=", "@Next 1 0"], "&&", [validTiles, "arr_elem", ["@This 0", "-", 1, "Number"], "arr_indexOf", ["@Literal", "@This 1", "+B", "@Next 1 1"], ">", -1]], false, [["@This 0", ["@This 1", "+B", "@Next 1 1"]]], ["@This 0", "factorial", "*", ["@This 1", "+B", "@Next 1 1"]], [false, true]]
                 );
             //}
-            /*else if(mode_vars[3] == 1) {
+            else if(mode_vars[3] == 1) {
                 
             }
             else if(mode_vars[3] == 2) {
                 
-            }*/
-        }
+            }
+        }*/
         else if(mode_vars[0] == 14) { // 1847 variant
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on paths to tiles in 1847.";
-            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
+            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#a01313");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "block");
             document.getElementById("Alternate5040_extra").style.setProperty("display", "none");
             document.getElementById("Alternate5040_fraction").style.setProperty("display", "block");
             document.getElementById("Alternate5040_fraction_numerator_change").value = mode_vars[4].numerator;
             document.getElementById("Alternate5040_fraction_denominator_change").value = mode_vars[4].denominator;
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #820e0e, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #820e0e, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             knownMergeLookbackDistance = 0;
             //if(mode_vars[3] == 0) {
                 let tierTiles = [];
@@ -15670,12 +15674,14 @@ function gmDisplayVars() {
         }
         else if(mode_vars[0] == 15) { // 6a1
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on paths to tiles in a brand new mode.";
-            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
+            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#5e5e5e");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "block");
             document.getElementById("Alternate5040_extra").style.setProperty("display", "none");
             document.getElementById("Alternate5040_num").style.setProperty("display", "block");
             if(mode_vars[4] < 1) document.getElementById("Alternate5040_num_minus").style.setProperty("display", "none");
             document.getElementById("Alternate5040_num_title").innerHTML = "Multiplier:";
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #d5d5d5, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #d5d5d5, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             let tierTiles = [];
             function splitMode15(n) {
                 if(n <= 1n || tierTiles.includes(n)) return;
@@ -15783,10 +15789,12 @@ function gmDisplayVars() {
         }*/
         else if(mode_vars[0] == 17) { // 1845 variant
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on paths to tiles in 1845.";
-            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
+            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#0088a3");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "block");
             document.getElementById("Alternate5040_extra").style.setProperty("display", "none");
             document.getElementById("Alternate5040_num").style.setProperty("display", "none");
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #14a3db, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #14a3db, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             let tierTiles = [];
             function split1845(n) {
                 if(n == 1n || n == 0n || tierTiles.includes(n)) return;
@@ -15842,10 +15850,12 @@ function gmDisplayVars() {
         }
         else if(mode_vars[0] == 18) { // X^Y variant
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on paths to tiles in X^Y.";
-            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
+            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#78cefc");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "none");
             document.getElementById("Alternate5040_extra").style.setProperty("display", "block");
             document.getElementById("Alternate5040_num").style.setProperty("display", "none");
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #19779c, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #19779c, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             knownMergeLookbackDistance = 0;
             let conditional = [["@This 1", "!=", 0n]];
             let lastArray = [false];
@@ -15881,10 +15891,12 @@ function gmDisplayVars() {
         }
         else if(mode_vars[0] == 19) { // 10 variant
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on paths to tiles in 10.";
-            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
+            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#6b9c30");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "block");
             document.getElementById("Alternate5040_extra").style.setProperty("display", "block");
             document.getElementById("Alternate5040_num").style.setProperty("display", "none");
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #a2c971, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #a2c971, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             if(mode_vars[3] == 0) {
                 knownMergeLookbackDistance = 0;
                 if(mode_vars[2] == 0) {
@@ -15962,10 +15974,12 @@ function gmDisplayVars() {
         }
         else if(mode_vars[0] == 20) { // Harderer 1762 variant
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on paths to tiles in Harderer 1762.";
-            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
+            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#6e550f");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "block");
             document.getElementById("Alternate5040_extra").style.setProperty("display", "none");
             document.getElementById("Alternate5040_num").style.setProperty("display", "none");
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #ab8c43, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #ab8c43, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             knownMergeLookbackDistance = 0;
             if(mode_vars[2] == 0) {
                 MergeRules.push(
@@ -16004,10 +16018,12 @@ function gmDisplayVars() {
         }
         else if(mode_vars[0] == 21) { // Ratio-Fill 1296 variant
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on ratios between tiles, like in Ratio-Fill modes.";
-            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
+            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#59436b");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "none");
-            document.getElementById("Alternate5040_extra").style.setProperty("display", "block");
+            document.getElementById("Alternate5040_extra").style.setProperty("display", "none");
             document.getElementById("Alternate5040_num").style.setProperty("display", "none");
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #3e49c2, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #3e49c2, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             start_game_vars = [0];
             if(mode_vars[3] == 0) {
                 document.getElementById("Alternate5040_diff").style.setProperty("display", "block");
@@ -16070,7 +16086,7 @@ function gmDisplayVars() {
         }
         else if(mode_vars[0] == 22) { // Turatin variant
             document.getElementById("Alternate5040_variant_text").innerHTML = "The merge rules are based on paths to tiles in Turatin.";
-            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#77a00d");
+            document.getElementById("Alternate5040_variant_text").style.setProperty("color", "#8a2986");
             document.getElementById("Alternate5040_diff").style.setProperty("display", "block");
             document.getElementById("Alternate5040_extra").style.setProperty("display", "none");
             document.getElementById("Alternate5040_num").style.setProperty("display", "block");
@@ -16078,6 +16094,8 @@ function gmDisplayVars() {
             if(mode_vars[4] == 1) {
                 document.getElementById("Alternate5040_num_minus").style.setProperty("display", "none");
             }
+            document.documentElement.style.setProperty("background-image", "repeating-conic-gradient(from -45deg, #0000, #0000, #c985c7, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg, #ffffa1 45deg, #c5c500 90deg)");
+            document.documentElement.style.setProperty("--background-color", "repeating-conic-gradient(from -45deg, #0000, #0000, #c985c7, #0000, #0000 90deg), repeating-conic-gradient(#c5c500 0deg,#eeee65 45deg,#8f8f00 90deg)");
             knownMergeLookbackDistance = 0;
             mergeResultKnownLevel = 0;
             if(mode_vars[2] == 0) {
