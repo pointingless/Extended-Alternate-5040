@@ -15951,8 +15951,8 @@ function gmDisplayVars() {
                     if(Array.isArray(mode_vars[1]) || (typeof mode_vars[1] == "bigint" && mode_vars[1] != 0n)) MergeRules.push(
                         [2, [["@Next 1 0", "=", 0n], "&&", ["@This 1", "=", "@Next 1 1"], "&&", ["@This 0", "=", 0n], "&&", [CAM1Entry, "=", 3n]], true, [[["@This 0", "+B", 1n], 1n]], [], [false, true]],
                         [2, [["@Next 1 0", "=", 0n], "&&", ["@Next 1 1", "=", 1n], "&&", ["@This 0", "=", 0n], "&&", ["@This 1", "=", 1n], "&&", [CAM1Entry, ">", 3n]], true, [["@This 0", 2n]], [], [false, true]],
-                        [2, [["@Next 1 0", "=", 0n], "&&", ["@This 1", "=", "@Next 1 1"], "&&", ["@This 0", "=", 0n], "&&", ["@This 1", "<", [CAM1Entry, "-B", 1n]], "&&", [CAM1Entry, ">", 3n]], true, [[0n, ["@This 1", "+B", 1n]], [0n, ["@This 1", "-B", 1n]]], [], [false, false]],
-                        [2, [["@Next 1 0", "=", 0n], "&&", ["@This 1", "=", "@Next 1 1"], "&&", ["@This 0", "=", 0n], "&&", ["@This 1", "=", [CAM1Entry, "-B", 1n]], "&&", [CAM1Entry, ">", 3n]], true, [[1n, 1n], [0n, ["@This 1", "-B", 1n]]], [], [false, false]]
+                        [2, [["@Next 1 0", "=", 0n], "&&", ["@This 1", "=", "@Next 1 1"], "&&", ["@This 0", "=", 0n], "&&", ["@This 1", "<", [CAM1Entry, "-B", 2n]], "&&", [CAM1Entry, ">", 3n]], true, [[0n, ["@This 1", "+B", 1n]], [0n, ["@This 1", "-B", 1n]]], [], [false, false]],
+                        [2, [["@Next 1 0", "=", 0n], "&&", ["@This 1", "=", "@Next 1 1"], "&&", ["@This 0", "=", 0n], "&&", ["@This 1", "=", [CAM1Entry, "-B", 2n]], "&&", [CAM1Entry, ">", 3n]], true, [[1n, 1n], [0n, ["@This 1", "-B", 1n]]], [], [false, false]]
                     );
                     MergeRules.push(
                         [3, [["@Next 2 0", "=", oneTile[0]], "&&", ["@Next 2 1", "=", oneTile[1]], "&&", ["@This 0", "=", "@Next 1 0"], "&&", ["@This 1", "=", "@Next 1 1"], "&&", ["@This 1", "!=", 0n], "&&", [CAM1Entry, "=", 2n]], false, [[["@This 0", "+B", 1n], baseTile]], [], [false, true, true]],
@@ -16060,9 +16060,10 @@ function gmDisplayVars() {
                     knownMergeMaxLength = 3;
                 }
                 rulesTitle[1] = "Ratio-Fill 1296";
-                if(mode_vars[4] > 1) rulesTitle[1] += " 1/ " + mode_vars[4];
+                if(mode_vars[4] == 2) rulesTitle[1] = "Ratio-Fill 1024"
+                else if(mode_vars[4] > 2) rulesTitle[1] += " 1/" + mode_vars[4];
                 if(Array.isArray(mode_vars[1])) {
-                    if(mode_vars[2] == 0) rulesDescription = "Follow the paths to get from 1 to n in " + rulesTitle[1] + ", for the following n's in a cycle: " + arrayListString + ". Get to the " + arrayWinCondition + " tile to win!";
+                    if(mode_vars[2] == 0) rulesDescription = "Follow the paths to get from 1 to n in " + rulesTitle[1] + ", for the following n's in a cycle: " + arrayListString + ". Get to the " + arrayWinCondition + "2 tile to win!";
                     else if(mode_vars[2] == 1) rulesDescription = "Follow the paths to get from 1 to n in " + rulesTitle[1] + ", for the following n's in a cycle: " + arrayListString + ". For the first time getting to the first number only, you merge like in the normal tile values version and get to n - 1 instead. Get to the " + (arrayWinCondition - 1n) + " tile to win!";
                 }
             }
@@ -23290,11 +23291,9 @@ function loadModifiers() {
                     }
                 }
             }
-            if(modifiers[33] == 1) TileTypes.unshift([["@This " + memorynum, "=", 0], "", "#ffffff", "#ffffff"]);
-            else if(modifiers[33] == 2) {
-                let blankColor = evaluateColor(getComputedStyle(document.documentElement).getPropertyValue("--tile-color"), 0, 0);
-                TileTypes.unshift([["@This " + memorynum, "=", 0], "", blankColor, blankColor]);
-            }
+            let blankColor = evaluateColor(getComputedStyle(document.documentElement).getPropertyValue("--tile-color"), 0, 0);
+            if(modifiers[33] == 1) blankColor = "#ffffff";
+            TileTypes.unshift([["@This " + memorynum, "=", 0], "", blankColor, blankColor]);
             for (let i = 0; i < startTileSpawns.length; i++) {
                 if (startTileSpawns[i][0] == "Box") {
                     let chance = startTileSpawns[i][1];
@@ -23335,8 +23334,15 @@ function loadModifiers() {
                 }
             }*/
             for (let m = 0; m < MergeRules.length; m++) {
-                for (let i = 0; i < MergeRules[m][3].length; i++) {
-                    MergeRules[m][3][i].push(0);
+                let mstart = 0;
+                if (MergeRules[m][0] === "@include_gvars") mstart = 1;
+                if ((MergeRules[m]).indexOf("@end_vars") > -1) mstart = (MergeRules[m]).indexOf("@end_vars") + 1;
+                for (let i = 0; i < MergeRules[m][mstart + 3].length; i++) {
+                    let minmemory = ["@This " + memorynum];
+                    for (let j = 0; j < MergeRules[m][mstart]; j++) {
+                        minmemory.push("min", "@Next " + j + " " + memorynum);
+                    }
+                    MergeRules[m][mstart + 3][i].push(minmemory.slice());
                 }
             }
             let tilechange = [["@This " + memorynum, "-", 1]];
