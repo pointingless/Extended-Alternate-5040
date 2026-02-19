@@ -23319,20 +23319,19 @@ function loadModifiers() {
                     startTileSpawns[i] = newSpawn;
                 }
             }
-            /*let wlength = winConditions.length;
-            for (let w = 0; w < wlength; w++) {
-                if (Array.isArray(winConditions[w]) && (eqPrimArrays(arrayTypes(winConditions[w]), ["number"]) || eqPrimArrays(arrayTypes(winConditions[w]), ["bigint"]) || eqPrimArrays(arrayTypes(winConditions[w]), ["number", "bigint"]))) {
-                    winConditions.push(compendiumStructuredClone(winConditions[w]));
-                    winConditions.push(compendiumStructuredClone(winConditions[w]));
-                    if (modifiers[24] > 2) winConditions.push(compendiumStructuredClone(winConditions[w]));
-                    if (modifiers[24] > 3) winConditions.push(compendiumStructuredClone(winConditions[w]));
-                    if (modifiers[24] > 4) winConditions.push(compendiumStructuredClone(winConditions[w]));
-                    winConditions[winConditions.length - 1].push(2);
-                    winConditions[winConditions.length - 2].push(1);
-                    //if (yellowIncluded) winConditions[winConditions.length - 3].push(3); // change this
-                    winConditions[w].push(0);
+            for(let i = 0; i < winConditions.length; i++) {
+                let newwincon = [];
+                for(let j = 0; j <= winConditions[i].length; j++) {
+                    if(j == winConditions[i].length) {
+                        winConditions[i] = newwincon.slice(1);
+                        break;
+                    }
+                    newwincon.push("&&", ["@This " + j, "=", winConditions[i][j]]);
+                    if(typeof winConditions[i][j] == "string" || Array.isArray(winConditions[i][j])) {
+                        break;
+                    }
                 }
-            }*/
+            }
             for (let m = 0; m < MergeRules.length; m++) {
                 let mstart = 0;
                 if (MergeRules[m][0] === "@include_gvars") mstart = 1;
